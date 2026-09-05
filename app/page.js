@@ -1,266 +1,211 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import ArchFrame from "@/components/ArchFrame";
 import ProductCard from "@/components/ProductCard";
-import SectionHead from "@/components/SectionHead";
-import { categories, bySlug } from "@/lib/products";
+import ProductMedia from "@/components/ProductMedia";
+import { Rosette, Star, Crescent, Lantern, Corner, Divider, Scallop } from "@/components/Ornament";
+import { categories, bySlug, inr } from "@/lib/products";
 
 const arrivals = ["sakina-crepe-abaya", "areej-coord", "salah-prayer-set", "misk-chiffon-set"].map(bySlug);
-const jummahCapsule = ["zahra-kaftan", "rida-georgette-shawl", "noor-open-abaya", "amal-flared-abaya"].map(bySlug);
-const dailyEssentials = ["hana-modal-hijab", "sidra-jersey-hijab", "iman-shirt-dress", "layl-linen-abaya"].map(bySlug);
+const capsule = ["zahra-kaftan", "rida-georgette-shawl", "noor-open-abaya", "amal-flared-abaya"].map(bySlug);
+const staples = ["hana-modal-hijab", "sidra-jersey-hijab", "iman-shirt-dress", "layl-linen-abaya"].map(bySlug);
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <ModestyPillars />
-      <Categories />
-      <Edit
-        eyebrow="Autumn / 1447 Capsule"
-        heading="Quietly New"
-        arabic="الجديد بوقار"
-        copy="Pieces cut for this season in Japanese Nida, washed linens, and Korean crepes — designed around fluid drape and zero sheer."
-        items={arrivals}
-        href="/collections"
-      />
-      <JummahOccasionEdit />
-      <HijabFabricGuide />
-      <AbayaSilhouetteGuide />
-      <SacredPrayerSection />
+      <Assurances />
+      <Silhouettes />
+      <NewArrivals />
+      <CelebrationCapsule />
+      <FabricTable />
+      <CutStandard />
+      <PrayerSanctuary />
       <Ethos />
-      <Edit
-        eyebrow="Everyday Staples"
-        heading="The Considered Few"
-        arabic="المختارات اليومية"
-        copy="Effortless pin-free wraps and everyday abayas reach-for pieces that hold up to real daily wear."
-        items={dailyEssentials}
-        href="/collections"
-      />
-      <BarakahGifting />
+      <Staples />
+      <Gifting />
       <Craft />
       <Voices />
-      <Journal />
+      <Letter />
     </>
   );
 }
 
-/* ---------------------------------------------------------------- hero */
+/* ══════════════════════════════════════════════════════════ 01 · hero
+   Asymmetric split under an onion dome, flanked by hanging lanterns. */
 
 function Hero() {
   return (
-    <section className="relative mx-auto grid max-w-[1400px] items-center gap-12 px-6 pb-20 pt-10 lg:grid-cols-[1fr_0.95fr] lg:gap-16 lg:px-10 lg:pt-16">
-      <Reveal>
-        <div className="inline-flex items-center gap-3 border border-gold/40 bg-sand/60 px-4 py-1.5 backdrop-blur-xs">
-          <span className="font-arabic text-sm text-gold-dark select-none">صِيَانَة — دار الحشمة الراقية</span>
-          <span className="h-1 w-1 rounded-full bg-gold" />
-          <span className="text-[9px] uppercase tracking-brand text-muted">Autumn 1447 Capsule</span>
-        </div>
+    <section className="relative">
+      <div className="pattern-girih pointer-events-none absolute inset-0 opacity-[0.035]" />
 
-        <h1 className="mt-8 font-display text-[3.2rem] font-light leading-[0.98] sm:text-[4.4rem] lg:text-[5.2rem] text-ink">
-          Dressed with
-          <br />
-          <span className="italic text-gold-dark font-normal">grace & dignity.</span>
-        </h1>
+      {/* Lanterns hang from the top edge, as in classical Eid mastheads */}
+      <Lantern className="animate-sway pointer-events-none absolute left-[3%] top-0 hidden h-52 w-14 text-gold/70 xl:block" drop={26} />
+      <Lantern
+        className="animate-sway pointer-events-none absolute left-[9%] top-0 hidden h-36 w-11 text-gold/45 xl:block"
+        drop={12}
+        style={{ animationDelay: "1.4s" }}
+      />
 
-        <p className="mt-3 font-arabic text-2xl text-muted/80 font-normal tracking-wide select-none">
-          حَيَاءٌ وَوَقَارٌ وَأَنَاقَةٌ تَلِيقُ بِكِ
-        </p>
+      <div className="relative mx-auto grid max-w-[1400px] items-center gap-14 px-6 pb-20 pt-12 lg:grid-cols-[1fr_0.92fr] lg:gap-16 lg:px-10 lg:pt-16">
+        <Reveal from="left">
+          <span className="inline-flex items-center gap-3 border border-gold/40 bg-paper/70 px-4 py-1.5 backdrop-blur-xs">
+            <Crescent className="h-3 w-3 text-gold" />
+            <span className="text-[9px] uppercase tracking-brand text-muted">Autumn Capsule</span>
+          </span>
 
-        <p className="mt-6 max-w-md text-[15px] leading-relaxed text-muted">
-          Abayas, hijabs, and timeless modest garments crafted with uncompromised coverage.
-          Tailored in Japanese Nida, breathable linens, and opaque crepes — made for sacred moments,
-          workdays, and ordinary Tuesdays alike.
-        </p>
+          <h1 className="mt-8 font-display text-[3.2rem] font-light leading-[0.98] text-ink sm:text-[4.4rem] lg:text-[5.2rem]">
+            Dressed with
+            <br />
+            <span className="italic font-normal text-gold-dark">grace &amp; dignity.</span>
+          </h1>
 
-        <div className="mt-10 flex flex-wrap items-center gap-5">
-          <Link
-            href="/collections"
-            className="bg-ink px-9 py-4 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark shadow-sm"
-          >
-            Shop The Collection
-          </Link>
-          <Link
-            href="/collections?c=abayas"
-            className="border border-line bg-paper px-7 py-4 text-[10px] uppercase tracking-brand text-ink hover:border-gold transition"
-          >
-            Abayas & Kimonos
-          </Link>
-          <Link
-            href="/collections?c=hijabs"
-            className="underline-grow py-2 text-[10px] uppercase tracking-brand text-muted hover:text-ink"
-          >
-            Hijabs & Shawls →
-          </Link>
-        </div>
+          <p className="mt-7 max-w-md text-[15px] leading-relaxed text-muted">
+            Abayas, hijabs and timeless modest garments cut for uncompromised coverage —
+            tailored in Japanese Nida, breathable linens and opaque crepes for sacred
+            moments, workdays and ordinary Tuesdays alike.
+          </p>
 
-        <div className="mt-12 flex items-center gap-8 border-t border-line pt-6 text-[10.5px] uppercase tracking-[0.16em] text-muted">
-          <div>
-            <p className="font-medium text-ink">100% Opaque</p>
-            <p className="text-[9px] text-muted">Zero-sheer guarantee</p>
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <Link
+              href="/collections"
+              className="bg-ink px-9 py-4 text-[10px] uppercase tracking-brand text-bone shadow-sm transition hover:bg-gold-dark"
+            >
+              Shop the Collection
+            </Link>
+            <Link
+              href="/collections?c=abayas"
+              className="border border-line bg-paper px-7 py-4 text-[10px] uppercase tracking-brand text-ink transition hover:border-gold"
+            >
+              Abayas
+            </Link>
+            <Link
+              href="/collections?c=hijabs"
+              className="underline-grow py-2 text-[10px] uppercase tracking-brand text-muted hover:text-ink"
+            >
+              Hijabs &amp; Shawls →
+            </Link>
           </div>
-          <span className="h-6 w-px bg-line" />
-          <div>
-            <p className="font-medium text-ink">Wudu Friendly</p>
-            <p className="text-[9px] text-muted">Comfortable sleeve access</p>
-          </div>
-          <span className="h-6 w-px bg-line" />
-          <div>
-            <p className="font-medium text-ink">52″ to 60″</p>
-            <p className="text-[9px] text-muted">Tailored drop lengths</p>
-          </div>
-        </div>
-      </Reveal>
 
-      <Reveal delay={120}>
-        <div className="relative">
-          {/* Outer Mihrab Arch Frame */}
-          <div className="arch relative aspect-[3/4.1] overflow-hidden bg-sand shadow-xl border border-line">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <dl className="mt-12 grid max-w-lg grid-cols-3 gap-4 border-t border-line pt-6">
+            {[
+              ["100% Opaque", "Zero-sheer guarantee"],
+              ["Wudu Friendly", "Easy sleeve access"],
+              ['52"–60"', "Tailored drop lengths"],
+            ].map(([k, v], i) => (
+              <div key={k} className={i ? "border-l border-line pl-4" : ""}>
+                <dt className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-ink">{k}</dt>
+                <dd className="mt-1 text-[9px] uppercase tracking-[0.12em] text-muted">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
+
+        <Reveal from="scale" delay={140}>
+          <div className="group relative">
+            <ArchFrame
               src="/images/hero/hero-siyana.jpg"
-              alt="Siyana Luxury Modest Fashion"
-              className="h-full w-full object-cover object-center"
-              priority="true"
-            />
-            {/* Vignette and Delicate Gold Architectural Rim */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/65 via-transparent to-black/15" />
-            <div className="arch pointer-events-none absolute inset-3 border border-white/35" />
-
-            {/* Hero Overlays */}
-            <div className="absolute top-6 right-6">
-              <span className="backdrop-blur-md bg-paper/90 border border-gold/30 px-3 py-1.5 text-[8.5px] uppercase tracking-[0.24em] text-ink font-medium shadow-sm">
-                Rabi' al-Awwal 1447
-              </span>
-            </div>
-
-            <div className="absolute bottom-8 left-8 right-8 text-center sm:text-left">
-              <p className="font-arabic text-lg text-gold-light select-none">
-                صِيَانَة — الحشمة في أبهى صورها
-              </p>
-              <p className="font-display text-[1.9rem] font-light italic text-white/95 leading-tight mt-0.5">
+              alt="Siyana modest wear — open abaya in a courtyard"
+              ratio="aspect-[3/4]"
+              shape="dome"
+              kenburns
+              frame={false}
+            >
+              <p className="font-display text-[1.9rem] font-light italic leading-tight text-white">
                 The Noble Art of Modesty
               </p>
-              <p className="text-[10px] uppercase tracking-brand text-bone/70 mt-1">
-                Japanese Nida & Hand-Rolled Silks
+              <p className="mt-1.5 text-[9.5px] uppercase tracking-brand text-bone/75">
+                Japanese Nida &amp; hand-rolled silks
               </p>
-            </div>
-          </div>
+            </ArchFrame>
 
-          {/* Decorative Islamic Geometric Medallion */}
-          <div className="absolute -bottom-6 -right-6 hidden sm:grid h-24 w-24 place-items-center rounded-full bg-paper border border-gold/40 shadow-lg">
-            <div className="text-center">
-              <span className="font-arabic text-base text-gold block leading-none select-none">حَيَاء</span>
-              <span className="text-[7.5px] uppercase tracking-brand text-muted block mt-1">Modesty</span>
+            {/* Rosette seal, clear of the dome's curved shoulders */}
+            <div className="absolute -bottom-8 right-6 hidden h-32 w-32 place-items-center rounded-full border border-gold/40 bg-paper shadow-lg sm:grid">
+              <Rosette className="absolute h-28 w-28 text-gold/35" spin />
+              <span className="relative text-center">
+                <span className="block font-display text-[2rem] leading-none text-gold-dark">17</span>
+                <span className="mt-1 block text-[7.5px] uppercase tracking-brand text-muted">Pieces</span>
+              </span>
             </div>
           </div>
-        </div>
-      </Reveal>
+        </Reveal>
+      </div>
+
+      <Scallop className="text-gold" />
     </section>
   );
 }
 
-/* --------------------------------------------------------------- modesty pillars */
+/* ══════════════════════════════════════════ 02 · assurances
+   A quiet arcade of four promises, divided by girih stars. */
 
-const pillars = [
-  {
-    en: "100% Zero-Sheer Verified",
-    ar: "ستر كامل مضمون",
-    desc: "Every cloth is tested against high daylight. If it goes transparent, it never enters production.",
-    badge: "100% Opaque",
-  },
-  {
-    en: "Wudu-Friendly Tailoring",
-    ar: "سهولة في الوضوء",
-    desc: "Engineered with elasticated smocking or concealed button cuffs for seamless ablution.",
-    badge: "Ablution Ease",
-  },
-  {
-    en: "52″–60″ Modest Drop Lengths",
-    ar: "أطوال شرعية ساترة",
-    desc: "Cut to gracefully meet the top of the footwear without dragging or cling.",
-    badge: "Custom Drops",
-  },
-  {
-    en: "Artisan Modest Heritage",
-    ar: "حرفة وأقمشة أصيلة",
-    desc: "Japanese Nida, washed desert linens, and breathable non-slip beechwood modal.",
-    badge: "Pure Cloth",
-  },
+const assurances = [
+  ["Zero-Sheer Verified", "Every cloth is tested against high daylight. If it goes transparent, it never enters production."],
+  ["Wudu-Friendly Cuffs", "Elasticated smocking or concealed buttons, so ablution never means undressing."],
+  ['52"–60" Drop Lengths', "Cut to meet the top of the footwear without dragging, clinging or pooling."],
+  ["Artisan Cloth Only", "Japanese Nida, washed desert linen and breathable beechwood modal. Nothing synthetic-feeling."],
 ];
 
-function ModestyPillars() {
+function Assurances() {
   return (
-    <div className="border-y border-line bg-paper/80 backdrop-blur-xs">
-      <div className="mx-auto max-w-[1400px] px-6 py-8 lg:px-10">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {pillars.map((p) => (
-            <div key={p.en} className="flex flex-col justify-between border-l border-line pl-6 first:border-l-0">
-              <div>
-                <span className="font-arabic text-xs text-gold-dark block select-none">{p.ar}</span>
-                <h4 className="mt-1 font-display text-[1.25rem] text-ink leading-snug">{p.en}</h4>
-                <p className="mt-2 text-xs leading-relaxed text-muted">{p.desc}</p>
-              </div>
-              <span className="mt-4 text-[8.5px] uppercase tracking-brand text-sage font-medium">
-                ✓ {p.badge}
-              </span>
+    <section className="border-y border-line bg-paper">
+      <div className="mx-auto grid max-w-[1400px] gap-y-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:px-10">
+        {assurances.map(([title, body], i) => (
+          <Reveal key={title} delay={i * 90} from="fade">
+            <div className={`h-full px-0 lg:px-8 ${i ? "lg:border-l lg:border-line" : "lg:pl-0"}`}>
+              <Star className="h-5 w-5 text-gold" />
+              <h3 className="mt-4 font-display text-[1.3rem] leading-snug text-ink">{title}</h3>
+              <p className="mt-2.5 text-xs leading-relaxed text-muted">{body}</p>
             </div>
-          ))}
-        </div>
+          </Reveal>
+        ))}
       </div>
-    </div>
+    </section>
   );
 }
 
-/* ----------------------------------------------------------- categories */
+/* ══════════════════════════════════════════ 03 · categories
+   Staggered mosaic — the middle column drops, so the row reads as
+   an arcade of arches rather than a flat table of boxes. */
 
-function Categories() {
+function Silhouettes() {
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
       <Reveal>
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <div>
-            <div className="flex items-center gap-3">
-              <p className="text-[10px] uppercase tracking-brand text-muted">Core Collections</p>
-              <span className="font-arabic text-sm text-gold select-none">تشكيلاتنا الفاخرة</span>
-            </div>
-            <h2 className="mt-3 font-display text-[2.6rem] sm:text-[3.2rem] font-light leading-none">
+            <p className="text-[10px] uppercase tracking-brand text-muted">Core Collections</p>
+            <h2 className="mt-4 font-display text-[2.6rem] font-light leading-none sm:text-[3.4rem]">
               Curated by Silhouette
             </h2>
           </div>
-          <Link href="/collections" className="underline-grow text-[10px] uppercase tracking-brand text-muted hover:text-ink">
-            View All Creations ({categories.length} Categories) →
+          <Link
+            href="/collections"
+            className="underline-grow shrink-0 pb-1 text-[10px] uppercase tracking-brand text-muted hover:text-ink"
+          >
+            View all {categories.length} collections →
           </Link>
         </div>
       </Reveal>
 
-      <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((c, i) => (
-          <Reveal key={c.slug} delay={i * 60}>
+          <Reveal key={c.slug} delay={(i % 3) * 110} className={i % 3 === 1 ? "lg:mt-20" : ""}>
             <Link href={`/collections?c=${c.slug}`} className="group block">
-              <div className="arch relative aspect-[4/3.5] overflow-hidden bg-sand shadow-sm">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={c.image}
-                  alt={c.name}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/20 to-transparent" />
-                <div className="arch pointer-events-none absolute inset-2.5 border border-white/20 transition-colors group-hover:border-gold/60" />
-
-                <div className="absolute top-4 right-4">
-                  <span className="font-arabic text-sm text-white/90 drop-shadow-sm select-none">
-                    {c.arabicName}
-                  </span>
-                </div>
-
-                <div className="absolute bottom-5 left-5 right-5">
-                  <span className="text-[9px] uppercase tracking-brand text-gold-light block font-medium">
-                    {c.count}
-                  </span>
-                  <h3 className="font-display text-2xl text-bone leading-tight mt-1">{c.name}</h3>
-                  <p className="text-[11px] text-bone/80 line-clamp-1 mt-0.5">{c.blurb}</p>
-                </div>
-              </div>
+              <ArchFrame
+                src={c.image}
+                alt={c.name}
+                ratio="aspect-[3/4]"
+                focus="object-top"
+                zoomOnHover
+              >
+                <span className="text-[8.5px] uppercase tracking-brand text-gold-light">{c.count}</span>
+                <h3 className="mt-1.5 font-display text-[1.8rem] leading-none text-bone">{c.name}</h3>
+                <p className="mt-2 line-clamp-2 text-[11px] leading-relaxed text-bone/75">{c.blurb}</p>
+                <span className="mt-3 inline-flex items-center gap-2 text-[9px] uppercase tracking-brand text-bone/70 transition-colors group-hover:text-gold-light">
+                  Explore <span className="transition-transform group-hover:translate-x-1">→</span>
+                </span>
+              </ArchFrame>
             </Link>
           </Reveal>
         ))}
@@ -269,30 +214,31 @@ function Categories() {
   );
 }
 
-/* ------------------------------------------------------- product blocks */
+/* ══════════════════════════════════════════ 04 · new arrivals
+   The straight shop grid. Uniform on purpose — this is the buying row. */
 
-function Edit({ eyebrow, heading, arabic, copy, items, href }) {
+function NewArrivals() {
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10">
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-6">
           <div>
-            <div className="flex items-center gap-3">
-              <p className="text-[10px] uppercase tracking-brand text-muted">{eyebrow}</p>
-              {arabic && <span className="font-arabic text-sm text-gold select-none">{arabic}</span>}
-            </div>
-            <h2 className="mt-3 font-display text-[2.6rem] font-light leading-none">{heading}</h2>
-            <p className="mt-3 max-w-lg text-sm text-muted">{copy}</p>
+            <p className="text-[10px] uppercase tracking-brand text-muted">Autumn Capsule</p>
+            <h2 className="mt-3 font-display text-[2.6rem] font-light leading-none">Quietly New</h2>
+            <p className="mt-3 max-w-lg text-sm text-muted">
+              Pieces cut this season in Japanese Nida, washed linen and Korean crepe —
+              designed around fluid drape and zero sheer.
+            </p>
           </div>
-          <Link href={href} className="underline-grow text-[10px] uppercase tracking-brand">
-            View All Pieces →
+          <Link href="/collections" className="underline-grow pb-1 text-[10px] uppercase tracking-brand">
+            View all pieces →
           </Link>
         </div>
       </Reveal>
 
-      <div className="mt-12 grid gap-x-7 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((p, i) => (
-          <Reveal key={p.slug} delay={i * 70}>
+      <div className="mt-12 grid items-stretch gap-x-7 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+        {arrivals.map((p, i) => (
+          <Reveal key={p.slug} delay={i * 90}>
             <ProductCard product={p} />
           </Reveal>
         ))}
@@ -301,274 +247,259 @@ function Edit({ eyebrow, heading, arabic, copy, items, href }) {
   );
 }
 
-/* -------------------------------------------------- jummah & occasion edit */
+/* ══════════════════════════════════════════ 05 · celebration capsule
+   Midnight and gold — the festival palette, lanterns and a rosette
+   watermark. The one section that goes dark mid-page. */
 
-function JummahOccasionEdit() {
+function CelebrationCapsule() {
   return (
-    <section className="border-y border-line bg-sand/30 py-24">
-      <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
-        <Reveal>
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="font-arabic text-base text-gold-dark block select-none">
-              مختارات صلاة الجمعة والمناسبات المباركة
-            </span>
-            <p className="mt-2 text-[10px] uppercase tracking-brand text-muted">Special Edit</p>
-            <h2 className="mt-3 font-display text-[2.8rem] sm:text-[3.6rem] font-light leading-tight">
-              The Jummah & Celebration Capsule
+    <section className="relative overflow-hidden bg-midnight text-bone">
+      <div className="pattern-girih-gold pointer-events-none absolute inset-0 opacity-25" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-midnight-deep via-transparent to-midnight-deep" />
+      <Rosette className="pointer-events-none absolute -right-24 top-10 h-96 w-96 text-gold/15" spin />
+
+      <Lantern className="animate-sway pointer-events-none absolute left-[8%] top-0 hidden h-44 w-9 text-gold/50 lg:block" drop={20} />
+      <Lantern className="animate-sway pointer-events-none absolute left-[16%] top-0 hidden h-32 w-8 text-gold/30 lg:block" drop={12} />
+      <Lantern className="animate-sway pointer-events-none absolute right-[10%] top-0 hidden h-40 w-9 text-gold/40 lg:block" drop={30} />
+
+      <div className="relative mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
+        <Reveal from="fade">
+          <div className="mx-auto max-w-2xl text-center">
+            <Divider label="Special Edit" />
+            <h2 className="mt-7 font-display text-[2.8rem] font-light leading-tight text-bone sm:text-[3.6rem]">
+              The Jummah &amp; Celebration Capsule
             </h2>
-            <p className="mt-4 text-sm text-muted/90 leading-relaxed max-w-xl mx-auto">
-              Friday prayers, Eid celebrations, and dignified family gatherings call for garments that reflect
-              solemnity and quiet grandeur. Featuring royal plum silk brocades, champagne georgettes, and pressed Japanese Nida.
+            <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-bone/70">
+              Friday prayers, Eid and dignified family gatherings call for garments that carry
+              solemnity and quiet grandeur — royal plum brocade, champagne georgette and pressed
+              Japanese Nida.
             </p>
           </div>
         </Reveal>
 
-        <div className="mt-16 grid gap-x-7 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
-          {jummahCapsule.map((p, i) => (
-            <Reveal key={p.slug} delay={i * 70}>
-              <ProductCard product={p} />
+        <div className="mt-16 grid items-stretch gap-x-7 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+          {capsule.map((p, i) => (
+            <Reveal key={p.slug} delay={i * 90} from="scale">
+              <ProductCard product={p} tone="dark" />
             </Reveal>
           ))}
         </div>
+
+        <Reveal from="fade" delay={200}>
+          <div className="mt-16 text-center">
+            <Link
+              href="/collections?c=kaftans"
+              className="inline-block border border-gold/60 px-10 py-4 text-[10px] uppercase tracking-brand text-gold-light transition hover:bg-gold hover:text-midnight-deep"
+            >
+              Shop occasion wear
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-/* ---------------------------------------------------- hijab fabric guide */
+/* ══════════════════════════════════════════ 06 · fabric guide
+   A comparison table, not another card row. Attributes read across,
+   so nothing can fall out of alignment. */
 
-const fabricGuide = [
-  {
-    name: "Sustainable Beechwood Modal",
-    ar: "مودال ناعم مستدام",
-    opacity: "5 / 5 (Opaque)",
-    grip: "5 / 5 (Pin-Free)",
-    breathable: "5 / 5 (High Airflow)",
-    bestFor: "Full daily wear, long working shifts, campus, and warm climates.",
-    tip: "No pins required. Simply drape and toss over the opposite shoulder.",
-  },
-  {
-    name: "Korean Double Chiffon",
-    ar: "شيفون كوري فاخر",
-    opacity: "4 / 5 (Medium)",
-    grip: "3.5 / 5 (Pair with Undercap)",
-    breathable: "4 / 5 (Weightless)",
-    bestFor: "Formal dinners, nikah ceremonies, and fluid graceful drapes.",
-    tip: "Pair with an organic cotton undercap and magnetic hijab pins.",
-  },
-  {
-    name: "Silk-Touch Georgette",
-    ar: "جورجيت بملمس الحرير",
-    opacity: "4 / 5 (Rich Shimmer)",
-    grip: "4 / 5 (Holds Fold)",
-    breathable: "4.5 / 5 (Evening Drape)",
-    bestFor: "Jummah gatherings, Eid festivals, and elevated occasions.",
-    tip: "Crisply press the front fold for an architectural facial frame.",
-  },
-  {
-    name: "Four-Way Cotton Jersey",
-    ar: "جيرسيه قطني مرن",
-    opacity: "5 / 5 (100% Solid)",
-    grip: "5 / 5 (Zero-Slip)",
-    breathable: "5 / 5 (Absorbent)",
-    bestFor: "Everyday active life, errands, school runs, and travel.",
-    tip: "Wrap once without pins. Soft stretch molds naturally to the crown.",
-  },
+const fabrics = [
+  { name: "Beechwood Modal", opacity: "5/5", grip: "5/5", air: "5/5", best: "Daily wear, long shifts, warm climates", note: "No pins needed — drape and toss over the shoulder." },
+  { name: "Korean Double Chiffon", opacity: "4/5", grip: "3.5/5", air: "4/5", best: "Formal dinners, nikah, fluid drapes", note: "Pair with a cotton undercap and magnetic pins." },
+  { name: "Silk-Touch Georgette", opacity: "4/5", grip: "4/5", air: "4.5/5", best: "Jummah, Eid, elevated occasions", note: "Press the front fold for an architectural frame." },
+  { name: "Four-Way Cotton Jersey", opacity: "5/5", grip: "5/5", air: "5/5", best: "Errands, school runs, travel", note: "Wrap once, no pins. Stretch moulds to the crown." },
 ];
 
-function HijabFabricGuide() {
+function FabricTable() {
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
       <Reveal>
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-line pb-8">
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <div className="flex items-center gap-3">
-              <p className="text-[10px] uppercase tracking-brand text-muted">Knowledge Base</p>
-              <span className="font-arabic text-sm text-gold select-none">دليل أقمشة الحجاب</span>
-            </div>
-            <h2 className="mt-3 font-display text-[2.6rem] sm:text-[3.2rem] font-light leading-none">
-              The Hijab Drape & Fabric Guide
+            <p className="text-[10px] uppercase tracking-brand text-muted">Knowledge Base</p>
+            <h2 className="mt-4 font-display text-[2.6rem] font-light leading-none sm:text-[3.2rem]">
+              The Hijab Fabric Guide
             </h2>
             <p className="mt-3 max-w-xl text-sm text-muted">
-              Every weave behaves differently. Choose your hijab based on slip-resistance, opacity level, and occasion.
+              Every weave behaves differently. Compare slip-resistance, opacity and airflow before you choose.
             </p>
           </div>
-          <Link href="/collections?c=hijabs" className="underline-grow text-[10px] uppercase tracking-brand">
-            Shop All Scarves →
+          <Link href="/collections?c=hijabs" className="underline-grow shrink-0 pb-1 text-[10px] uppercase tracking-brand">
+            Shop all scarves →
           </Link>
         </div>
       </Reveal>
 
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {fabricGuide.map((f, i) => (
-          <Reveal key={f.name} delay={i * 60}>
-            <div className="h-full border border-line bg-paper p-7 flex flex-col justify-between hover:border-gold transition">
-              <div>
-                <span className="font-arabic text-xs text-gold-dark block select-none">{f.ar}</span>
-                <h3 className="mt-1 font-display text-[1.4rem] text-ink leading-tight">{f.name}</h3>
-
-                <dl className="mt-6 space-y-3 text-[11px] uppercase tracking-[0.14em] text-muted border-t border-line pt-4">
-                  <div className="flex justify-between">
-                    <dt>Opacity</dt>
-                    <dd className="text-ink font-medium">{f.opacity}</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt>Grip / Hold</dt>
-                    <dd className="text-ink font-medium">{f.grip}</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt>Breathability</dt>
-                    <dd className="text-ink font-medium">{f.breathable}</dd>
-                  </div>
-                </dl>
-
-                <div className="mt-6">
-                  <p className="text-[10px] uppercase tracking-brand text-muted">Recommended for</p>
-                  <p className="mt-1 text-xs text-ink/80 leading-relaxed">{f.bestFor}</p>
-                </div>
-              </div>
-
-              <div className="mt-6 border-t border-line pt-4 text-[11px] text-sage">
-                <span className="font-medium text-gold-dark">Drape Note: </span>
-                {f.tip}
-              </div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
+      <Reveal delay={120}>
+        <div className="mt-12 overflow-x-auto border border-line bg-paper">
+          <table className="w-full min-w-[760px] border-collapse text-left">
+            <thead>
+              <tr className="border-b border-line bg-sand/50 text-[9px] uppercase tracking-brand text-muted">
+                <th className="px-6 py-5 font-normal">Fabric</th>
+                <th className="px-4 py-5 text-center font-normal">Opacity</th>
+                <th className="px-4 py-5 text-center font-normal">Grip</th>
+                <th className="px-4 py-5 text-center font-normal">Airflow</th>
+                <th className="px-6 py-5 font-normal">Best for</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fabrics.map((f) => (
+                <tr key={f.name} className="group border-b border-line last:border-0 transition-colors hover:bg-sand/30">
+                  <td className="px-6 py-6 align-top">
+                    <span className="font-display text-[1.35rem] leading-tight text-ink">{f.name}</span>
+                    <span className="mt-1.5 block max-w-xs text-[11px] leading-relaxed text-muted">{f.note}</span>
+                  </td>
+                  <Cell v={f.opacity} />
+                  <Cell v={f.grip} />
+                  <Cell v={f.air} />
+                  <td className="px-6 py-6 align-top text-xs leading-relaxed text-muted">{f.best}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Reveal>
     </section>
   );
 }
 
-/* ------------------------------------------------ abaya silhouette guide */
+const Cell = ({ v }) => (
+  <td className="px-4 py-6 text-center align-top">
+    <span className="font-display text-[1.5rem] text-gold-dark">{v}</span>
+  </td>
+);
 
-const silhouettes = [
-  {
-    name: "Open Front Abaya",
-    ar: "العباية المفتوحة",
-    desc: "Versatile tailoring with a detachable sash belt. Wear buttoned closed, knotted, or flowing open over an inner slip dress.",
-  },
-  {
-    name: "Minimalist Column Cut",
-    ar: "القصة المستقيمة العمودية",
-    desc: "A disciplined vertical drop with back pleating. Never clings, creates a regal silhouette that gracefully accommodates movement.",
-  },
-  {
-    name: "Regal Farasha / Butterfly",
-    ar: "عباية الفراشة الواسعة",
-    desc: "Continuous wing cut extending from wrist to hem. The pinnacle of relaxed modest elegance with voluminous uninhibited coverage.",
-  },
-  {
-    name: "Flared Umbrella Sweep",
-    ar: "الكلوش الواسع المنسدل",
-    desc: "Tapered gently at the bodice and widening to a 110-inch circumference sweep. Floats majestically around the feet.",
-  },
+/* ══════════════════════════════════════════ 07 · cut standard
+   A horizontal timeline of dome diagrams, joined by one hairline. */
+
+const cuts = [
+  ["Open Front", "Detachable sash belt. Wear it buttoned, knotted, or flowing open over a slip."],
+  ["Column Cut", "A disciplined vertical drop with back pleating. Never clings, always moves."],
+  ["Farasha", "A continuous wing from wrist to hem — voluminous, uninhibited coverage."],
+  ["Umbrella Sweep", 'Tapered at the bodice, widening to a 110" circumference that floats at the feet.'],
 ];
 
-function AbayaSilhouetteGuide() {
+function CutStandard() {
   return (
-    <section className="border-t border-line bg-paper/50 py-20">
+    <section className="border-y border-line bg-paper py-24">
       <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
         <Reveal>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-line pb-6">
-            <div>
-              <div className="flex items-center gap-3">
-                <p className="text-[10px] uppercase tracking-brand text-muted">Architectural Cuts</p>
-                <span className="font-arabic text-sm text-gold select-none">معيار قصات العباية</span>
-              </div>
-              <h2 className="mt-3 font-display text-[2.6rem] sm:text-[3.2rem] font-light leading-none">
-                The Modesty Silhouette Standard
-              </h2>
-            </div>
-            <p className="text-xs text-muted max-w-md">
-              Each Siyana piece is developed according to classic modest drape geometry — balancing complete modesty with effortless grace.
+          <div className="max-w-2xl">
+            <p className="text-[10px] uppercase tracking-brand text-muted">Architectural Cuts</p>
+            <h2 className="mt-4 font-display text-[2.6rem] font-light leading-none sm:text-[3.2rem]">
+              The Modesty Silhouette Standard
+            </h2>
+            <p className="mt-3 text-sm text-muted">
+              Every Siyana piece is developed against classic modest drape geometry —
+              full coverage held in balance with effortless grace.
             </p>
           </div>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {silhouettes.map((s, i) => (
-            <Reveal key={s.name} delay={i * 70}>
-              <div className="border border-line bg-paper p-6 relative overflow-hidden group hover:border-gold transition">
-                <span className="font-display text-4xl text-gold/30 group-hover:text-gold transition-colors">
-                  0{i + 1}
-                </span>
-                <span className="font-arabic text-sm text-gold-dark block mt-2 select-none">{s.ar}</span>
-                <h3 className="mt-1 font-display text-[1.35rem] leading-tight text-ink">{s.name}</h3>
-                <p className="mt-3 text-xs leading-relaxed text-muted">{s.desc}</p>
-              </div>
-            </Reveal>
-          ))}
+        <div className="relative mt-20">
+          {/* The hairline that threads the four cuts together */}
+          <div className="absolute inset-x-0 top-[122px] hidden h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent lg:block" />
+
+          <div className="grid gap-14 sm:grid-cols-2 lg:grid-cols-4">
+            {cuts.map(([name, body], i) => (
+              <Reveal key={name} delay={i * 120} from="fade">
+                <div className="group relative text-center">
+                  <div className="relative mx-auto grid h-[140px] w-[104px] place-items-end">
+                    <svg viewBox="0 0 100 140" className="absolute inset-0 h-full w-full text-gold/45 transition-colors duration-500 group-hover:text-gold" aria-hidden="true">
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                        d="M4 138 V62 C4 30 22 34 40 14 c4-5 7-8 10-11 3 3 6 6 10 11 18 20 36 16 36 48 v76"
+                      />
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="0.6"
+                        opacity="0.5"
+                        d="M14 138 V66 C14 38 30 41 44 24 c3-4 5-6 6-8 1 2 3 4 6 8 14 17 30 14 30 42 v72"
+                      />
+                    </svg>
+                    <span className="relative z-10 grid h-9 w-9 place-items-center rounded-full border border-gold/50 bg-paper font-display text-[1.05rem] text-gold-dark">
+                      {i + 1}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-6 font-display text-[1.5rem] leading-tight text-ink">{name}</h3>
+                  <p className="mx-auto mt-3 max-w-[15rem] text-xs leading-relaxed text-muted">{body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ------------------------------------------------ prayer sanctuary */
+/* ══════════════════════════════════════════ 08 · prayer sanctuary
+   Editorial split, image bracketed by corner ornaments. */
 
-function SacredPrayerSection() {
+function PrayerSanctuary() {
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
-      <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-        <Reveal>
-          <div className="arch relative aspect-[4/3.8] overflow-hidden bg-sand shadow-lg border border-line">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+      <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+        <Reveal from="left">
+          <div className="group relative">
+            <Corner className="absolute -bottom-4 -left-4 z-10 h-14 w-14 -scale-y-100 text-gold/70" />
+            <Corner className="absolute -bottom-4 -right-4 z-10 h-14 w-14 -scale-100 text-gold/70" />
+            <ArchFrame
               src="/images/products/salah-prayer-set.jpg"
-              alt="Salah Two-Piece Prayer Set"
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
-            <div className="arch pointer-events-none absolute inset-3 border border-white/30" />
-            <div className="absolute bottom-6 left-6 right-6">
-              <span className="font-arabic text-sm text-gold-light block select-none">
-                طقم صلاة الصلاح قطن عضوي
-              </span>
-              <p className="font-display text-2xl text-white">The Sacred Hour Sanctuary</p>
-            </div>
+              alt="Salah two-piece prayer set"
+              ratio="aspect-[4/4.4]"
+              focus="object-top"
+              zoomOnHover
+            >
+              <p className="font-display text-[1.7rem] font-light italic text-white">The Sacred Hour</p>
+              <p className="mt-1 text-[9px] uppercase tracking-brand text-bone/70">Brushed organic cotton</p>
+            </ArchFrame>
           </div>
         </Reveal>
 
-        <Reveal delay={100}>
-          <span className="font-arabic text-base text-gold-dark block select-none">
-            أطقم الصلاة والسكينة والسفر
-          </span>
-          <p className="mt-2 text-[10px] uppercase tracking-brand text-muted">Sacred Moments</p>
-          <h2 className="mt-3 font-display text-[2.8rem] sm:text-[3.6rem] font-light leading-tight">
-            Silent Cottons for Sacred Prostrations
+        <Reveal from="right" delay={120}>
+          <p className="text-[10px] uppercase tracking-brand text-muted">Sacred Moments</p>
+          <h2 className="mt-4 font-display text-[2.8rem] font-light leading-tight sm:text-[3.5rem]">
+            Silent cottons for
+            <br />
+            <span className="italic text-gold-dark">sacred prostration.</span>
           </h2>
-          <p className="mt-6 text-[15px] leading-relaxed text-muted">
-            Standing in prayer requires complete tranquility. Our two-piece prayer dresses are made from
-            ultra-soft brushed organic combed cotton that is silent, weightless, and guaranteed opaque.
-            Paired with an overhead tie-back khimar and a matching storage pouch that packs effortlessly into your handbag.
+          <p className="mt-7 text-[15px] leading-relaxed text-muted">
+            Standing in prayer asks for complete stillness. Our two-piece prayer dresses are
+            brushed organic combed cotton — silent, weightless and guaranteed opaque — with an
+            overhead tie-back khimar and a matching pouch that folds into a handbag.
           </p>
 
-          <ul className="mt-8 space-y-3 text-sm text-muted border-t border-line pt-6">
-            <li className="flex items-center gap-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-              <span>Includes matching zippered travel pouch</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-              <span>Full overhead khimar with built-in tie back</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-              <span>Tested 100% zero-transparency under direct light</span>
-            </li>
+          <ul className="mt-9 space-y-4 border-t border-line pt-7 text-sm text-muted">
+            {[
+              "Matching zippered travel pouch included",
+              "Full overhead khimar with built-in tie back",
+              "Tested at 100% zero-transparency under direct light",
+            ].map((t) => (
+              <li key={t} className="flex items-start gap-3.5">
+                <Star className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                <span>{t}</span>
+              </li>
+            ))}
           </ul>
 
-          <div className="mt-10 flex items-center gap-4">
+          <div className="mt-10 flex flex-wrap items-center gap-5">
             <Link
               href="/collections?c=prayerwear"
-              className="bg-ink px-8 py-4 text-[10px] uppercase tracking-brand text-bone hover:bg-gold-dark transition"
+              className="bg-ink px-8 py-4 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
             >
-              Explore Prayer Wear
+              Explore prayer wear
             </Link>
-            <Link href="/product/salah-prayer-set" className="underline-grow py-3 text-[10px] uppercase tracking-brand text-muted hover:text-ink">
-              View Two-Piece Set →
+            <Link
+              href="/product/salah-prayer-set"
+              className="underline-grow py-2 text-[10px] uppercase tracking-brand text-muted hover:text-ink"
+            >
+              View the two-piece set →
             </Link>
           </div>
         </Reveal>
@@ -577,93 +508,185 @@ function SacredPrayerSection() {
   );
 }
 
-/* --------------------------------------------------------------- ethos */
+/* ══════════════════════════════════════════ 09 · ethos */
 
 function Ethos() {
   return (
     <section id="ethos" className="relative overflow-hidden bg-ink py-28 text-bone">
-      <div className="pattern-girih-gold absolute inset-0 opacity-15" />
-      <Reveal className="relative mx-auto max-w-3xl px-6 text-center">
-        <span className="font-arabic text-xl sm:text-2xl text-gold block leading-relaxed select-none">
-          «إِنَّ لِكُلِّ دِينٍ خُلُقًا، وَخُلُقُ الإِسْلاَمِ الْحَيَاءُ»
-        </span>
-        <p className="mt-4 text-[10px] uppercase tracking-brand text-bone/50">The Sacred Character</p>
+      <div className="pattern-girih-gold absolute inset-0 opacity-20" />
+      <Rosette className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 text-gold/10" spin />
 
-        <p className="mt-10 font-display text-[2.2rem] font-light leading-[1.35] sm:text-[2.8rem] text-bone/95">
-          Modesty is not a costume donned for rare occasions. It is the noble silhouette of an ordinary
-          Tuesday — and it deserves fabrics that dignify it.
+      <Reveal className="relative mx-auto max-w-3xl px-6 text-center" from="fade">
+        <Divider label="Our Ethos" />
+        <p className="mt-10 font-display text-[2.2rem] font-light leading-[1.35] text-bone/95 sm:text-[2.8rem]">
+          Modesty is not a costume donned for rare occasions. It is the noble silhouette of an
+          ordinary Tuesday — and it deserves fabric that dignifies it.
         </p>
-
         <div className="mx-auto mt-10 h-px w-20 bg-gold" />
-
-        <p className="mt-8 text-xs leading-relaxed text-bone/70 max-w-xl mx-auto">
-          Every Siyana piece is measured for full coverage first, drape second, and tested against light before it ever leaves our studio.
-          If it clings or goes sheer, it will never ship.
+        <p className="mx-auto mt-8 max-w-xl text-xs leading-relaxed text-bone/65">
+          Every Siyana piece is measured for coverage first and drape second, then held against
+          the light before it leaves the studio. If it clings or goes sheer, it never ships.
         </p>
       </Reveal>
     </section>
   );
 }
 
-/* ------------------------------------------------ barakah gifting */
+/* ══════════════════════════════════════════ 10 · staples
+   Editorial: one hero piece, three list rows. Not another 4-up grid. */
 
-function BarakahGifting() {
+function Staples() {
+  const [lead, ...rest] = staples;
+
   return (
-    <section className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10">
-      <div className="arch-sm relative overflow-hidden bg-sand/60 border border-gold/30 p-8 sm:p-14">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+    <section className="mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
+      <Reveal>
+        <div className="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-6">
           <div>
-            <div className="flex items-center gap-3">
-              <span className="font-arabic text-base text-gold-dark select-none">صناديق الهدايا والبركة</span>
-              <span className="text-[10px] uppercase tracking-brand text-muted">Islamic Gifting</span>
-            </div>
-            <h2 className="mt-3 font-display text-[2.6rem] sm:text-[3.2rem] font-light leading-tight">
-              The Barakah Presentation Box
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted max-w-lg">
-              Whether celebrating a wedding, Eid, Ramadan, or gifting a mother or sister, each Siyana gift is
-              hand-packed in a gold-embossed textured rigid box with silk ribbon, custom tissue, and a complimentary musk scent card.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-4 text-[10.5px] uppercase tracking-[0.16em] text-muted">
-              <span className="border border-line bg-paper px-3 py-1.5">✓ Gold-Embossed Rigid Box</span>
-              <span className="border border-line bg-paper px-3 py-1.5">✓ Scented Musk Insert</span>
-              <span className="border border-line bg-paper px-3 py-1.5">✓ Personalized Calligraphy Note</span>
-            </div>
+            <p className="text-[10px] uppercase tracking-brand text-muted">Everyday Staples</p>
+            <h2 className="mt-3 font-display text-[2.6rem] font-light leading-none">The Considered Few</h2>
           </div>
-
-          <div className="arch relative aspect-[4/3] overflow-hidden bg-sand border border-line shadow-md">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/products/misk-chiffon-set.jpg"
-              alt="Misk Chiffon Trio Presentation Box"
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-          </div>
+          <Link href="/collections" className="underline-grow pb-1 text-[10px] uppercase tracking-brand">
+            View all pieces →
+          </Link>
         </div>
+      </Reveal>
+
+      <div className="mt-12 grid gap-x-14 gap-y-12 lg:grid-cols-[0.85fr_1fr] lg:items-start">
+        <Reveal from="left">
+          <Link href={`/product/${lead.slug}`} className="group block">
+            <ArchFrame
+              src={lead.image}
+              alt={lead.name}
+              ratio="aspect-[4/5]"
+              focus="object-top"
+              zoomOnHover
+            >
+              <span className="text-[8.5px] uppercase tracking-brand text-gold-light">Most reached for</span>
+              <h3 className="mt-1.5 font-display text-[2rem] leading-none text-bone">{lead.name}</h3>
+              <p className="mt-2 text-[11px] uppercase tracking-[0.18em] text-bone/70">
+                {lead.colorName} · {inr(lead.price)}
+              </p>
+            </ArchFrame>
+          </Link>
+        </Reveal>
+
+        <ul className="divide-y divide-line border-y border-line">
+          {rest.map((p, i) => (
+            <Reveal key={p.slug} delay={i * 110} from="right">
+              <li>
+                <Link href={`/product/${p.slug}`} className="group flex items-center gap-6 py-6">
+                  <div className="w-24 shrink-0">
+                    <ProductMedia product={p} ratio="aspect-[3/4]" />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex min-h-4 items-center gap-2 text-[8.5px] uppercase tracking-[0.22em] text-gold-dark">
+                      {p.tag}
+                    </div>
+                    <h3 className="mt-1 font-display text-[1.6rem] leading-tight text-ink transition-colors group-hover:text-gold-dark">
+                      {p.name}
+                    </h3>
+                    <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted">
+                      {p.colorName} · {p.fabric}
+                    </p>
+                  </div>
+
+                  <div className="flex shrink-0 items-center gap-5">
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-ink">{inr(p.price)}</p>
+                      {p.mrp && <p className="text-xs text-muted line-through">{inr(p.mrp)}</p>}
+                    </div>
+                    <span className="text-[11px] text-muted transition-transform group-hover:translate-x-1">→</span>
+                  </div>
+                </Link>
+              </li>
+            </Reveal>
+          ))}
+        </ul>
       </div>
     </section>
   );
 }
 
-/* --------------------------------------------------------------- craft */
+/* ══════════════════════════════════════════ 11 · gifting */
+
+function Gifting() {
+  return (
+    <section className="mx-auto max-w-[1400px] px-6 py-16 lg:px-10">
+      <Reveal from="scale">
+        <div className="relative overflow-hidden border border-gold/30 bg-sand/60">
+          <Scallop className="text-gold/70" />
+          <Corner className="absolute left-3 top-6 h-12 w-12 text-gold/50" />
+          <Corner className="absolute right-3 top-6 h-12 w-12 -scale-x-100 text-gold/50" />
+
+          <div className="grid items-center gap-12 p-8 sm:p-14 lg:grid-cols-[1.15fr_0.85fr]">
+            <div>
+              <p className="text-[10px] uppercase tracking-brand text-muted">Gifting</p>
+              <h2 className="mt-4 font-display text-[2.6rem] font-light leading-tight sm:text-[3.2rem]">
+                The Barakah Presentation Box
+              </h2>
+              <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted">
+                For a wedding, for Eid, for a mother or a sister — every Siyana gift is hand-packed
+                in a gold-embossed rigid box with silk ribbon, custom tissue and a musk scent card.
+              </p>
+
+              <ul className="mt-8 flex flex-wrap gap-3 text-[10px] uppercase tracking-[0.16em] text-muted">
+                {["Gold-embossed rigid box", "Scented musk insert", "Handwritten note"].map((t) => (
+                  <li key={t} className="flex items-center gap-2 border border-line bg-paper px-3.5 py-2">
+                    <Star className="h-3 w-3 text-gold" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="/collections?c=hijabs"
+                className="mt-9 inline-block bg-ink px-8 py-4 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
+              >
+                Shop gifting
+              </Link>
+            </div>
+
+            <div className="group">
+              <ArchFrame
+                src="/images/products/misk-chiffon-set.jpg"
+                alt="Misk chiffon trio in its presentation box"
+                ratio="aspect-[4/3.6]"
+                shape="sm"
+                focus="object-center"
+                scrim={false}
+                zoomOnHover
+              />
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/* ══════════════════════════════════════════ 12 · craft */
 
 const craft = [
-  ["01", "Fabric Before Form", "We source genuine Japanese Nida, washed desert linens, and Korean crepes specifically for their opacity and weight before designing the cut."],
-  ["02", "Full Coverage Architecture", "Sleeve drops, neckline curvature, and hemlines are determined by modest coverage as the baseline, never as an afterthought."],
-  ["03", "Small-Batch Integrity", "All garments are produced in limited batches of twenty to fifty pieces, ensuring zero overproduction and exceptional hand-finished seams."],
+  ["Fabric before form", "We source Japanese Nida, washed desert linen and Korean crepe for opacity and weight — then design to what the cloth wants to do."],
+  ["Coverage as architecture", "Sleeve drop, neckline curve and hemline are set by modest coverage as the baseline, never as an afterthought."],
+  ["Small-batch integrity", "Garments run in batches of twenty to fifty. No overproduction, no clearing stock at a discount."],
 ];
 
 function Craft() {
   return (
     <section className="border-y border-line bg-paper">
-      <div className="mx-auto grid max-w-[1400px] gap-12 px-6 py-24 lg:grid-cols-3 lg:px-10">
-        {craft.map(([n, title, body], i) => (
-          <Reveal key={n} delay={i * 90}>
-            <p className="font-display text-3xl text-gold">{n}</p>
-            <h3 className="mt-5 font-display text-[1.7rem] leading-tight">{title}</h3>
-            <p className="mt-4 text-sm leading-relaxed text-muted">{body}</p>
+      <div className="mx-auto grid max-w-[1400px] gap-14 px-6 py-24 lg:grid-cols-3 lg:px-10">
+        {craft.map(([title, body], i) => (
+          <Reveal key={title} delay={i * 110}>
+            <div className={i ? "lg:border-l lg:border-line lg:pl-12" : ""}>
+              <span className="font-display text-[2.6rem] font-light leading-none text-gold/60">
+                0{i + 1}
+              </span>
+              <h3 className="mt-5 font-display text-[1.7rem] leading-tight">{title}</h3>
+              <p className="mt-4 text-sm leading-relaxed text-muted">{body}</p>
+            </div>
           </Reveal>
         ))}
       </div>
@@ -671,28 +694,39 @@ function Craft() {
   );
 }
 
-/* -------------------------------------------------------------- voices */
+/* ══════════════════════════════════════════ 13 · voices */
 
 const voices = [
-  ["The Noor open abaya is the only piece I own that survives a 10-hour hospital shift without creasing or clinging. Truly uncompromised modesty.", "Dr. Aisha R.", "London, UK"],
-  ["Finally a modal hijab that holds its drape through dhuhr prayer and university lectures without five pins. The warm bone color is perfection.", "Fatima K.", "Dubai, UAE"],
-  ["Ordered the two-piece prayer set for Umrah. It folded into its tiny pouch, stayed completely crease-free, and was totally opaque in bright Mecca sun.", "Maryam S.", "Hyderabad, IN"],
+  ["The Noor open abaya is the only piece I own that survives a ten-hour hospital shift without creasing or clinging.", "Dr. Aisha R.", "London"],
+  ["Finally a modal hijab that holds its drape through dhuhr and a full day of lectures without five pins.", "Fatima K.", "Dubai"],
+  ["Took the prayer set for Umrah. It folded into its pouch, stayed crease-free, and was completely opaque in bright sun.", "Maryam S.", "Hyderabad"],
 ];
 
 function Voices() {
   return (
-    <section className="mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
-      <Reveal>
-        <SectionHead eyebrow="Ummah Reflections" title="Worn, Treasured, Repeated" />
+    <section className="relative mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
+      <Reveal from="fade">
+        <Divider label="In Their Words" />
+        <h2 className="mt-7 text-center font-display text-[2.6rem] font-light leading-none sm:text-[3.2rem]">
+          Worn, treasured, repeated
+        </h2>
       </Reveal>
-      <div className="mt-14 grid gap-10 lg:grid-cols-3">
+
+      <div className="mt-16 grid gap-10 lg:grid-cols-3">
         {voices.map(([quote, name, city], i) => (
-          <Reveal key={name} delay={i * 80}>
-            <figure className="border-t border-line pt-8">
-              <blockquote className="font-display text-[1.35rem] leading-snug text-ink/90">“{quote}”</blockquote>
-              <figcaption className="mt-6 flex items-center justify-between text-[10px] uppercase tracking-brand text-muted">
+          <Reveal key={name} delay={i * 110} from="scale">
+            <figure className="flex h-full flex-col border border-line bg-paper p-8">
+              <div className="flex gap-1 text-gold">
+                {Array.from({ length: 5 }, (_, n) => (
+                  <Star key={n} className="h-3 w-3" />
+                ))}
+              </div>
+              <blockquote className="mt-6 flex-1 font-display text-[1.35rem] leading-snug text-ink/90">
+                “{quote}”
+              </blockquote>
+              <figcaption className="mt-8 flex items-center justify-between border-t border-line pt-5 text-[10px] uppercase tracking-brand text-muted">
                 <span>{name}</span>
-                <span className="text-gold font-medium">{city}</span>
+                <span className="text-gold-dark">{city}</span>
               </figcaption>
             </figure>
           </Reveal>
@@ -702,30 +736,35 @@ function Voices() {
   );
 }
 
-/* ------------------------------------------------------------- journal */
+/* ══════════════════════════════════════════ 14 · letter */
 
-function Journal() {
+function Letter() {
   return (
-    <section className="mx-auto max-w-[1400px] px-6 lg:px-10 pb-16">
-      <Reveal>
-        <div className="relative overflow-hidden bg-sand/70 px-6 py-20 text-center sm:px-16 border border-line arch-sm">
+    <section className="mx-auto max-w-[1400px] px-6 pb-20 lg:px-10">
+      <Reveal from="scale">
+        <div className="arch-sm relative overflow-hidden border border-line bg-sand/70 px-6 py-20 text-center sm:px-16">
           <div className="pattern-girih absolute inset-0 opacity-[0.05]" />
+          <Rosette className="pointer-events-none absolute -bottom-20 -left-16 h-64 w-64 text-gold/15" spin />
+          <Rosette className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 text-gold/15" spin />
+
           <div className="relative mx-auto max-w-lg">
-            <span className="font-arabic text-sm text-gold-dark select-none">رسالة صيانة الشهرية</span>
-            <h2 className="mt-2 font-display text-[2.4rem] font-light leading-none">The Siyana Letter</h2>
+            <Crescent className="mx-auto h-6 w-6 text-gold" />
+            <h2 className="mt-6 font-display text-[2.4rem] font-light leading-none">The Siyana Letter</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted">
-              Restock announcements, seasonal capsules, and fabric care notes. Delivered with dignity, never more than twice a month.
+              Restocks, seasonal capsules and fabric care notes. Sent with dignity, never more than
+              twice a month.
             </p>
+
             <form className="mt-9 flex flex-col gap-3 sm:flex-row">
               <label htmlFor="news" className="sr-only">Email address</label>
               <input
                 id="news"
                 type="email"
                 required
-                placeholder="sister@example.com"
+                placeholder="you@example.com"
                 className="flex-1 border-b border-ink/25 bg-transparent px-2 py-3 text-sm outline-none placeholder:text-muted focus:border-gold"
               />
-              <button className="bg-ink px-8 py-4 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark shadow-sm">
+              <button className="bg-ink px-8 py-4 text-[10px] uppercase tracking-brand text-bone shadow-sm transition hover:bg-gold-dark">
                 Subscribe
               </button>
             </form>
@@ -735,5 +774,3 @@ function Journal() {
     </section>
   );
 }
-
-

@@ -30,14 +30,7 @@ export default function CollectionsView() {
       <header className="mx-auto max-w-[1400px] px-6 pb-12 pt-14 lg:px-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div className="flex items-center gap-3">
-              <p className="text-[10px] uppercase tracking-brand text-muted">Curated Wardrobe</p>
-              {category?.arabicName && (
-                <span className="font-arabic text-base text-gold-dark select-none">
-                  {category.arabicName}
-                </span>
-              )}
-            </div>
+            <p className="text-[10px] uppercase tracking-brand text-muted">Curated Wardrobe</p>
             <h1 className="mt-4 font-display text-[3.2rem] font-light leading-none sm:text-[4rem]">
               {category?.name ?? "All Creations"}
             </h1>

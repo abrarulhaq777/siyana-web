@@ -1,6 +1,7 @@
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import Intro from "@/components/Intro";
 import Footer from "@/components/Footer";
 import { StoreProvider } from "@/lib/store";
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${cormorant.variable} ${jost.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
+        <Intro />
         <StoreProvider>
           <Header />
           <main className="flex-1">{children}</main>

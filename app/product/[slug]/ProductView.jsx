@@ -61,11 +61,6 @@ export default function ProductView({ product, related }) {
                   {product.tag}
                 </span>
               )}
-              {product.arabicName && (
-                <span className="font-arabic text-xl text-gold-dark select-none">
-                  {product.arabicName}
-                </span>
-              )}
             </div>
 
             <h1 className="mt-4 font-display text-[2.8rem] font-light leading-none sm:text-[3.4rem]">

@@ -3,8 +3,17 @@
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
 import Wordmark from "./Wordmark";
+import { Star } from "./Ornament";
 import { categories } from "@/lib/products";
 import { useStore } from "@/lib/store";
+
+const ticker = [
+  "Autumn Capsule — now in studio",
+  "Certified 100% opaque",
+  "Complimentary shipping over ₹2,999",
+  "Wudu-friendly tailoring",
+  "Made in small batches",
+];
 
 const links = [
   { href: "/collections", label: "All Creations" },
@@ -18,9 +27,19 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="bg-ink py-2 text-center text-[9px] uppercase tracking-brand text-bone/90 border-b border-gold/20 flex items-center justify-center gap-2">
-        <span className="font-arabic text-[11px] text-gold tracking-normal">بِسْمِ اللَّهِ</span>
-        <span>· Autumn / Rabi' al-Awwal 1447 Capsule · Certified 100% Opaque · Free Shipping Over ₹2,999</span>
+      <div className="overflow-hidden border-b border-gold/20 bg-ink py-2">
+        <div className="animate-marquee flex w-max whitespace-nowrap text-[9px] uppercase tracking-brand text-bone/85">
+          {[0, 1].map((n) => (
+            <span key={n} className="flex shrink-0 items-center" aria-hidden={n === 1}>
+              {ticker.map((t) => (
+                <span key={t} className="flex items-center">
+                  <span className="px-7">{t}</span>
+                  <Star className="h-2.5 w-2.5 shrink-0 text-gold/70" />
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
       </div>
 
       <div className={`border-b transition-colors duration-500 ${solid ? "border-line bg-paper/95 backdrop-blur-md shadow-xs" : "border-transparent bg-bone/90 backdrop-blur-sm"}`}>
