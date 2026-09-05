@@ -1,26 +1,100 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-bone: #f6f3ec;
+  --color-paper: #fbf9f5;
+  --color-ink: #141311;
+  --color-muted: #797163;
+  --color-line: #e3dcd1;
+  --color-sage: #4e5f52;
+  --color-emerald: #24392c;
+  --color-gold: #c5a059;
+  --color-gold-light: #ebd8ad;
+  --color-gold-dark: #8c6e33;
+  --color-blush: #eae1d6;
+  --color-sand: #efe9dc;
+
+  --font-display: var(--font-cormorant), "Playfair Display", Georgia, serif;
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "Geeza Pro", "Damascus", "Noto Naskh Arabic", "Traditional Arabic", "Amiri", serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bone);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
 }
+
+::selection {
+  background: var(--color-ink);
+  color: var(--color-gold-light);
+}
+
+/* Mihrab arch — signature Islamic architectural silhouette */
+.arch {
+  border-radius: 50% 50% 3px 3px / 32% 32% 3px 3px;
+}
+
+.arch-sm {
+  border-radius: 40% 40% 2px 2px / 24% 24% 2px 2px;
+}
+
+.tracking-brand {
+  letter-spacing: 0.34em;
+}
+
+.font-arabic {
+  font-family: var(--font-arabic);
+}
+
+/* Hairline that draws itself on hover */
+.underline-grow {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.4s ease;
+}
+.underline-grow:hover {
+  background-size: 100% 1px;
+}
+
+/* Delicate gold hairline border */
+.border-gold-accent {
+  border-color: rgba(197, 160, 89, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Girih-inspired Islamic star tile: 8-point geometric rosette */
+.pattern-girih {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%23141311' stroke-width='0.65' opacity='0.7'%3E%3Cpath d='M22 1 L43 22 L22 43 L1 22 Z'/%3E%3Crect x='7.2' y='7.2' width='29.6' height='29.6'/%3E%3Ccircle cx='22' cy='22' r='4' stroke-width='0.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 44px 44px;
+}
+
+/* Gold variant for dark or accent sections */
+.pattern-girih-gold {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%23c5a059' stroke-width='0.6' opacity='0.45'%3E%3Cpath d='M24 1 L47 24 L24 47 L1 24 Z'/%3E%3Crect x='8' y='8' width='32' height='32'/%3E%3Cpolygon points='24,12 36,24 24,36 12,24' stroke-width='0.4'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 48px 48px;
+}
+
+/* Subtle gold gradient sheen */
+.gold-gradient {
+  background: linear-gradient(135deg, #c5a059 0%, #ebd8ad 50%, #b8934a 100%);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #a7803a 0%, #d4af37 50%, #906e2a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
