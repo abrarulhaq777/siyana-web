@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Wordmark from "./Wordmark";
-import { categories } from "@/lib/products";
 
 const help = [
   ["Shipping & Discreet Delivery", "/help/shipping"],
@@ -16,7 +15,7 @@ const house = [
   ["Contact Concierge", "/about#contact"],
 ];
 
-export default function Footer() {
+export default function Footer({ categories = [], settings = {} }) {
   return (
     <footer className="mt-28 border-t border-line bg-paper">
       <div className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10">
@@ -38,7 +37,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-16 flex flex-col gap-4 border-t border-line pt-8 text-[10px] uppercase tracking-[0.18em] text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Siyana — All Rights Reserved</p>
+          <p>© {new Date().getFullYear()} {settings.storeName ?? "Siyana"} — All Rights Reserved</p>
           <div className="flex items-center gap-4 text-ink font-medium">
             <span>Discreet Packaging</span>
             <span className="text-muted/40">·</span>

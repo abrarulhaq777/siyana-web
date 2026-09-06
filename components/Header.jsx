@@ -4,23 +4,14 @@ import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
 import Wordmark from "./Wordmark";
 import { Star } from "./Ornament";
-import { categories } from "@/lib/products";
 import { useStore } from "@/lib/store";
 
-const ticker = [
-  "Autumn Capsule — now in studio",
-  "Certified 100% opaque",
-  "Complimentary shipping over ₹2,999",
-  "Wudu-friendly tailoring",
-  "Made in small batches",
-];
+export default function Header({ categories = [], ticker = [] }) {
+  const links = [
+    { href: "/collections", label: "All Creations" },
+    ...categories.map((c) => ({ href: `/collections?c=${c.slug}`, label: c.name })),
+  ];
 
-const links = [
-  { href: "/collections", label: "All Creations" },
-  ...categories.map((c) => ({ href: `/collections?c=${c.slug}`, label: c.name })),
-];
-
-export default function Header() {
   const { count, wishlist } = useStore();
   const [open, setOpen] = useState(false);
   const solid = useSyncExternalStore(subscribeToScroll, () => window.scrollY > 24, () => false);

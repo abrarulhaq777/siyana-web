@@ -1,9 +1,5 @@
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import Intro from "@/components/Intro";
-import Footer from "@/components/Footer";
-import { StoreProvider } from "@/lib/store";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -18,24 +14,19 @@ const jost = Jost({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://siyana.example"),
+  metadataBase: new URL(process.env.SITE_URL ?? "https://siyana.example"),
   title: { default: "Siyana — The Daily Modesty", template: "%s · Siyana" },
   description:
     "Modest wear for Muslim women. Abayas, hijabs, kaftans and prayer wear in considered cuts and honest fabric.",
   openGraph: { title: "Siyana — The Daily Modesty", images: ["/siyana-logo.png"] },
 };
 
+/* Chrome lives in the route groups: (shop) has the storefront header and footer,
+ * /admin has its own shell. This layout only owns the document. */
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${cormorant.variable} ${jost.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
-        <Intro />
-        <StoreProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </StoreProvider>
-      </body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }
