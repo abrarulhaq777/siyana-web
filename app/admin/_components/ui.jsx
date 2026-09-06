@@ -13,7 +13,7 @@ export function Button({ children, variant = "primary", className = "", ...rest 
   return (
     <button
       {...rest}
-      className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[11px] uppercase tracking-[0.16em] transition disabled:cursor-not-allowed disabled:opacity-50 ${styles[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[13px] uppercase tracking-[0.16em] transition disabled:cursor-not-allowed disabled:opacity-50 ${styles[variant]} ${className}`}
     >
       {children}
     </button>
@@ -47,9 +47,9 @@ export function Notice({ state }) {
 export function Field({ label, hint, children, className = "" }) {
   return (
     <label className={`block ${className}`}>
-      <span className="text-[10px] uppercase tracking-[0.18em] text-muted">{label}</span>
+      <span className="text-[12px] uppercase tracking-[0.18em] text-muted">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-[10px] text-muted/80">{hint}</span>}
+      {hint && <span className="mt-1 block text-[12px] text-muted/80">{hint}</span>}
     </label>
   );
 }
@@ -91,7 +91,7 @@ const badgeTones = {
 export function Badge({ children, tone }) {
   return (
     <span
-      className={`inline-block whitespace-nowrap border px-2 py-0.5 text-[9.5px] uppercase tracking-[0.14em] ${
+      className={`inline-block whitespace-nowrap border px-2 py-0.5 text-[11.5px] uppercase tracking-[0.14em] ${
         badgeTones[tone] ?? "border-line bg-sand/60 text-muted"
       }`}
     >

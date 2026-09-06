@@ -9,7 +9,7 @@ export default function PasswordForm() {
 
   return (
     <form action={action} className="space-y-5 border border-line bg-paper p-6">
-      <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Change password</h2>
+      <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Change password</h2>
       <Notice state={state} />
       <Field label="New password" hint="At least 8 characters.">
         <Input name="password" type="password" minLength={8} required autoComplete="new-password" />

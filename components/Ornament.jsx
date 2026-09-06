@@ -102,7 +102,7 @@ export function Divider({ className = "", label }) {
       <span className="h-px w-16 bg-gradient-to-r from-transparent to-gold/50 sm:w-28" />
       <Star className="h-4 w-4 shrink-0 opacity-75" />
       {label && (
-        <span className="shrink-0 text-[9px] uppercase tracking-brand text-muted">{label}</span>
+        <span className="shrink-0 text-[11px] uppercase tracking-brand text-muted">{label}</span>
       )}
       <Star className="h-4 w-4 shrink-0 opacity-75" />
       <span className="h-px w-16 bg-gradient-to-l from-transparent to-gold/50 sm:w-28" />

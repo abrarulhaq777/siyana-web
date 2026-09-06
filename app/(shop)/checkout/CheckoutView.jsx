@@ -6,13 +6,16 @@ import { useState } from "react";
 import Empty from "@/components/Empty";
 import { inr } from "@/lib/products";
 import { useStore } from "@/lib/store";
-import { placeOrder, confirmPayment, abandonOrder } from "./actions";
+import { placeOrder, confirmPayment, abandonOrder, checkCoupon } from "./actions";
 
 export default function CheckoutView({ settings, gateway, me }) {
   const { hydrated, lines, subtotal, clear } = useStore();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const [done, setDone] = useState(null);
+  const [coupon, setCoupon] = useState(null);      // { code, discount, description }
+  const [couponError, setCouponError] = useState(null);
+  const [checking, setChecking] = useState(false);
 
   if (!hydrated) return null;
 
@@ -29,9 +32,28 @@ export default function CheckoutView({ settings, gateway, me }) {
   if (lines.length === 0)
     return <Empty title="Nothing to check out" copy="Your bag is empty." href="/collections" cta="Browse the collection" />;
 
+  const bag = lines.map((l) => ({ slug: l.slug, size: l.size, qty: l.qty }));
+  const discount = coupon?.discount ?? 0;
   const shipping = subtotal >= settings.freeShippingAbove ? 0 : settings.shippingFee;
-  const total = subtotal + shipping;
+  const total = Math.max(0, subtotal - discount) + shipping;
   const address = me?.addresses?.find((a) => a.isDefault) ?? me?.addresses?.[0];
+
+  async function redeem(e) {
+    e.preventDefault();
+    const code = new FormData(e.currentTarget).get("code");
+    if (!code) return;
+
+    setChecking(true);
+    setCouponError(null);
+    const result = await checkCoupon(code, bag);
+    setChecking(false);
+
+    if (!result.ok) {
+      setCoupon(null);
+      return setCouponError(result.error);
+    }
+    setCoupon(result);
+  }
 
   async function submit(e) {
     e.preventDefault();
@@ -39,10 +61,7 @@ export default function CheckoutView({ settings, gateway, me }) {
     setError(null);
 
     const form = Object.fromEntries(new FormData(e.currentTarget));
-    const result = await placeOrder({
-      ...form,
-      items: lines.map((l) => ({ slug: l.slug, size: l.size, qty: l.qty })),
-    });
+    const result = await placeOrder({ ...form, items: bag, couponCode: coupon?.code ?? null });
 
     if (!result.ok) {
       setBusy(false);
@@ -95,6 +114,8 @@ export default function CheckoutView({ settings, gateway, me }) {
       <h1 className="font-display text-[3rem] font-light leading-none">Checkout</h1>
       {me && <p className="mt-3 text-xs text-muted">Signed in as {me.email}</p>}
 
+      <form id="coupon-form" onSubmit={redeem} />
+
       <form onSubmit={submit} className="mt-14 grid gap-16 lg:grid-cols-[1.3fr_0.8fr]">
         <div className="space-y-12">
           {error && (
@@ -129,7 +150,7 @@ export default function CheckoutView({ settings, gateway, me }) {
                 <Method value="cod" label="Cash on delivery" hint="Pay the courier when it arrives" defaultChecked={!gateway} />
               )}
               {!gateway && (
-                <p className="text-[11px] text-muted">
+                <p className="text-[13px] text-muted">
                   Online payment is being set up. Cash on delivery is available in the meantime.
                 </p>
               )}
@@ -138,19 +159,71 @@ export default function CheckoutView({ settings, gateway, me }) {
         </div>
 
         <aside className="lg:sticky lg:top-40 lg:self-start">
-          <h2 className="text-[10px] uppercase tracking-brand">Your order</h2>
+          <h2 className="text-[12px] uppercase tracking-brand">Your order</h2>
           <ul className="mt-8 space-y-4 border-t border-line pt-8 text-sm">
             {lines.map((l) => (
               <li key={l.slug + l.size} className="flex justify-between gap-6">
                 <span className="text-muted">
-                  {l.product.name} <span className="text-[11px]">· {l.size} × {l.qty}</span>
+                  {l.product.name} <span className="text-[13px]">· {l.size} × {l.qty}</span>
                 </span>
                 <span>{inr(l.product.price * l.qty)}</span>
               </li>
             ))}
           </ul>
 
+          {/* Coupon */}
+          <div className="mt-6 border-t border-line pt-6">
+            {coupon ? (
+              <div className="flex items-start justify-between gap-3 border border-sage/30 bg-sage/10 px-4 py-3">
+                <div>
+                  <p className="text-[13px] font-medium text-sage">{coupon.code} applied</p>
+                  <p className="mt-0.5 text-[12px] text-muted">
+                    {coupon.description || `You save ${inr(coupon.discount)}`}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => { setCoupon(null); setCouponError(null); }}
+                  className="shrink-0 text-[11px] uppercase tracking-[0.14em] text-muted hover:text-ink"
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <>
+                <label htmlFor="code" className="text-[11px] uppercase tracking-brand text-muted">
+                  Have a code?
+                </label>
+                <div className="mt-2 flex gap-2">
+                  <input
+                    id="code"
+                    name="code"
+                    form="coupon-form"
+                    placeholder="SIYANA10"
+                    autoComplete="off"
+                    className="min-w-0 flex-1 border border-line bg-paper px-3 py-2.5 text-sm uppercase tracking-[0.1em] outline-none focus:border-gold"
+                  />
+                  <button
+                    type="submit"
+                    form="coupon-form"
+                    disabled={checking}
+                    className="shrink-0 border border-ink px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.14em] text-ink transition hover:bg-ink hover:text-bone disabled:opacity-50"
+                  >
+                    {checking ? "…" : "Apply"}
+                  </button>
+                </div>
+                {couponError && <p className="mt-2 text-[12px] text-red-700">{couponError}</p>}
+              </>
+            )}
+          </div>
+
           <div className="mt-6 space-y-3 border-t border-line pt-6 text-sm text-muted">
+            {discount > 0 && (
+              <div className="flex justify-between">
+                <span>Discount</span>
+                <span className="text-sage">− {inr(discount)}</span>
+              </div>
+            )}
             <div className="flex justify-between">
               <span>Shipping</span>
               <span className="text-ink">{shipping === 0 ? "Complimentary" : inr(shipping)}</span>
@@ -163,11 +236,11 @@ export default function CheckoutView({ settings, gateway, me }) {
 
           <button
             disabled={busy}
-            className="mt-8 w-full bg-ink py-4 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark disabled:opacity-50"
+            className="mt-8 w-full bg-ink py-4 text-[12px] uppercase tracking-brand text-bone transition hover:bg-gold-dark disabled:opacity-50"
           >
             {busy ? "Working…" : `Place order · ${inr(total)}`}
           </button>
-          <Link href="/cart" className="mt-4 block text-center text-[10px] uppercase tracking-[0.18em] text-muted hover:text-ink">
+          <Link href="/cart" className="mt-4 block text-center text-[12px] uppercase tracking-[0.18em] text-muted hover:text-ink">
             Back to bag
           </Link>
         </aside>
@@ -179,7 +252,7 @@ export default function CheckoutView({ settings, gateway, me }) {
 function Fieldset({ legend, children }) {
   return (
     <fieldset>
-      <legend className="text-[10px] uppercase tracking-brand">{legend}</legend>
+      <legend className="text-[12px] uppercase tracking-brand">{legend}</legend>
       <div className="mt-7 grid gap-6 sm:grid-cols-2">{children}</div>
     </fieldset>
   );
@@ -188,7 +261,7 @@ function Fieldset({ legend, children }) {
 function Field({ label, name, className = "", ...rest }) {
   return (
     <div className={className}>
-      <label htmlFor={name} className="text-[10px] uppercase tracking-[0.18em] text-muted">{label}</label>
+      <label htmlFor={name} className="text-[12px] uppercase tracking-[0.18em] text-muted">{label}</label>
       <input
         id={name}
         name={name}
@@ -206,7 +279,7 @@ function Method({ value, label, hint, defaultChecked }) {
       <input type="radio" name="method" value={value} defaultChecked={defaultChecked} className="mt-0.5 accent-ink" required />
       <span>
         <span className="block text-ink">{label}</span>
-        <span className="block text-[11px] text-muted">{hint}</span>
+        <span className="block text-[13px] text-muted">{hint}</span>
       </span>
     </label>
   );

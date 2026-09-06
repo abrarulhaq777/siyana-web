@@ -12,7 +12,7 @@ export default function AdminLogin() {
       <div className="w-full max-w-sm">
         <div className="text-center">
           <p className="font-display text-[1.8rem] uppercase tracking-[0.26em] text-ink">Siyana</p>
-          <p className="mt-1.5 text-[8px] uppercase tracking-brand text-muted">Control room</p>
+          <p className="mt-1.5 text-[10px] uppercase tracking-brand text-muted">Control room</p>
         </div>
 
         <form action={action} className="mt-10 space-y-5 border border-line bg-paper p-8">
@@ -26,7 +26,7 @@ export default function AdminLogin() {
           <Submit className="w-full">Sign in</Submit>
         </form>
 
-        <p className="mt-6 text-center text-[10px] uppercase tracking-[0.16em] text-muted">
+        <p className="mt-6 text-center text-[12px] uppercase tracking-[0.16em] text-muted">
           Staff and administrators only
         </p>
       </div>

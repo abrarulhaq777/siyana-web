@@ -22,7 +22,7 @@ export default async function OrderDetail({ params }) {
 
   return (
     <>
-      <Link href="/admin/orders" className="text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+      <Link href="/admin/orders" className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
         ← All orders
       </Link>
 
@@ -42,7 +42,7 @@ export default async function OrderDetail({ params }) {
       <div className="mt-8 grid gap-8 lg:grid-cols-[1.4fr_1fr]">
         <div className="space-y-8">
           <section className="border border-line bg-paper">
-            <h2 className="border-b border-line px-5 py-3.5 text-[10px] uppercase tracking-[0.16em] text-muted">Items</h2>
+            <h2 className="border-b border-line px-5 py-3.5 text-[12px] uppercase tracking-[0.16em] text-muted">Items</h2>
             <ul className="divide-y divide-line">
               {o.items.map((it, i) => (
                 <li key={i} className="flex items-center gap-4 px-5 py-4">
@@ -52,7 +52,7 @@ export default async function OrderDetail({ params }) {
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-ink">{it.name}</p>
-                    <p className="mt-0.5 text-[11px] uppercase tracking-[0.14em] text-muted">
+                    <p className="mt-0.5 text-[13px] uppercase tracking-[0.14em] text-muted">
                       Size {it.size} · {it.qty} × {inr(it.price)}
                     </p>
                   </div>
@@ -69,19 +69,19 @@ export default async function OrderDetail({ params }) {
                 <dd>{inr(o.amounts.total)}</dd>
               </div>
               {refunded > 0 && (
-                <p className="pt-1 text-right text-[11px] text-muted">Refunded {inr(refunded)}</p>
+                <p className="pt-1 text-right text-[13px] text-muted">Refunded {inr(refunded)}</p>
               )}
             </dl>
           </section>
 
           <section className="border border-line bg-paper">
-            <h2 className="border-b border-line px-5 py-3.5 text-[10px] uppercase tracking-[0.16em] text-muted">History</h2>
+            <h2 className="border-b border-line px-5 py-3.5 text-[12px] uppercase tracking-[0.16em] text-muted">History</h2>
             <ol className="divide-y divide-line">
               {(o.timeline ?? []).slice().reverse().map((t, i) => (
                 <li key={i} className="px-5 py-3.5 text-xs">
                   <div className="flex justify-between gap-4">
                     <span className="text-ink">{t.label}</span>
-                    <time className="shrink-0 text-[10px] text-muted">
+                    <time className="shrink-0 text-[12px] text-muted">
                       {new Date(t.at).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
                     </time>
                   </div>
@@ -103,17 +103,17 @@ export default async function OrderDetail({ params }) {
           />
 
           <section className="border border-line bg-paper p-5">
-            <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Customer</h2>
+            <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Customer</h2>
             <p className="mt-3 text-sm text-ink">{o.customer.name}</p>
             <p className="text-xs text-muted">{o.customer.email}</p>
             <p className="text-xs text-muted">{o.customer.phone}</p>
             {o.user && (
-              <Link href={`/admin/customers/${o.user}`} className="mt-3 inline-block text-[10px] uppercase tracking-[0.16em] text-gold-dark hover:text-ink">
+              <Link href={`/admin/customers/${o.user}`} className="mt-3 inline-block text-[12px] uppercase tracking-[0.16em] text-gold-dark hover:text-ink">
                 View account →
               </Link>
             )}
 
-            <h2 className="mt-6 border-t border-line pt-5 text-[10px] uppercase tracking-[0.16em] text-muted">Deliver to</h2>
+            <h2 className="mt-6 border-t border-line pt-5 text-[12px] uppercase tracking-[0.16em] text-muted">Deliver to</h2>
             <address className="mt-3 text-xs not-italic leading-relaxed text-ink">
               {o.address.line1}
               <br />
@@ -122,7 +122,7 @@ export default async function OrderDetail({ params }) {
           </section>
 
           <section className="border border-line bg-paper p-5 text-xs">
-            <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Payment</h2>
+            <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Payment</h2>
             <dl className="mt-3 space-y-2">
               <Line k="Method" v={o.payment.method.toUpperCase()} />
               <Line k="Status" v={o.payment.status.replace(/_/g, " ")} />
@@ -135,7 +135,7 @@ export default async function OrderDetail({ params }) {
             {(o.payment.refunds ?? []).length > 0 && (
               <ul className="mt-4 space-y-2 border-t border-line pt-3">
                 {o.payment.refunds.map((r) => (
-                  <li key={r._id} className="flex justify-between gap-3 text-[11px]">
+                  <li key={r._id} className="flex justify-between gap-3 text-[13px]">
                     <span className="text-muted">{new Date(r.at).toLocaleDateString("en-IN")} · {r.reference}</span>
                     <span>{inr(r.amount)}</span>
                   </li>

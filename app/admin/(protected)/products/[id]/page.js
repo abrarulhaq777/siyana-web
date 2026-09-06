@@ -22,7 +22,7 @@ export default async function ProductEditor({ params }) {
 
   return (
     <>
-      <Link href="/admin/products" className="text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+      <Link href="/admin/products" className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
         ← Catalogue
       </Link>
       <h1 className="mt-4 font-display text-[2.4rem] font-light leading-none">

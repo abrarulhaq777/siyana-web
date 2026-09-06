@@ -36,7 +36,7 @@ export default function CartView({ settings }) {
                     </Link>
                     <span className="text-sm">{inr(l.product.price * l.qty)}</span>
                   </div>
-                  <p className="mt-2 text-[10px] uppercase tracking-[0.18em] text-muted">
+                  <p className="mt-2 text-[12px] uppercase tracking-[0.18em] text-muted">
                     Size {l.size} · {l.product.colorName}
                   </p>
                 </div>
@@ -49,7 +49,7 @@ export default function CartView({ settings }) {
                   </div>
                   <button
                     onClick={() => setQty(l.slug, l.size, 0)}
-                    className="underline-grow text-[10px] uppercase tracking-[0.18em] text-muted hover:text-ink"
+                    className="underline-grow text-[12px] uppercase tracking-[0.18em] text-muted hover:text-ink"
                   >
                     Remove
                   </button>
@@ -60,7 +60,7 @@ export default function CartView({ settings }) {
         </ul>
 
         <aside className="lg:sticky lg:top-40 lg:self-start">
-          <h2 className="text-[10px] uppercase tracking-brand">Summary</h2>
+          <h2 className="text-[12px] uppercase tracking-brand">Summary</h2>
           <dl className="mt-8 space-y-4 border-t border-line pt-8 text-sm">
             <Line k="Subtotal" v={inr(subtotal)} />
             <Line k="Shipping" v={shipping === 0 ? "Complimentary" : inr(shipping)} />
@@ -71,18 +71,18 @@ export default function CartView({ settings }) {
           </dl>
 
           {shipping > 0 && (
-            <p className="mt-5 text-[11px] leading-relaxed text-muted">
+            <p className="mt-5 text-[13px] leading-relaxed text-muted">
               Add {inr(freeAbove - subtotal)} more for complimentary shipping.
             </p>
           )}
 
           <Link
             href="/checkout"
-            className="mt-8 block bg-ink py-4 text-center text-[10px] uppercase tracking-brand text-bone transition hover:bg-sage"
+            className="mt-8 block bg-ink py-4 text-center text-[12px] uppercase tracking-brand text-bone transition hover:bg-sage"
           >
             Proceed to checkout
           </Link>
-          <Link href="/collections" className="mt-4 block text-center text-[10px] uppercase tracking-[0.18em] text-muted hover:text-ink">
+          <Link href="/collections" className="mt-4 block text-center text-[12px] uppercase tracking-[0.18em] text-muted hover:text-ink">
             Continue shopping
           </Link>
         </aside>

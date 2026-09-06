@@ -11,6 +11,8 @@ const ITEMS = [
   ["/admin/orders", "Orders", "orders:read"],
   ["/admin/payments", "Payments", "payments:read"],
   ["/admin/products", "Catalogue", "products:read"],
+  ["/admin/coupons", "Coupons", "products:read"],
+  ["/admin/reviews", "Reviews", "products:read"],
   ["/admin/customers", "Customers", "customers:read"],
   ["/admin/content", "Storefront", "content:read"],
   ["/admin/staff", "Team", "staff:read"],
@@ -42,7 +44,7 @@ export default function Nav({ user, allowed }) {
       >
         <div className="border-b border-line px-6 py-6 pt-16 lg:pt-6">
           <p className="font-display text-[1.4rem] uppercase tracking-[0.24em] text-ink">Siyana</p>
-          <p className="mt-1 text-[8px] uppercase tracking-brand text-muted">Control room</p>
+          <p className="mt-1 text-[10px] uppercase tracking-brand text-muted">Control room</p>
         </div>
 
         <nav className="flex-1 overflow-y-auto p-3">
@@ -53,7 +55,7 @@ export default function Nav({ user, allowed }) {
                 key={href}
                 href={href}
                 onClick={() => setOpen(false)}
-                className={`block px-3 py-2.5 text-[11px] uppercase tracking-[0.16em] transition ${
+                className={`block px-3 py-2.5 text-[13px] uppercase tracking-[0.16em] transition ${
                   active ? "bg-ink text-bone" : "text-muted hover:bg-sand/60 hover:text-ink"
                 }`}
               >
@@ -65,15 +67,15 @@ export default function Nav({ user, allowed }) {
 
         <div className="border-t border-line p-4">
           <p className="truncate text-xs text-ink">{user.name}</p>
-          <p className="mt-0.5 text-[9.5px] uppercase tracking-[0.16em] text-gold-dark">
+          <p className="mt-0.5 text-[11.5px] uppercase tracking-[0.16em] text-gold-dark">
             {user.role === "admin" ? "Administrator" : `Staff · ${user.permissions.length} permissions`}
           </p>
           <form action={adminSignOut} className="mt-3">
-            <button className="w-full border border-line px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-muted transition hover:border-gold hover:text-ink">
+            <button className="w-full border border-line px-3 py-2 text-[12px] uppercase tracking-[0.16em] text-muted transition hover:border-gold hover:text-ink">
               Sign out
             </button>
           </form>
-          <Link href="/" className="mt-2 block text-center text-[9.5px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+          <Link href="/" className="mt-2 block text-center text-[11.5px] uppercase tracking-[0.16em] text-muted hover:text-ink">
             View storefront →
           </Link>
         </div>

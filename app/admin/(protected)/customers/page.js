@@ -27,14 +27,14 @@ export default async function Customers({ searchParams }) {
   return (
     <>
       <header>
-        <p className="text-[10px] uppercase tracking-brand text-muted">People</p>
+        <p className="text-[12px] uppercase tracking-brand text-muted">People</p>
         <h1 className="mt-2 font-display text-[2.4rem] font-light leading-none">Customers</h1>
       </header>
 
       <form className="mt-8 flex gap-3 border border-line bg-paper p-4">
         <input name="q" defaultValue={q} placeholder="Name, email or phone"
           className="flex-1 border border-line bg-bone px-3 py-2.5 text-sm outline-none focus:border-gold" />
-        <button className="bg-ink px-5 py-2.5 text-[10px] uppercase tracking-[0.16em] text-bone">Search</button>
+        <button className="bg-ink px-5 py-2.5 text-[12px] uppercase tracking-[0.16em] text-bone">Search</button>
       </form>
 
       <div className="mt-6">
@@ -55,7 +55,7 @@ export default async function Customers({ searchParams }) {
                 <Cell>{inr(s?.total ?? 0)}</Cell>
                 <Cell><Badge tone={c.status}>{c.status}</Badge></Cell>
                 <Cell className="text-right">
-                  <Link href={`/admin/customers/${c._id}`} className="text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+                  <Link href={`/admin/customers/${c._id}`} className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
                     Open →
                   </Link>
                 </Cell>

@@ -40,7 +40,7 @@ export default async function Dashboard() {
   return (
     <>
       <header>
-        <p className="text-[10px] uppercase tracking-brand text-muted">Overview</p>
+        <p className="text-[12px] uppercase tracking-brand text-muted">Overview</p>
         <h1 className="mt-2 font-display text-[2.4rem] font-light leading-none">
           Good to see you, {user.name.split(" ")[0]}.
         </h1>
@@ -49,9 +49,9 @@ export default async function Dashboard() {
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map(([label, value, hint]) => (
           <div key={label} className="border border-line bg-paper p-5">
-            <p className="text-[9.5px] uppercase tracking-[0.16em] text-muted">{label}</p>
+            <p className="text-[11.5px] uppercase tracking-[0.16em] text-muted">{label}</p>
             <p className="mt-3 font-display text-[2rem] leading-none text-ink">{value}</p>
-            <p className="mt-2 text-[10px] text-muted">{hint}</p>
+            <p className="mt-2 text-[12px] text-muted">{hint}</p>
           </div>
         ))}
       </div>
@@ -65,7 +65,7 @@ export default async function Dashboard() {
             <strong className="font-medium">{lowStock}</strong> live{" "}
             {lowStock === 1 ? "product has" : "products have"} a size down to 2 or fewer units.
           </span>
-          <span className="text-[10px] uppercase tracking-[0.16em]">Review stock →</span>
+          <span className="text-[12px] uppercase tracking-[0.16em]">Review stock →</span>
         </Link>
       )}
 
@@ -73,7 +73,7 @@ export default async function Dashboard() {
         <section className="mt-10">
           <div className="mb-4 flex items-end justify-between">
             <h2 className="font-display text-[1.6rem] leading-none">Latest orders</h2>
-            <Link href="/admin/orders" className="text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+            <Link href="/admin/orders" className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
               All orders →
             </Link>
           </div>
@@ -87,7 +87,7 @@ export default async function Dashboard() {
                 <Cell><Badge tone={o.payment.status}>{o.payment.status}</Badge></Cell>
                 <Cell><Badge tone={o.status}>{o.status}</Badge></Cell>
                 <Cell className="text-right">
-                  <Link href={`/admin/orders/${o._id}`} className="text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+                  <Link href={`/admin/orders/${o._id}`} className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
                     Open →
                   </Link>
                 </Cell>
@@ -107,7 +107,7 @@ export default async function Dashboard() {
                 <span className="text-muted">{a.userName ?? "System"}</span> · {a.action}
                 {a.entityId && <span className="text-muted"> · {a.entityId}</span>}
               </span>
-              <time className="shrink-0 text-[10px] text-muted">
+              <time className="shrink-0 text-[12px] text-muted">
                 {new Date(a.at).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
               </time>
             </li>

@@ -31,13 +31,21 @@ creates the owner account from `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD`.
 | `lib/models.js` | Every Mongoose schema. |
 | `lib/auth.js` | Sessions, password hashing, the permission guards. |
 | `lib/permissions.js` | The permission list, presets and `can()`. |
-| `lib/orders.js` | Order creation: server-side pricing and stock claiming. |
+| `lib/orders.js` | Order creation: server-side pricing, coupons and stock claiming. |
+| `lib/coupons.js` | Coupon rules — the arithmetic is pure and separately checked. |
 | `lib/content.js` + `content-defaults.js` | The CMS surface and its defaults. |
 | `lib/catalog.js` | Server-side catalogue reads. |
 
 ## Admin
 
-`/admin` — dashboard, orders, payments, catalogue, customers, storefront CMS, team.
+`/admin` — dashboard, orders, payments, catalogue, coupons, reviews, customers,
+storefront CMS, team.
+
+**Product images.** Upload several at once from the product form (JPEG, PNG, WebP
+or AVIF, 6 MB each). The first image is the cover used in listings; the rest feed
+the product-page gallery, and the arrows set the order. Files land in
+`public/uploads` under randomised names — the upload route checks `products:write`
+and rejects anything that is not an image.
 
 **Permissions.** An `admin` implicitly holds everything. A `staff` account holds
 exactly what is ticked for them under Team, from twelve permissions grouped into
@@ -55,6 +63,27 @@ and a hand-crafted POST still fails. Two escalation paths are closed explicitly:
 only an admin can create or edit another admin, and nobody can change their own
 role or disable their own account. Every mutation is written to an audit log,
 shown on the dashboard.
+
+## Coupons
+
+`/admin/coupons`. Percentage or fixed amount, an optional cap on a percentage, a
+minimum order value, and a scope of everything / selected collections / selected
+products — a scoped percentage discounts only the lines it covers. Validity runs
+between two dates (the end date is optional), and usage is limited by total
+redemptions, per-customer redemptions, an unlimited-reuse switch, and a
+first-order-only switch.
+
+Checkout previews the discount against server-side prices, and `createOrder`
+re-validates the whole rule set before charging — a coupon edited in the browser
+changes nothing.
+
+## Reviews
+
+Customers who are signed in can review a product once. Reviews arrive as
+`pending` and only reach the storefront when a staff member publishes them at
+`/admin/reviews`, which also recalculates the product's star average. A review
+from someone who has actually paid for the piece is flagged **verified buyer**
+automatically. Staff can reply publicly, reject, or unpublish.
 
 ## The CMS
 
@@ -93,12 +122,13 @@ both win, and a multi-line order that fails partway rolls back what it already t
 
 ## Still open
 
-- **Product images** are public paths typed into the admin; there is no upload
-  pipeline yet (S3/Cloudinary + a signed-upload action would slot into the product form).
+- **Uploads go to local disk** (`public/uploads`). Fine on one machine; swap the
+  `writeFile` in `app/api/upload/route.js` for an S3 or Cloudinary put before running
+  on more than one. No image resizing is done either — large photographs ship as-is.
 - **Email** — no order confirmations are sent. Orders and status changes are recorded,
   nothing is delivered.
 - **Storefront rendering** is `force-dynamic`; every page reads Mongo per request.
   If traffic makes that matter, switch to `revalidate` plus the `revalidatePath`
   calls already present in the admin actions.
-- **Discounts** are modelled on the order (`amounts.discount`) but there is no coupon UI.
+- **Review photos** are not supported — text and a star rating only.
 - `/help/*` and `/about` are linked from the footer and do not exist yet.

@@ -32,11 +32,11 @@ export default async function Products({ searchParams }) {
     <>
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-brand text-muted">Catalogue</p>
+          <p className="text-[12px] uppercase tracking-brand text-muted">Catalogue</p>
           <h1 className="mt-2 font-display text-[2.4rem] font-light leading-none">Products</h1>
         </div>
         {writable && (
-          <Link href="/admin/products/new" className="bg-ink px-5 py-2.5 text-[10px] uppercase tracking-[0.16em] text-bone transition hover:bg-gold-dark">
+          <Link href="/admin/products/new" className="bg-ink px-5 py-2.5 text-[12px] uppercase tracking-[0.16em] text-bone transition hover:bg-gold-dark">
             New product
           </Link>
         )}
@@ -49,11 +49,11 @@ export default async function Products({ searchParams }) {
           <option value="">All collections</option>
           {categories.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
         </select>
-        <label className="flex items-center gap-2 px-2 text-[10px] uppercase tracking-[0.16em] text-muted">
+        <label className="flex items-center gap-2 px-2 text-[12px] uppercase tracking-[0.16em] text-muted">
           <input type="checkbox" name="filter" value="low" defaultChecked={low} className="accent-ink" />
           Low stock
         </label>
-        <button className="bg-ink px-5 py-2.5 text-[10px] uppercase tracking-[0.16em] text-bone">Filter</button>
+        <button className="bg-ink px-5 py-2.5 text-[12px] uppercase tracking-[0.16em] text-bone">Filter</button>
       </form>
 
       <div className="mt-6">
@@ -70,22 +70,22 @@ export default async function Products({ searchParams }) {
                     )}
                     <div className="min-w-0">
                       <span className="block truncate text-ink">{p.name}</span>
-                      <span className="block truncate text-[11px] text-muted">{p.slug}</span>
+                      <span className="block truncate text-[13px] text-muted">{p.slug}</span>
                     </div>
                   </div>
                 </Cell>
                 <Cell className="text-muted">{categories.find((c) => c.slug === p.category)?.name ?? p.category}</Cell>
                 <Cell>
                   {inr(p.price)}
-                  {p.mrp && <span className="ml-1.5 text-[11px] text-muted line-through">{inr(p.mrp)}</span>}
+                  {p.mrp && <span className="ml-1.5 text-[13px] text-muted line-through">{inr(p.mrp)}</span>}
                 </Cell>
                 <Cell>
                   <span className={units <= 2 ? "text-amber-700" : "text-ink"}>{units}</span>
-                  <span className="ml-1 text-[10px] text-muted">units</span>
+                  <span className="ml-1 text-[12px] text-muted">units</span>
                 </Cell>
                 <Cell><Badge tone={p.active ? "active" : "disabled"}>{p.active ? "live" : "hidden"}</Badge></Cell>
                 <Cell className="text-right">
-                  <Link href={`/admin/products/${p._id}`} className="text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+                  <Link href={`/admin/products/${p._id}`} className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
                     {writable ? "Edit →" : "View →"}
                   </Link>
                 </Cell>

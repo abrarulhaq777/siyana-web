@@ -26,7 +26,7 @@ export default function OrderControls({ order, statuses, canWrite, canRefund, re
     <div className="space-y-5">
       {canWrite && (
         <form action={statusAction} className="space-y-4 border border-line bg-paper p-5">
-          <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Update status</h2>
+          <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Update status</h2>
           <Notice state={statusState} />
           <input type="hidden" name="id" value={order._id} />
           <Field label="Status">
@@ -43,7 +43,7 @@ export default function OrderControls({ order, statuses, canWrite, canRefund, re
 
       {needsManualCapture && (
         <form action={paidAction} className="space-y-3 border border-line bg-paper p-5">
-          <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Record payment</h2>
+          <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Record payment</h2>
           <Notice state={paidState} />
           <p className="text-xs text-muted">
             Use this when money arrived outside the gateway — a bank transfer or a manual capture.
@@ -55,7 +55,7 @@ export default function OrderControls({ order, statuses, canWrite, canRefund, re
 
       {refundable && (
         <form action={refundAction} className="space-y-4 border border-line bg-paper p-5">
-          <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Refund</h2>
+          <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Refund</h2>
           <Notice state={refundState} />
           <input type="hidden" name="id" value={order._id} />
           <Field label="Amount" hint={`Up to ${inr(remaining)} remaining.`}>

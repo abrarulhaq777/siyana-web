@@ -10,16 +10,19 @@ import mongoose from "mongoose";
 process.env.MONGODB_URI ??= "mongodb://127.0.0.1:27017/siyana";
 await mongoose.connect(process.env.MONGODB_URI);
 
-const { Product, Order } = await import("../lib/models.js");
+const { Product, Order, Coupon } = await import("../lib/models.js");
 const { createOrder, restock } = await import("../lib/orders.js");
 
 const SLUG = "zz-check-product";
 const buyer = { name: "Check Runner", email: "check@siyana.local", phone: "9999999999" };
 const where = { line1: "1 Test Lane", city: "Kochi", state: "Kerala", pincode: "682001" };
 
+const CODE = "ZZCHECK20";
+
 const cleanup = async () => {
   await Product.deleteOne({ slug: SLUG });
   await Order.deleteMany({ "customer.email": buyer.email });
+  await Coupon.deleteOne({ code: CODE });
 };
 
 await cleanup();
@@ -72,7 +75,53 @@ try {
   fresh = await Product.findOne({ slug: SLUG });
   assert.equal(fresh.stock.find((s) => s.size === "M").qty, 3, "restock must return the units");
 
-  // 7. An archived product cannot be bought.
+  // 7. A coupon is re-priced server-side and its redemption is counted.
+  await Coupon.create({
+    code: CODE, type: "percent", value: 20, minOrder: 500,
+    maxUsesPerCustomer: 1, repeatUse: false, active: true,
+  });
+
+  const discounted = await createOrder({
+    items: [{ slug: SLUG, size: "M", qty: 1 }],
+    customer: buyer, address: where, method: "cod", couponCode: CODE,
+  });
+  assert.equal(discounted.amounts.subtotal, 1000);
+  assert.equal(discounted.amounts.discount, 200, "20% of 1000");
+  assert.equal(discounted.amounts.total, 800 + discounted.amounts.shipping);
+  assert.equal(discounted.coupon.code, CODE);
+  assert.equal((await Coupon.findOne({ code: CODE })).uses, 1, "redemption must be counted");
+
+  // The same customer cannot use a single-use code twice.
+  await assert.rejects(
+    () => createOrder({
+      items: [{ slug: SLUG, size: "M", qty: 1 }],
+      customer: buyer, address: where, method: "cod", couponCode: CODE,
+    }),
+    /already used this code/
+  );
+
+  // A code below its minimum order is refused.
+  await Coupon.updateOne({ code: CODE }, { minOrder: 99999, repeatUse: true });
+  await assert.rejects(
+    () => createOrder({
+      items: [{ slug: SLUG, size: "M", qty: 1 }],
+      customer: buyer, address: where, method: "cod", couponCode: CODE,
+    }),
+    /Spend ₹99999/
+  );
+
+  // An unknown code is refused rather than silently ignored.
+  await assert.rejects(
+    () => createOrder({
+      items: [{ slug: SLUG, size: "M", qty: 1 }],
+      customer: buyer, address: where, method: "cod", couponCode: "NOPE",
+    }),
+    /isn't recognised/
+  );
+
+  await restock(discounted);
+
+  // 8. An archived product cannot be bought.
   await Product.updateOne({ slug: SLUG }, { active: false });
   await assert.rejects(
     () => createOrder({ items: [{ slug: SLUG, size: "M", qty: 1 }], customer: buyer, address: where, method: "cod" }),

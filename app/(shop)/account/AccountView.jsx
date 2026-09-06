@@ -21,12 +21,12 @@ export default function AccountView({ user, orders }) {
     <section className="mx-auto max-w-[1400px] px-6 py-16 lg:px-10">
       <header className="flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p className="text-[10px] uppercase tracking-brand text-muted">Your account</p>
+          <p className="text-[12px] uppercase tracking-brand text-muted">Your account</p>
           <h1 className="mt-4 font-display text-[3rem] font-light leading-none">{user.name}</h1>
           <p className="mt-3 text-sm text-muted">{user.email}</p>
         </div>
         <form action={signOut}>
-          <button className="border border-line px-6 py-3 text-[10px] uppercase tracking-brand text-muted transition hover:border-gold hover:text-ink">
+          <button className="border border-line px-6 py-3 text-[12px] uppercase tracking-brand text-muted transition hover:border-gold hover:text-ink">
             Sign out
           </button>
         </form>
@@ -41,7 +41,7 @@ export default function AccountView({ user, orders }) {
               <p className="text-sm text-muted">No orders yet.</p>
               <Link
                 href="/collections"
-                className="mt-6 inline-block bg-ink px-8 py-3.5 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
+                className="mt-6 inline-block bg-ink px-8 py-3.5 text-[12px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
               >
                 Start browsing
               </Link>
@@ -54,7 +54,7 @@ export default function AccountView({ user, orders }) {
                     <span className="font-display text-[1.4rem] text-ink">{o.orderNo}</span>
                     <span className="text-sm">{inr(o.amounts.total)}</span>
                   </div>
-                  <div className="mt-2 flex flex-wrap items-center gap-3 text-[10px] uppercase tracking-[0.16em] text-muted">
+                  <div className="mt-2 flex flex-wrap items-center gap-3 text-[12px] uppercase tracking-[0.16em] text-muted">
                     <time>{new Date(o.createdAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}</time>
                     <span className="h-2.5 w-px bg-line" />
                     <span className={statusTone[o.status] ?? "text-ink"}>{o.status}</span>
@@ -88,13 +88,13 @@ export default function AccountView({ user, orders }) {
             </div>
             <Field label="Pincode" name="pincode" defaultValue={address?.pincode} pattern="[0-9]{6}" inputMode="numeric" />
 
-            <button className="w-full bg-ink py-3.5 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark">
+            <button className="w-full bg-ink py-3.5 text-[12px] uppercase tracking-brand text-bone transition hover:bg-gold-dark">
               Save address
             </button>
           </form>
 
           <div className="mt-8 border border-line bg-sand/40 p-6">
-            <p className="text-[10px] uppercase tracking-brand text-muted">Lifetime</p>
+            <p className="text-[12px] uppercase tracking-brand text-muted">Lifetime</p>
             <p className="mt-3 font-display text-[2rem] leading-none">{inr(spend)}</p>
             <p className="mt-2 text-xs text-muted">across {orders.length} {orders.length === 1 ? "order" : "orders"}</p>
           </div>
@@ -107,7 +107,7 @@ export default function AccountView({ user, orders }) {
 function Field({ label, name, ...rest }) {
   return (
     <div>
-      <label htmlFor={name} className="text-[10px] uppercase tracking-[0.18em] text-muted">{label}</label>
+      <label htmlFor={name} className="text-[12px] uppercase tracking-[0.18em] text-muted">{label}</label>
       <input
         id={name}
         name={name}

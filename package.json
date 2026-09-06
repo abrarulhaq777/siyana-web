@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "node --env-file=.env.local scripts/seed.mjs",
-    "check": "node lib/cart.check.mjs && node lib/permissions.check.mjs && node --env-file=.env.local scripts/orders.check.mjs"
+    "check": "node lib/cart.check.mjs && node lib/permissions.check.mjs && node lib/coupons.check.mjs && node --env-file=.env.local scripts/orders.check.mjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

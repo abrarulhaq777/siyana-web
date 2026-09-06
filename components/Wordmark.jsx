@@ -5,7 +5,7 @@ export default function Wordmark({ tagline = true, className = "" }) {
         Siyana
       </span>
       {tagline && (
-        <span className="mt-1.5 text-[7px] uppercase tracking-brand text-muted/80">
+        <span className="mt-1.5 text-[9px] uppercase tracking-brand text-muted/80">
           The Daily Modesty
         </span>
       )}

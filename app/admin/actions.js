@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import db from "@/lib/db";
-import { User, Product, Category, Order } from "@/lib/models";
+import { User, Product, Category, Order, Coupon, Review } from "@/lib/models";
 import { login, destroySession, requirePermission, hashPassword, log } from "@/lib/auth";
 import { ALL } from "@/lib/permissions";
 import { setKey } from "@/lib/content";
@@ -143,6 +143,8 @@ export async function saveProduct(_prev, formData) {
   if (!(price > 0)) return fail("Price must be greater than zero.");
   if (mrp !== null && mrp < price) return fail("MRP cannot be lower than the selling price.");
 
+  const images = formData.getAll("images").filter(Boolean).slice(0, 12);
+
   const doc = {
     slug,
     name: String(formData.get("name") ?? "").trim(),
@@ -153,12 +155,13 @@ export async function saveProduct(_prev, formData) {
     colorName: formData.get("colorName"),
     fabric: formData.get("fabric"),
     tag: formData.get("tag") || null,
-    image: formData.get("image"),
     opacity: formData.get("opacity"),
     silhouette: formData.get("silhouette"),
     story: formData.get("story"),
     wuduFriendly: formData.get("wuduFriendly") === "on",
     active: formData.get("active") === "on",
+    images,
+    image: images[0] ?? null, // first upload is the cover used in listings
     details: String(formData.get("details") ?? "").split("\n").map((s) => s.trim()).filter(Boolean),
     stock: formData.getAll("stockSize").map((size, i) => ({
       size,
@@ -224,6 +227,125 @@ export async function saveCategory(_prev, formData) {
   revalidatePath("/admin/products");
   revalidatePath("/");
   return ok("Collection saved.");
+}
+
+/* ─────────────────────────────────────────────────────────────── coupons */
+
+export async function saveCoupon(_prev, formData) {
+  const user = await requirePermission("products:write");
+  const id = formData.get("id");
+  const code = String(formData.get("code") ?? "").trim().toUpperCase();
+
+  if (!/^[A-Z0-9_-]{3,24}$/.test(code)) return fail("Code must be 3–24 letters, numbers, hyphens or underscores.");
+
+  const type = formData.get("type") === "fixed" ? "fixed" : "percent";
+  const value = num(formData.get("value"));
+  if (!(value > 0)) return fail("Enter a discount greater than zero.");
+  if (type === "percent" && value > 100) return fail("A percentage cannot exceed 100.");
+
+  const validFrom = formData.get("validFrom") ? new Date(formData.get("validFrom")) : new Date();
+  const validTo = formData.get("validTo") ? new Date(formData.get("validTo")) : null;
+  if (validTo && validTo < validFrom) return fail("The end date is before the start date.");
+
+  const scope = ["all", "collections", "products"].includes(formData.get("scope")) ? formData.get("scope") : "all";
+
+  const doc = {
+    code,
+    description: String(formData.get("description") ?? "").trim(),
+    type,
+    value,
+    maxDiscount: formData.get("maxDiscount") ? num(formData.get("maxDiscount")) : null,
+    minOrder: num(formData.get("minOrder")),
+    scope,
+    collections: scope === "collections" ? formData.getAll("collections") : [],
+    products: scope === "products" ? formData.getAll("products") : [],
+    validFrom,
+    validTo,
+    maxUses: formData.get("maxUses") ? num(formData.get("maxUses")) : null,
+    maxUsesPerCustomer: formData.get("maxUsesPerCustomer") ? num(formData.get("maxUsesPerCustomer")) : 1,
+    repeatUse: formData.get("repeatUse") === "on",
+    firstOrderOnly: formData.get("firstOrderOnly") === "on",
+    active: formData.get("active") === "on",
+  };
+
+  if (scope === "collections" && !doc.collections.length) return fail("Pick at least one collection.");
+  if (scope === "products" && !doc.products.length) return fail("Pick at least one product.");
+
+  await db();
+  const clash = await Coupon.findOne({ code, _id: { $ne: id || null } }).lean();
+  if (clash) return fail("That code already exists.");
+
+  if (id) await Coupon.findByIdAndUpdate(id, doc, { runValidators: true });
+  else await Coupon.create(doc);
+
+  await log(user, id ? "coupon.update" : "coupon.create", { entity: "Coupon", entityId: code });
+  revalidatePath("/admin/coupons");
+  return ok(`${code} saved.`);
+}
+
+export async function toggleCoupon(_prev, formData) {
+  const user = await requirePermission("products:write");
+  await db();
+  const c = await Coupon.findById(formData.get("id"));
+  if (!c) return fail("Coupon not found.");
+  c.active = !c.active;
+  await c.save();
+
+  await log(user, "coupon.toggle", { entity: "Coupon", entityId: c.code, meta: { active: c.active } });
+  revalidatePath("/admin/coupons");
+  return ok(c.active ? `${c.code} is live.` : `${c.code} is paused.`);
+}
+
+/* ─────────────────────────────────────────────────────────────── reviews */
+
+export async function moderateReview(_prev, formData) {
+  const user = await requirePermission("products:write");
+  const id = formData.get("id");
+  const status = formData.get("status");
+  if (!["published", "rejected", "pending"].includes(status)) return fail("Unknown status.");
+
+  await db();
+  const review = await Review.findById(id);
+  if (!review) return fail("Review not found.");
+
+  review.status = status;
+  await review.save();
+  await rollUpRating(review.productSlug);
+
+  await log(user, "review.moderate", { entity: "Review", entityId: id, meta: { status } });
+  revalidatePath("/admin/reviews");
+  revalidatePath(`/product/${review.productSlug}`);
+  return ok(`Review ${status}.`);
+}
+
+export async function replyToReview(_prev, formData) {
+  const user = await requirePermission("products:write");
+  const body = String(formData.get("body") ?? "").trim();
+  if (!body) return fail("Write a reply first.");
+
+  await db();
+  const review = await Review.findById(formData.get("id"));
+  if (!review) return fail("Review not found.");
+
+  review.reply = { body, at: new Date(), by: user._id };
+  await review.save();
+
+  await log(user, "review.reply", { entity: "Review", entityId: review._id });
+  revalidatePath("/admin/reviews");
+  revalidatePath(`/product/${review.productSlug}`);
+  return ok("Reply posted.");
+}
+
+/** Recomputes a product's star average from its published reviews. */
+async function rollUpRating(slug) {
+  const [agg] = await Review.aggregate([
+    { $match: { productSlug: slug, status: "published" } },
+    { $group: { _id: null, avg: { $avg: "$rating" }, n: { $sum: 1 } } },
+  ]);
+  await Product.updateOne(
+    { slug },
+    { rating: agg ? Math.round(agg.avg * 10) / 10 : 0, reviewCount: agg?.n ?? 0 }
+  );
 }
 
 /* ───────────────────────────────────────────────────────────── customers */

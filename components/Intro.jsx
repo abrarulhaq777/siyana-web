@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 
 /*
- * First-visit curtain: a mihrab arch draws itself in gold, the SIYANA wordmark
- * settles inside it, then the panel lifts away.
+ * Opening curtain: a mihrab arch draws itself in gold, the SIYANA wordmark
+ * settles inside it, then the panel lifts away. Plays on every page load.
  *
- * `played` is module scope on purpose. StrictMode invokes effects twice on the
- * same mount, and a sessionStorage-only guard makes the second pass believe the
- * intro has already run — which is exactly how it ended up never showing.
+ * `played` is module scope on purpose — StrictMode invokes effects twice on the
+ * same mount, and without this the second pass would restart the animation.
+ * A real refresh re-evaluates the module, so the splash comes back.
  */
-const KEY = "siyana:intro";
 const HOLD = 2600;
 let played = false;
 
@@ -23,15 +22,6 @@ export default function Intro() {
     played = true;
 
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return setPhase("gone");
-
-    let seen = false;
-    try {
-      seen = !!sessionStorage.getItem(KEY);
-      sessionStorage.setItem(KEY, "1");
-    } catch {
-      // private mode: just play it
-    }
-    if (seen) return setPhase("gone");
 
     setPhase("playing");
     document.body.style.overflow = "hidden";
@@ -83,7 +73,7 @@ export default function Intro() {
           </span>
           <span className="mt-4 h-px w-20 bg-gold" style={{ animation: "fade 0.7s ease 1.15s both" }} />
           <span
-            className="mt-4 text-[8px] uppercase tracking-brand text-muted"
+            className="mt-4 text-[10px] uppercase tracking-brand text-muted"
             style={{ animation: "fade 0.9s ease 1.3s both" }}
           >
             The Daily Modesty

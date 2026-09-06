@@ -18,7 +18,7 @@ export default async function Staff() {
   return (
     <>
       <header>
-        <p className="text-[10px] uppercase tracking-brand text-muted">Access control</p>
+        <p className="text-[12px] uppercase tracking-brand text-muted">Access control</p>
         <h1 className="mt-2 font-display text-[2.4rem] font-light leading-none">Team</h1>
         <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted">
           Administrators hold every permission. Staff hold only what you tick — the sidebar hides
@@ -32,7 +32,7 @@ export default async function Staff() {
             <Row key={u._id}>
               <Cell className="text-ink">
                 {u.name}
-                {String(u._id) === String(me._id) && <span className="ml-2 text-[10px] text-muted">(you)</span>}
+                {String(u._id) === String(me._id) && <span className="ml-2 text-[12px] text-muted">(you)</span>}
               </Cell>
               <Cell className="text-xs text-muted">{u.email}</Cell>
               <Cell>

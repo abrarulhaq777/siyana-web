@@ -35,7 +35,7 @@ export default function ContentEditor({ content, products, labels, codeOnly, wri
           <button
             key={key}
             onClick={() => setTab(key)}
-            className={`px-3 py-2 text-left text-[10px] uppercase tracking-[0.14em] transition ${
+            className={`px-3 py-2 text-left text-[12px] uppercase tracking-[0.14em] transition ${
               tab === key ? "bg-ink text-bone" : "text-muted hover:bg-sand/60 hover:text-ink"
             }`}
           >
@@ -101,11 +101,11 @@ function Panel({ tab, data, products, labels, codeOnly, writable }) {
                 const hidden = draft.hidden.includes(id);
                 return (
                   <li key={id} className="flex items-center gap-3 px-4 py-2.5">
-                    <span className="w-6 text-[11px] text-muted">{i + 1}</span>
+                    <span className="w-6 text-[13px] text-muted">{i + 1}</span>
                     <span className={`flex-1 text-sm ${hidden ? "text-muted line-through" : "text-ink"}`}>
                       {labels[id] ?? id}
                       {codeOnly.includes(id) && (
-                        <span className="ml-2 text-[9.5px] uppercase tracking-[0.14em] text-muted">fixed copy</span>
+                        <span className="ml-2 text-[11.5px] uppercase tracking-[0.14em] text-muted">fixed copy</span>
                       )}
                     </span>
                     <button type="button" disabled={i === 0} onClick={() => set({ order: move(draft.order, i, -1) })}
@@ -115,7 +115,7 @@ function Panel({ tab, data, products, labels, codeOnly, writable }) {
                     <button
                       type="button"
                       onClick={() => set({ hidden: hidden ? draft.hidden.filter((h) => h !== id) : [...draft.hidden, id] })}
-                      className="w-16 text-right text-[10px] uppercase tracking-[0.14em] text-muted hover:text-ink"
+                      className="w-16 text-right text-[12px] uppercase tracking-[0.14em] text-muted hover:text-ink"
                     >
                       {hidden ? "Show" : "Hide"}
                     </button>
@@ -332,7 +332,7 @@ function Panel({ tab, data, products, labels, codeOnly, writable }) {
       {writable ? (
         <div className="flex items-center gap-4">
           <Submit>Publish changes</Submit>
-          <span className="text-[11px] text-muted">Live on the storefront as soon as you save.</span>
+          <span className="text-[13px] text-muted">Live on the storefront as soon as you save.</span>
         </div>
       ) : (
         <p className="border border-line bg-paper p-4 text-xs text-muted">
@@ -352,7 +352,7 @@ const move = (arr, i, d) => {
 };
 
 const SectionTitle = ({ children }) => (
-  <h2 className="border-b border-line pb-3 text-[10px] uppercase tracking-[0.16em] text-muted">{children}</h2>
+  <h2 className="border-b border-line pb-3 text-[12px] uppercase tracking-[0.16em] text-muted">{children}</h2>
 );
 
 const Text = ({ label, v, on }) => (
@@ -376,7 +376,7 @@ const Check = ({ label, v, on }) => (
 
 const Cta = ({ label, v = {}, on }) => (
   <div>
-    <span className="text-[10px] uppercase tracking-[0.18em] text-muted">{label}</span>
+    <span className="text-[12px] uppercase tracking-[0.18em] text-muted">{label}</span>
     <div className="mt-1.5 grid gap-2 sm:grid-cols-2">
       <input value={v.label ?? ""} onChange={(e) => on({ ...v, label: e.target.value })} placeholder="Label" className={inputClass} />
       <input value={v.href ?? ""} onChange={(e) => on({ ...v, href: e.target.value })} placeholder="/collections" className={inputClass} />
@@ -411,17 +411,17 @@ function Picker({ label, products, value = [], on }) {
 
   return (
     <div>
-      <span className="text-[10px] uppercase tracking-[0.18em] text-muted">{label}</span>
+      <span className="text-[12px] uppercase tracking-[0.18em] text-muted">{label}</span>
       <ol className="mt-2 space-y-2">
         {value.map((slug, i) => {
           const p = products.find((x) => x.slug === slug);
           return (
             <li key={slug} className="flex items-center gap-3 border border-line bg-bone px-3 py-2 text-sm">
-              <span className="w-5 text-[11px] text-muted">{i + 1}</span>
+              <span className="w-5 text-[13px] text-muted">{i + 1}</span>
               <span className="flex-1 truncate">
                 {p?.name ?? slug}
-                {p && !p.active && <span className="ml-2 text-[10px] uppercase tracking-[0.14em] text-amber-700">hidden</span>}
-                {!p && <span className="ml-2 text-[10px] uppercase tracking-[0.14em] text-red-600">missing</span>}
+                {p && !p.active && <span className="ml-2 text-[12px] uppercase tracking-[0.14em] text-amber-700">hidden</span>}
+                {!p && <span className="ml-2 text-[12px] uppercase tracking-[0.14em] text-red-600">missing</span>}
               </span>
               <button type="button" disabled={i === 0} onClick={() => on(move(value, i, -1))} className="px-1.5 text-xs text-muted disabled:opacity-25 hover:text-ink">↑</button>
               <button type="button" disabled={i === value.length - 1} onClick={() => on(move(value, i, 1))} className="px-1.5 text-xs text-muted disabled:opacity-25 hover:text-ink">↓</button>

@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { saveProduct, toggleProduct } from "@/app/admin/actions";
 import { Field, Input, Textarea, Select, Submit, Notice, Button } from "@/app/admin/_components/ui";
+import ImagePicker from "./ImagePicker";
 
 export default function ProductForm({ product, categories, sizes, writable }) {
   const [state, action] = useActionState(saveProduct, null);
@@ -26,7 +27,7 @@ export default function ProductForm({ product, categories, sizes, writable }) {
         {p._id && <input type="hidden" name="id" value={p._id} />}
 
         <section className="space-y-5 border border-line bg-paper p-6">
-          <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Identity</h2>
+          <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Identity</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Name"><Input name="name" defaultValue={p.name} required /></Field>
             <Field label="Slug" hint="Used in the storefront URL.">
@@ -44,7 +45,7 @@ export default function ProductForm({ product, categories, sizes, writable }) {
         </section>
 
         <section className="space-y-5 border border-line bg-paper p-6">
-          <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Price</h2>
+          <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Price</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Selling price (₹)"><Input name="price" type="number" min="1" defaultValue={p.price} required /></Field>
             <Field label="MRP (₹)" hint="Shown struck through. Blank for no comparison price.">
@@ -54,7 +55,7 @@ export default function ProductForm({ product, categories, sizes, writable }) {
         </section>
 
         <section className="space-y-5 border border-line bg-paper p-6">
-          <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Cloth &amp; cut</h2>
+          <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Cloth &amp; cut</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Fabric"><Input name="fabric" defaultValue={p.fabric} /></Field>
             <Field label="Colour name"><Input name="colorName" defaultValue={p.colorName} /></Field>
@@ -63,9 +64,6 @@ export default function ProductForm({ product, categories, sizes, writable }) {
             </Field>
             <Field label="Opacity"><Input name="opacity" defaultValue={p.opacity} /></Field>
             <Field label="Silhouette"><Input name="silhouette" defaultValue={p.silhouette} /></Field>
-            <Field label="Image path" hint="Public path, e.g. /images/products/noor-open-abaya.jpg">
-              <Input name="image" defaultValue={p.image} />
-            </Field>
           </div>
           <Field label="Story"><Textarea name="story" rows={3} defaultValue={p.story} /></Field>
           <Field label="Detail lines" hint="One per line.">
@@ -74,7 +72,12 @@ export default function ProductForm({ product, categories, sizes, writable }) {
         </section>
 
         <section className="space-y-5 border border-line bg-paper p-6">
-          <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Stock by size</h2>
+          <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Images</h2>
+          <ImagePicker initial={p.images?.length ? p.images : p.image ? [p.image] : []} />
+        </section>
+
+        <section className="space-y-5 border border-line bg-paper p-6">
+          <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Stock by size</h2>
           <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
             {sizes.map((size) => (
               <div key={size}>
@@ -88,7 +91,7 @@ export default function ProductForm({ product, categories, sizes, writable }) {
         </section>
 
         <section className="space-y-4 border border-line bg-paper p-6">
-          <h2 className="text-[10px] uppercase tracking-[0.16em] text-muted">Visibility</h2>
+          <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Visibility</h2>
           <label className="flex items-center gap-3 text-sm text-ink">
             <input type="checkbox" name="active" defaultChecked={p._id ? p.active : true} className="accent-ink" />
             Live on the storefront

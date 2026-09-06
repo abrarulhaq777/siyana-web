@@ -30,7 +30,7 @@ export default function ProductMedia({ product, className = "", ratio = "aspect-
     >
       <div className="pattern-girih absolute inset-0 opacity-[0.16] invert" />
       <div className="arch absolute inset-2.5 border border-white/20" />
-      <span className="absolute bottom-5 left-0 right-0 text-center text-[9px] uppercase tracking-brand text-white/55">
+      <span className="absolute bottom-5 left-0 right-0 text-center text-[11px] uppercase tracking-brand text-white/55">
         {product?.fabric}
       </span>
     </div>

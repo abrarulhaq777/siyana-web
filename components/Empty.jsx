@@ -8,7 +8,7 @@ export default function Empty({ title, copy, href, cta }) {
       <p className="mt-4 text-sm text-muted">{copy}</p>
       <Link
         href={href}
-        className="mt-9 inline-block bg-ink px-9 py-4 text-[10px] uppercase tracking-brand text-bone transition hover:bg-sage"
+        className="mt-9 inline-block bg-ink px-9 py-4 text-[12px] uppercase tracking-brand text-bone transition hover:bg-sage"
       >
         {cta}
       </Link>

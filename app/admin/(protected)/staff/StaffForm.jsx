@@ -32,7 +32,7 @@ export default function StaffForm({ team, groups, labels, presets, canMakeAdmin,
             <button
               key={t._id}
               onClick={() => start(t)}
-              className={`border px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] transition ${
+              className={`border px-3 py-1.5 text-[12px] uppercase tracking-[0.14em] transition ${
                 editingId === t._id ? "border-ink bg-ink text-bone" : "border-line bg-paper text-muted hover:border-gold"
               }`}
             >
@@ -69,13 +69,13 @@ export default function StaffForm({ team, groups, labels, presets, canMakeAdmin,
         {role === "staff" ? (
           <div className="space-y-5 border-t border-line pt-6">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-[10px] uppercase tracking-[0.16em] text-muted">Start from a preset</span>
+              <span className="text-[12px] uppercase tracking-[0.16em] text-muted">Start from a preset</span>
               {Object.entries(presets).map(([name, perms]) => (
                 <button
                   key={name}
                   type="button"
                   onClick={() => setChecked(perms)}
-                  className="border border-line px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-muted transition hover:border-gold hover:text-ink"
+                  className="border border-line px-3 py-1.5 text-[12px] uppercase tracking-[0.14em] text-muted transition hover:border-gold hover:text-ink"
                 >
                   {name}
                 </button>
@@ -83,7 +83,7 @@ export default function StaffForm({ team, groups, labels, presets, canMakeAdmin,
               <button
                 type="button"
                 onClick={() => setChecked([])}
-                className="px-2 py-1.5 text-[10px] uppercase tracking-[0.14em] text-muted hover:text-ink"
+                className="px-2 py-1.5 text-[12px] uppercase tracking-[0.14em] text-muted hover:text-ink"
               >
                 Clear
               </button>
@@ -92,7 +92,7 @@ export default function StaffForm({ team, groups, labels, presets, canMakeAdmin,
             <div className="grid gap-6 sm:grid-cols-2">
               {groups.map(([group, perms]) => (
                 <fieldset key={group}>
-                  <legend className="text-[10px] uppercase tracking-[0.16em] text-ink">{group}</legend>
+                  <legend className="text-[12px] uppercase tracking-[0.16em] text-ink">{group}</legend>
                   <div className="mt-3 space-y-2.5">
                     {perms.map((p) => (
                       <label key={p} className="flex cursor-pointer items-start gap-2.5 text-xs">
@@ -106,7 +106,7 @@ export default function StaffForm({ team, groups, labels, presets, canMakeAdmin,
                         />
                         <span>
                           <span className="block text-ink">{labels[p]}</span>
-                          <span className="block font-mono text-[10px] text-muted">{p}</span>
+                          <span className="block font-mono text-[12px] text-muted">{p}</span>
                         </span>
                       </label>
                     ))}
@@ -115,7 +115,7 @@ export default function StaffForm({ team, groups, labels, presets, canMakeAdmin,
               ))}
             </div>
 
-            <p className="text-[11px] text-muted">
+            <p className="text-[13px] text-muted">
               {checked.length} of {Object.keys(labels).length} permissions granted.
             </p>
           </div>

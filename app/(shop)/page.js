@@ -61,45 +61,49 @@ function Hero({ c }) {
 
       <div className="relative mx-auto grid max-w-[1400px] items-center gap-14 px-6 pb-20 pt-12 lg:grid-cols-[1fr_0.92fr] lg:gap-16 lg:px-10 lg:pt-16">
         <Reveal from="left">
-          <span className="inline-flex items-center gap-3 border border-gold/40 bg-paper/70 px-4 py-1.5 backdrop-blur-xs">
-            <Crescent className="h-3 w-3 text-gold" />
-            <span className="text-[9px] uppercase tracking-brand text-muted">{c.eyebrow}</span>
+          <span className="inline-flex items-center gap-3 border border-gold/40 bg-paper/70 px-4 py-2 backdrop-blur-xs">
+            <Crescent className="h-3.5 w-3.5 text-gold" />
+            <span className="text-[11px] uppercase tracking-brand text-muted">{c.eyebrow}</span>
           </span>
 
-          <h1 className="mt-8 font-display text-[3.2rem] font-light leading-[0.98] text-ink sm:text-[4.4rem] lg:text-[5.2rem]">
+          <h1 className="mt-8 font-display text-[3.4rem] font-light leading-[0.98] text-ink sm:text-[4.6rem] lg:text-[5.4rem]">
             {c.titleTop}
             <br />
             <span className="italic font-normal text-gold-dark">{c.titleAccent}</span>
           </h1>
 
-          <p className="mt-7 max-w-md text-[15px] leading-relaxed text-muted">{c.body}</p>
+          <p className="mt-7 max-w-lg text-[17px] leading-relaxed text-muted">{c.body}</p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Link
               href={c.primaryCta.href}
-              className="bg-ink px-9 py-4 text-[10px] uppercase tracking-brand text-bone shadow-sm transition hover:bg-gold-dark"
+              className="group relative bg-ink px-9 py-4 text-[12px] font-medium uppercase tracking-brand text-bone shadow-sm transition hover:bg-gold-dark"
             >
+              <span className="absolute -right-1 -top-1 h-2.5 w-2.5">
+                <span className="animate-pulse-ring absolute inset-0 rounded-full bg-gold" />
+                <span className="absolute inset-0 rounded-full bg-gold" />
+              </span>
               {c.primaryCta.label}
             </Link>
             <Link
               href={c.secondaryCta.href}
-              className="border border-line bg-paper px-7 py-4 text-[10px] uppercase tracking-brand text-ink transition hover:border-gold"
+              className="border border-line bg-paper px-7 py-4 text-[12px] font-medium uppercase tracking-brand text-ink transition hover:border-gold"
             >
               {c.secondaryCta.label}
             </Link>
             <Link
               href={c.tertiaryCta.href}
-              className="underline-grow py-2 text-[10px] uppercase tracking-brand text-muted hover:text-ink"
+              className="underline-grow py-2 text-[12px] font-medium uppercase tracking-brand text-muted hover:text-ink"
             >
               {c.tertiaryCta.label}
             </Link>
           </div>
 
-          <dl className="mt-12 grid max-w-lg grid-cols-3 gap-4 border-t border-line pt-6">
+          <dl className="mt-12 grid max-w-xl grid-cols-3 gap-5 border-t border-line pt-6">
             {c.stats.map((stat, i) => (
               <div key={stat.k + i} className={i ? "border-l border-line pl-4" : ""}>
-                <dt className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-ink">{stat.k}</dt>
-                <dd className="mt-1 text-[9px] uppercase tracking-[0.12em] text-muted">{stat.v}</dd>
+                <dt className="whitespace-nowrap text-[12.5px] font-semibold uppercase tracking-[0.1em] text-ink">{stat.k}</dt>
+                <dd className="mt-1.5 text-[11px] uppercase leading-relaxed tracking-[0.08em] text-muted">{stat.v}</dd>
               </div>
             ))}
           </dl>
@@ -107,26 +111,64 @@ function Hero({ c }) {
 
         <Reveal from="scale" delay={140}>
           <div className="group relative">
+            {/* Gold hairline that traces the dome, sitting just outside the mask */}
+            <svg
+              viewBox="0 0 100 140"
+              preserveAspectRatio="none"
+              className="pointer-events-none absolute -inset-x-2 -inset-y-2 h-[calc(100%+1rem)] w-[calc(100%+1rem)] text-gold/50"
+              aria-hidden="true"
+            >
+              <path
+                className="animate-trace"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="0.4"
+                vectorEffect="non-scaling-stroke"
+                d="M0 140 V70 C0 44 14 40 34 20 C40 13 46 6 50 0 c4 6 10 13 16 20 20 20 34 24 34 50 V140"
+              />
+            </svg>
+
             <ArchFrame
               src={c.image}
               alt={c.captionTitle}
-              ratio="aspect-[3/4]"
+              ratio="aspect-[4/4.6]"
               shape="dome"
+              focus="object-[50%_30%]"
               kenburns
               frame={false}
             >
-              <p className="font-display text-[1.9rem] font-light italic leading-tight text-white">
+              <p className="max-w-[72%] font-display text-[2.1rem] font-light italic leading-tight text-white">
                 {c.captionTitle}
               </p>
-              <p className="mt-1.5 text-[9.5px] uppercase tracking-brand text-bone/75">{c.captionSub}</p>
+              <p className="mt-2 max-w-[68%] text-[11.5px] font-medium uppercase tracking-brand text-bone/80">{c.captionSub}</p>
             </ArchFrame>
+
+            {/* Light falling across the arch, with motes drifting up through it */}
+            <div className="dome pointer-events-none absolute inset-0 overflow-hidden">
+              <div className="animate-lightfall absolute -top-1/4 left-0 h-[150%] w-1/3 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+              {[
+                { l: "22%", b: "18%", d: "0s" },
+                { l: "48%", b: "10%", d: "1.8s" },
+                { l: "68%", b: "24%", d: "3.4s" },
+                { l: "36%", b: "32%", d: "5.1s" },
+              ].map((m) => (
+                <span
+                  key={m.d}
+                  className="animate-drift absolute h-1 w-1 rounded-full bg-gold-light/80"
+                  style={{ left: m.l, bottom: m.b, animationDelay: m.d }}
+                />
+              ))}
+            </div>
+
+            <Corner className="absolute -bottom-4 -left-4 z-10 h-14 w-14 -scale-y-100 text-gold/60" />
+            <Corner className="absolute -bottom-4 -right-4 z-10 h-14 w-14 -scale-100 text-gold/60" />
 
             {/* Rosette seal, clear of the dome's curved shoulders */}
             <div className="absolute -bottom-8 right-6 hidden h-32 w-32 place-items-center rounded-full border border-gold/40 bg-paper shadow-lg sm:grid">
               <Rosette className="absolute h-28 w-28 text-gold/35" spin />
               <span className="relative text-center">
-                <span className="block font-display text-[2rem] leading-none text-gold-dark">17</span>
-                <span className="mt-1 block text-[7.5px] uppercase tracking-brand text-muted">Pieces</span>
+                <span className="block font-display text-[2.1rem] leading-none text-gold-dark">17</span>
+                <span className="mt-1 block text-[9.5px] font-medium uppercase tracking-brand text-muted">Pieces</span>
               </span>
             </div>
           </div>
@@ -169,14 +211,14 @@ function Silhouettes({ c, categories }) {
       <Reveal>
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <div>
-            <p className="text-[10px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
+            <p className="text-[12px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
             <h2 className="mt-4 font-display text-[2.6rem] font-light leading-none sm:text-[3.4rem]">
               {c.heading}
             </h2>
           </div>
           <Link
             href="/collections"
-            className="underline-grow shrink-0 pb-1 text-[10px] uppercase tracking-brand text-muted hover:text-ink"
+            className="underline-grow shrink-0 pb-1 text-[12px] uppercase tracking-brand text-muted hover:text-ink"
           >
             View all {categories.length} collections →
           </Link>
@@ -194,10 +236,10 @@ function Silhouettes({ c, categories }) {
                 focus="object-top"
                 zoomOnHover
               >
-                <span className="text-[8.5px] uppercase tracking-brand text-gold-light">{cat.count}</span>
+                <span className="text-[10.5px] uppercase tracking-brand text-gold-light">{cat.count}</span>
                 <h3 className="mt-1.5 font-display text-[1.8rem] leading-none text-bone">{cat.name}</h3>
-                <p className="mt-2 line-clamp-2 text-[11px] leading-relaxed text-bone/75">{cat.blurb}</p>
-                <span className="mt-3 inline-flex items-center gap-2 text-[9px] uppercase tracking-brand text-bone/70 transition-colors group-hover:text-gold-light">
+                <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-bone/75">{cat.blurb}</p>
+                <span className="mt-3 inline-flex items-center gap-2 text-[11px] uppercase tracking-brand text-bone/70 transition-colors group-hover:text-gold-light">
                   Explore <span className="transition-transform group-hover:translate-x-1">→</span>
                 </span>
               </ArchFrame>
@@ -218,11 +260,11 @@ function NewArrivals({ c, items }) {
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-6">
           <div>
-            <p className="text-[10px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
+            <p className="text-[12px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
             <h2 className="mt-3 font-display text-[2.6rem] font-light leading-none">{c.heading}</h2>
             <p className="mt-3 max-w-lg text-sm text-muted">{c.body}</p>
           </div>
-          <Link href="/collections" className="underline-grow pb-1 text-[10px] uppercase tracking-brand">
+          <Link href="/collections" className="underline-grow pb-1 text-[12px] uppercase tracking-brand">
             View all pieces →
           </Link>
         </div>
@@ -277,7 +319,7 @@ function CelebrationCapsule({ c, items }) {
           <div className="mt-16 text-center">
             <Link
               href={c.cta.href}
-              className="inline-block border border-gold/60 px-10 py-4 text-[10px] uppercase tracking-brand text-gold-light transition hover:bg-gold hover:text-midnight-deep"
+              className="inline-block border border-gold/60 px-10 py-4 text-[12px] uppercase tracking-brand text-gold-light transition hover:bg-gold hover:text-midnight-deep"
             >
               {c.cta.label}
             </Link>
@@ -305,7 +347,7 @@ function FabricTable() {
       <Reveal>
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <p className="text-[10px] uppercase tracking-brand text-muted">Knowledge Base</p>
+            <p className="text-[12px] uppercase tracking-brand text-muted">Knowledge Base</p>
             <h2 className="mt-4 font-display text-[2.6rem] font-light leading-none sm:text-[3.2rem]">
               The Hijab Fabric Guide
             </h2>
@@ -313,7 +355,7 @@ function FabricTable() {
               Every weave behaves differently. Compare slip-resistance, opacity and airflow before you choose.
             </p>
           </div>
-          <Link href="/collections?c=hijabs" className="underline-grow shrink-0 pb-1 text-[10px] uppercase tracking-brand">
+          <Link href="/collections?c=hijabs" className="underline-grow shrink-0 pb-1 text-[12px] uppercase tracking-brand">
             Shop all scarves →
           </Link>
         </div>
@@ -323,7 +365,7 @@ function FabricTable() {
         <div className="mt-12 overflow-x-auto border border-line bg-paper">
           <table className="w-full min-w-[760px] border-collapse text-left">
             <thead>
-              <tr className="border-b border-line bg-sand/50 text-[9px] uppercase tracking-brand text-muted">
+              <tr className="border-b border-line bg-sand/50 text-[11px] uppercase tracking-brand text-muted">
                 <th className="px-6 py-5 font-normal">Fabric</th>
                 <th className="px-4 py-5 text-center font-normal">Opacity</th>
                 <th className="px-4 py-5 text-center font-normal">Grip</th>
@@ -336,7 +378,7 @@ function FabricTable() {
                 <tr key={f.name} className="group border-b border-line last:border-0 transition-colors hover:bg-sand/30">
                   <td className="px-6 py-6 align-top">
                     <span className="font-display text-[1.35rem] leading-tight text-ink">{f.name}</span>
-                    <span className="mt-1.5 block max-w-xs text-[11px] leading-relaxed text-muted">{f.note}</span>
+                    <span className="mt-1.5 block max-w-xs text-[13px] leading-relaxed text-muted">{f.note}</span>
                   </td>
                   <Cell v={f.opacity} />
                   <Cell v={f.grip} />
@@ -374,7 +416,7 @@ function CutStandard() {
       <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
         <Reveal>
           <div className="max-w-2xl">
-            <p className="text-[10px] uppercase tracking-brand text-muted">Architectural Cuts</p>
+            <p className="text-[12px] uppercase tracking-brand text-muted">Architectural Cuts</p>
             <h2 className="mt-4 font-display text-[2.6rem] font-light leading-none sm:text-[3.2rem]">
               The Modesty Silhouette Standard
             </h2>
@@ -445,19 +487,19 @@ function PrayerSanctuary({ c }) {
               zoomOnHover
             >
               <p className="font-display text-[1.7rem] font-light italic text-white">{c.captionTitle}</p>
-              <p className="mt-1 text-[9px] uppercase tracking-brand text-bone/70">{c.captionSub}</p>
+              <p className="mt-1 text-[11px] uppercase tracking-brand text-bone/70">{c.captionSub}</p>
             </ArchFrame>
           </div>
         </Reveal>
 
         <Reveal from="right" delay={120}>
-          <p className="text-[10px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
+          <p className="text-[12px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
           <h2 className="mt-4 font-display text-[2.8rem] font-light leading-tight sm:text-[3.5rem]">
             {c.titleTop}
             <br />
             <span className="italic text-gold-dark">{c.titleAccent}</span>
           </h2>
-          <p className="mt-7 text-[15px] leading-relaxed text-muted">{c.body}</p>
+          <p className="mt-7 text-[17px] leading-relaxed text-muted">{c.body}</p>
 
           <ul className="mt-9 space-y-4 border-t border-line pt-7 text-sm text-muted">
             {c.bullets.map((t) => (
@@ -471,13 +513,13 @@ function PrayerSanctuary({ c }) {
           <div className="mt-10 flex flex-wrap items-center gap-5">
             <Link
               href={c.primaryCta.href}
-              className="bg-ink px-8 py-4 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
+              className="bg-ink px-8 py-4 text-[12px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
             >
               {c.primaryCta.label}
             </Link>
             <Link
               href={c.secondaryCta.href}
-              className="underline-grow py-2 text-[10px] uppercase tracking-brand text-muted hover:text-ink"
+              className="underline-grow py-2 text-[12px] uppercase tracking-brand text-muted hover:text-ink"
             >
               {c.secondaryCta.label}
             </Link>
@@ -520,10 +562,10 @@ function Staples({ c, items }) {
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-6">
           <div>
-            <p className="text-[10px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
+            <p className="text-[12px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
             <h2 className="mt-3 font-display text-[2.6rem] font-light leading-none">{c.heading}</h2>
           </div>
-          <Link href="/collections" className="underline-grow pb-1 text-[10px] uppercase tracking-brand">
+          <Link href="/collections" className="underline-grow pb-1 text-[12px] uppercase tracking-brand">
             View all pieces →
           </Link>
         </div>
@@ -539,9 +581,9 @@ function Staples({ c, items }) {
               focus="object-top"
               zoomOnHover
             >
-              <span className="text-[8.5px] uppercase tracking-brand text-gold-light">Most reached for</span>
+              <span className="text-[10.5px] uppercase tracking-brand text-gold-light">Most reached for</span>
               <h3 className="mt-1.5 font-display text-[2rem] leading-none text-bone">{lead.name}</h3>
-              <p className="mt-2 text-[11px] uppercase tracking-[0.18em] text-bone/70">
+              <p className="mt-2 text-[13px] uppercase tracking-[0.18em] text-bone/70">
                 {lead.colorName} · {inr(lead.price)}
               </p>
             </ArchFrame>
@@ -558,13 +600,13 @@ function Staples({ c, items }) {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex min-h-4 items-center gap-2 text-[8.5px] uppercase tracking-[0.22em] text-gold-dark">
+                    <div className="flex min-h-4 items-center gap-2 text-[10.5px] uppercase tracking-[0.22em] text-gold-dark">
                       {p.tag}
                     </div>
                     <h3 className="mt-1 font-display text-[1.6rem] leading-tight text-ink transition-colors group-hover:text-gold-dark">
                       {p.name}
                     </h3>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted">
+                    <p className="mt-1 text-[12px] uppercase tracking-[0.18em] text-muted">
                       {p.colorName} · {p.fabric}
                     </p>
                   </div>
@@ -574,7 +616,7 @@ function Staples({ c, items }) {
                       <p className="text-sm font-medium text-ink">{inr(p.price)}</p>
                       {p.mrp && <p className="text-xs text-muted line-through">{inr(p.mrp)}</p>}
                     </div>
-                    <span className="text-[11px] text-muted transition-transform group-hover:translate-x-1">→</span>
+                    <span className="text-[13px] text-muted transition-transform group-hover:translate-x-1">→</span>
                   </div>
                 </Link>
               </li>
@@ -599,13 +641,13 @@ function Gifting({ c }) {
 
           <div className="grid items-center gap-12 p-8 sm:p-14 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
-              <p className="text-[10px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
+              <p className="text-[12px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
               <h2 className="mt-4 font-display text-[2.6rem] font-light leading-tight sm:text-[3.2rem]">
                 {c.heading}
               </h2>
               <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted">{c.body}</p>
 
-              <ul className="mt-8 flex flex-wrap gap-3 text-[10px] uppercase tracking-[0.16em] text-muted">
+              <ul className="mt-8 flex flex-wrap gap-3 text-[12px] uppercase tracking-[0.16em] text-muted">
                 {c.chips.map((t) => (
                   <li key={t} className="flex items-center gap-2 border border-line bg-paper px-3.5 py-2">
                     <Star className="h-3 w-3 text-gold" />
@@ -616,7 +658,7 @@ function Gifting({ c }) {
 
               <Link
                 href={c.cta.href}
-                className="mt-9 inline-block bg-ink px-8 py-4 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
+                className="mt-9 inline-block bg-ink px-8 py-4 text-[12px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
               >
                 {c.cta.label}
               </Link>
@@ -692,7 +734,7 @@ function Voices({ c }) {
               <blockquote className="mt-6 flex-1 font-display text-[1.35rem] leading-snug text-ink/90">
                 “{quote}”
               </blockquote>
-              <figcaption className="mt-8 flex items-center justify-between border-t border-line pt-5 text-[10px] uppercase tracking-brand text-muted">
+              <figcaption className="mt-8 flex items-center justify-between border-t border-line pt-5 text-[12px] uppercase tracking-brand text-muted">
                 <span>{name}</span>
                 <span className="text-gold-dark">{city}</span>
               </figcaption>
@@ -729,7 +771,7 @@ function Letter({ c }) {
                 placeholder={c.placeholder}
                 className="flex-1 border-b border-ink/25 bg-transparent px-2 py-3 text-sm outline-none placeholder:text-muted focus:border-gold"
               />
-              <button className="bg-ink px-8 py-4 text-[10px] uppercase tracking-brand text-bone shadow-sm transition hover:bg-gold-dark">
+              <button className="bg-ink px-8 py-4 text-[12px] uppercase tracking-brand text-bone shadow-sm transition hover:bg-gold-dark">
                 {c.button}
               </button>
             </form>

@@ -24,7 +24,7 @@ export default function AuthPanel({ next }) {
       </div>
 
       <div className="mx-auto w-full max-w-sm self-center">
-        <p className="text-[10px] uppercase tracking-brand text-muted">{signup ? "New here" : "Welcome back"}</p>
+        <p className="text-[12px] uppercase tracking-brand text-muted">{signup ? "New here" : "Welcome back"}</p>
         <h1 className="mt-5 font-display text-[2.8rem] font-light leading-none">
           {signup ? "Create account" : "Sign in"}
         </h1>
@@ -45,19 +45,19 @@ export default function AuthPanel({ next }) {
             minLength={8}
             autoComplete={signup ? "new-password" : "current-password"}
           />
-          <button className="w-full bg-ink py-4 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark">
+          <button className="w-full bg-ink py-4 text-[12px] uppercase tracking-brand text-bone transition hover:bg-gold-dark">
             {signup ? "Create account" : "Sign in"}
           </button>
         </form>
 
         <button
           onClick={() => setMode(signup ? "signin" : "signup")}
-          className="mt-8 text-[10px] uppercase tracking-[0.18em] text-muted hover:text-ink"
+          className="mt-8 text-[12px] uppercase tracking-[0.18em] text-muted hover:text-ink"
         >
           {signup ? "Already have an account? Sign in" : "New to Siyana? Create an account"}
         </button>
 
-        <p className="mt-10 border-t border-line pt-6 text-[11px] leading-relaxed text-muted">
+        <p className="mt-10 border-t border-line pt-6 text-[13px] leading-relaxed text-muted">
           By continuing you agree to our{" "}
           <Link href="/help/terms" className="underline-grow text-ink">terms</Link> and{" "}
           <Link href="/help/privacy" className="underline-grow text-ink">privacy policy</Link>.
@@ -70,7 +70,7 @@ export default function AuthPanel({ next }) {
 function Field({ label, name, ...rest }) {
   return (
     <div>
-      <label htmlFor={name} className="text-[10px] uppercase tracking-[0.18em] text-muted">{label}</label>
+      <label htmlFor={name} className="text-[12px] uppercase tracking-[0.18em] text-muted">{label}</label>
       <input
         id={name}
         name={name}

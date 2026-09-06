@@ -27,13 +27,13 @@ export default function CategoryPanel({ categories, writable }) {
               )}
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm text-ink">{c.name}</p>
-                <p className="truncate text-[11px] text-muted">/{c.slug}</p>
+                <p className="truncate text-[13px] text-muted">/{c.slug}</p>
               </div>
-              {!c.active && <span className="text-[9.5px] uppercase tracking-[0.14em] text-muted">hidden</span>}
+              {!c.active && <span className="text-[11.5px] uppercase tracking-[0.14em] text-muted">hidden</span>}
               {writable && (
                 <button
                   onClick={() => setEditing(editing === c._id ? null : c._id)}
-                  className="shrink-0 text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink"
+                  className="shrink-0 text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink"
                 >
                   {editing === c._id ? "Close" : "Edit"}
                 </button>
@@ -45,11 +45,11 @@ export default function CategoryPanel({ categories, writable }) {
         {writable && (
           <form key={editing ?? "new"} action={action} className="space-y-4 border border-line bg-paper p-5">
             <div className="flex items-center justify-between">
-              <h3 className="text-[10px] uppercase tracking-[0.16em] text-muted">
+              <h3 className="text-[12px] uppercase tracking-[0.16em] text-muted">
                 {current ? `Edit ${current.name}` : "New collection"}
               </h3>
               {current && (
-                <button type="button" onClick={() => setEditing(null)} className="text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+                <button type="button" onClick={() => setEditing(null)} className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
                   New instead
                 </button>
               )}
@@ -67,7 +67,7 @@ export default function CategoryPanel({ categories, writable }) {
             </Field>
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label="Sort order"><Input name="order" type="number" defaultValue={current?.order ?? 0} /></Field>
-              <label className="flex items-end gap-2 pb-2.5 text-[10px] uppercase tracking-[0.16em] text-muted">
+              <label className="flex items-end gap-2 pb-2.5 text-[12px] uppercase tracking-[0.16em] text-muted">
                 <input type="checkbox" name="active" defaultChecked={current ? current.active : true} className="accent-ink" />
                 Visible on the storefront
               </label>

@@ -16,7 +16,7 @@ export default async function ContentPage() {
   return (
     <>
       <header>
-        <p className="text-[10px] uppercase tracking-brand text-muted">Content</p>
+        <p className="text-[12px] uppercase tracking-brand text-muted">Content</p>
         <h1 className="mt-2 font-display text-[2.4rem] font-light leading-none">Storefront</h1>
         <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted">
           Copy, imagery and product picks for the home page. Layout stays in code, so nothing here

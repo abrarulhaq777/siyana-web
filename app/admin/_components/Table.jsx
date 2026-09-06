@@ -6,7 +6,7 @@ export function Table({ head, children, empty = "Nothing here yet." }) {
     <div className="overflow-x-auto border border-line bg-paper">
       <table className="w-full min-w-[720px] border-collapse text-left text-sm">
         <thead>
-          <tr className="border-b border-line bg-sand/40 text-[9.5px] uppercase tracking-[0.16em] text-muted">
+          <tr className="border-b border-line bg-sand/40 text-[11.5px] uppercase tracking-[0.16em] text-muted">
             {head.map((h) => (
               <th key={h} className="px-4 py-3.5 font-normal">{h}</th>
             ))}

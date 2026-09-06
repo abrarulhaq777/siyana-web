@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import ProductMedia from "@/components/ProductMedia";
+import Gallery from "@/components/Gallery";
+import Stars from "@/components/Stars";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
 import { inr, sizes, abayaLengths } from "@/lib/products";
@@ -31,7 +32,7 @@ export default function ProductView({ product, related, categories = [] }) {
 
   return (
     <>
-      <nav className="mx-auto max-w-[1400px] px-6 pt-10 text-[10px] uppercase tracking-[0.18em] text-muted lg:px-10 flex items-center gap-2">
+      <nav className="mx-auto max-w-[1400px] px-6 pt-10 text-[12px] uppercase tracking-[0.18em] text-muted lg:px-10 flex items-center gap-2">
         <Link href="/collections" className="hover:text-ink">Collections</Link>
         <span className="text-muted/60">/</span>
         <Link href={`/collections?c=${product.category}`} className="hover:text-ink">{category?.name}</Link>
@@ -41,17 +42,17 @@ export default function ProductView({ product, related, categories = [] }) {
 
       <section className="mx-auto grid max-w-[1400px] gap-12 px-6 py-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:px-10">
         <div className="space-y-6">
-          <ProductMedia product={product} ratio="aspect-[3/4]" className="shadow-md" />
+          <Gallery images={product.images?.length ? product.images : product.image ? [product.image] : []} alt={product.name} />
           <div className="grid grid-cols-2 gap-4">
             <div className="arch-sm relative aspect-[4/3] overflow-hidden bg-sand/60 p-6 flex flex-col justify-end border border-line">
-              <span className="text-[9px] uppercase tracking-brand text-gold font-medium">Modesty Standard</span>
+              <span className="text-[11px] uppercase tracking-brand text-gold font-medium">Modesty Standard</span>
               <p className="mt-1 font-display text-lg leading-tight text-ink">{product.opacity}</p>
-              <p className="text-[11px] text-muted mt-1">Light transmission checked to guarantee zero sheer.</p>
+              <p className="text-[13px] text-muted mt-1">Light transmission checked to guarantee zero sheer.</p>
             </div>
             <div className="arch-sm relative aspect-[4/3] overflow-hidden bg-sand/60 p-6 flex flex-col justify-end border border-line">
-              <span className="text-[9px] uppercase tracking-brand text-gold font-medium">Silhouette Cut</span>
+              <span className="text-[11px] uppercase tracking-brand text-gold font-medium">Silhouette Cut</span>
               <p className="mt-1 font-display text-lg leading-tight text-ink">{product.silhouette}</p>
-              <p className="text-[11px] text-muted mt-1">Designed for full coverage and graceful natural drape.</p>
+              <p className="text-[13px] text-muted mt-1">Designed for full coverage and graceful natural drape.</p>
             </div>
           </div>
         </div>
@@ -60,7 +61,7 @@ export default function ProductView({ product, related, categories = [] }) {
           <div>
             <div className="flex items-center justify-between">
               {product.tag && (
-                <span className="bg-gold/15 text-gold-dark border border-gold/30 px-3 py-1 text-[9px] uppercase tracking-brand font-medium">
+                <span className="bg-gold/15 text-gold-dark border border-gold/30 px-3 py-1 text-[11px] uppercase tracking-brand font-medium">
                   {product.tag}
                 </span>
               )}
@@ -70,26 +71,33 @@ export default function ProductView({ product, related, categories = [] }) {
               {product.name}
             </h1>
 
+            {product.reviewCount > 0 && (
+              <a href="#reviews" className="mt-3 inline-flex items-center gap-2.5 text-[13px] text-muted hover:text-ink">
+                <Stars value={product.rating} />
+                <span>{product.rating.toFixed(1)} · {product.reviewCount} {product.reviewCount === 1 ? "review" : "reviews"}</span>
+              </a>
+            )}
+
             <p className="mt-6 flex items-baseline gap-3">
               <span className="text-2xl font-normal text-ink">{inr(product.price)}</span>
               {product.mrp && (
                 <>
                   <span className="text-sm text-muted line-through">{inr(product.mrp)}</span>
-                  <span className="bg-emerald/10 text-emerald text-[9.5px] uppercase tracking-brand px-2 py-0.5 font-medium">
+                  <span className="bg-emerald/10 text-emerald text-[11.5px] uppercase tracking-brand px-2 py-0.5 font-medium">
                     Save {Math.round((1 - product.price / product.mrp) * 100)}%
                   </span>
                 </>
               )}
             </p>
-            <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted">Inclusive of all duties & taxes</p>
+            <p className="mt-1 text-[12px] uppercase tracking-[0.18em] text-muted">Inclusive of all duties & taxes</p>
           </div>
 
-          <p className="text-[15px] leading-relaxed text-muted/90 border-t border-line pt-6">
+          <p className="text-[17px] leading-relaxed text-muted/90 border-t border-line pt-6">
             {product.story}
           </p>
 
           {/* Color and Fabric specifications */}
-          <div className="flex flex-wrap items-center gap-6 border-y border-line py-4 text-[10px] uppercase tracking-[0.18em]">
+          <div className="flex flex-wrap items-center gap-6 border-y border-line py-4 text-[12px] uppercase tracking-[0.18em]">
             <div className="flex items-center gap-2.5">
               <span className="h-3.5 w-3.5 rounded-full border border-line shadow-xs" style={{ backgroundColor: product.color }} />
               <span className="text-ink font-medium">{product.colorName}</span>
@@ -108,8 +116,8 @@ export default function ProductView({ product, related, categories = [] }) {
           <div className="space-y-6">
             <div>
               <div className="flex items-center justify-between">
-                <p className="text-[10px] uppercase tracking-brand text-ink">1. Select Size</p>
-                <Link href="/help/sizing" className="underline-grow text-[9.5px] uppercase tracking-[0.18em] text-muted">
+                <p className="text-[12px] uppercase tracking-brand text-ink">1. Select Size</p>
+                <Link href="/help/sizing" className="underline-grow text-[11.5px] uppercase tracking-[0.18em] text-muted">
                   Size guide
                 </Link>
               </div>
@@ -126,7 +134,7 @@ export default function ProductView({ product, related, categories = [] }) {
                       }}
                       aria-pressed={size === s}
                       title={left === 0 ? "Out of stock" : left <= 2 ? `Only ${left} left` : undefined}
-                      className={`h-11 w-14 border text-[11px] tracking-[0.1em] transition ${
+                      className={`h-11 w-14 border text-[13px] tracking-[0.1em] transition ${
                         left === 0
                           ? "cursor-not-allowed border-line/60 bg-sand/40 text-muted/50 line-through"
                           : size === s
@@ -139,18 +147,18 @@ export default function ProductView({ product, related, categories = [] }) {
                   );
                 })}
               </div>
-              {err && <p className="mt-2 text-[11px] text-sage">Please select a size to proceed.</p>}
+              {err && <p className="mt-2 text-[13px] text-sage">Please select a size to proceed.</p>}
               {size && stockFor(size) <= 2 && stockFor(size) > 0 && (
-                <p className="mt-2 text-[11px] text-gold-dark">Only {stockFor(size)} left in {size}.</p>
+                <p className="mt-2 text-[13px] text-gold-dark">Only {stockFor(size)} left in {size}.</p>
               )}
-              {soldOut && <p className="mt-2 text-[11px] text-muted">This piece is sold out. New stock is cut every few weeks.</p>}
+              {soldOut && <p className="mt-2 text-[13px] text-muted">This piece is sold out. New stock is cut every few weeks.</p>}
             </div>
 
             {isLongGarment && (
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-[10px] uppercase tracking-brand text-ink">2. Abaya Length (Shoulder to Ankle)</p>
-                  <span className="text-[9px] uppercase tracking-[0.18em] text-muted">Standard modest drop</span>
+                  <p className="text-[12px] uppercase tracking-brand text-ink">2. Abaya Length (Shoulder to Ankle)</p>
+                  <span className="text-[11px] uppercase tracking-[0.18em] text-muted">Standard modest drop</span>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {abayaLengths.map((l) => (
@@ -158,7 +166,7 @@ export default function ProductView({ product, related, categories = [] }) {
                       key={l}
                       onClick={() => setLength(l)}
                       aria-pressed={length === l}
-                      className={`h-10 px-3.5 border text-[10.5px] tracking-[0.08em] transition ${
+                      className={`h-10 px-3.5 border text-[12.5px] tracking-[0.08em] transition ${
                         length === l ? "border-gold bg-gold/10 text-ink font-medium" : "border-line hover:border-ink bg-paper"
                       }`}
                     >
@@ -174,7 +182,7 @@ export default function ProductView({ product, related, categories = [] }) {
           <div className="flex gap-3 pt-2">
             <button
               onClick={add}
-              className={`flex-1 py-4 text-[10px] uppercase tracking-brand transition shadow-sm ${
+              className={`flex-1 py-4 text-[12px] uppercase tracking-brand transition shadow-sm ${
                 added ? "bg-emerald text-white" : "bg-ink text-bone hover:bg-gold-dark"
               }`}
             >
@@ -202,7 +210,7 @@ export default function ProductView({ product, related, categories = [] }) {
             ))}
           </ul>
 
-          <dl className="space-y-3 border-t border-line pt-6 text-[10.5px] uppercase tracking-[0.16em] text-muted">
+          <dl className="space-y-3 border-t border-line pt-6 text-[12.5px] uppercase tracking-[0.16em] text-muted">
             <Row k="Dispatch" v="Ships within 24 hours" />
             <Row k="Modesty Guarantee" v="Free 15-day exchanges" />
             <Row k="Packaging" v="Discreet Luxury Box with Ribbon" />
@@ -215,7 +223,7 @@ export default function ProductView({ product, related, categories = [] }) {
         <section className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10 border-t border-line">
           <div className="flex items-baseline justify-between mb-12">
             <h2 className="font-display text-[2.2rem] font-light">Complete the Modest Wardrobe</h2>
-            <Link href={`/collections?c=${product.category}`} className="underline-grow text-[9.5px] uppercase tracking-brand text-muted hover:text-ink">
+            <Link href={`/collections?c=${product.category}`} className="underline-grow text-[11.5px] uppercase tracking-brand text-muted hover:text-ink">
               View more in this category
             </Link>
           </div>

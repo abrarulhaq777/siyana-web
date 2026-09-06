@@ -21,7 +21,7 @@ export default function ProductCard({ product, tone = "light" }) {
       <div className="relative">
         <ProductMedia product={product}>
           {/* Sits in the arch's straight-sided zone, so the crown never clips it */}
-          <span className="translate-y-2 self-start bg-ink/75 px-2.5 py-1 text-[8px] uppercase tracking-[0.2em] text-bone opacity-0 backdrop-blur-md transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+          <span className="translate-y-2 self-start bg-ink/75 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-bone opacity-0 backdrop-blur-md transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
             {product.fabric}
           </span>
         </ProductMedia>
@@ -48,7 +48,7 @@ export default function ProductCard({ product, tone = "light" }) {
       >
 
         {/* Reserved eyebrow row — keeps titles level whether or not a piece is tagged */}
-        <div className="mt-4 flex min-h-4 items-center gap-2 text-[8.5px] uppercase tracking-[0.22em]">
+        <div className="mt-4 flex min-h-4 items-center gap-2 text-[10.5px] uppercase tracking-[0.22em]">
           {product.tag && <span className={dark ? "text-gold-light" : "text-gold-dark"}>{product.tag}</span>}
           {off && (
             <>
@@ -62,7 +62,7 @@ export default function ProductCard({ product, tone = "light" }) {
           {product.name}
         </h3>
 
-        <div className={`mt-1 flex items-center justify-between text-[10px] uppercase tracking-[0.18em] ${dark ? "text-bone/60" : "text-muted"}`}>
+        <div className={`mt-1 flex items-center justify-between text-[12px] uppercase tracking-[0.18em] ${dark ? "text-bone/60" : "text-muted"}`}>
           <span className="truncate">{product.colorName}</span>
           {product.opacity && <span className={`shrink-0 ${dark ? "text-gold-light/70" : "text-sage"}`}>{product.opacity.split(" ")[0]}</span>}
         </div>

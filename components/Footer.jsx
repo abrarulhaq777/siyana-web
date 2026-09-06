@@ -36,7 +36,7 @@ export default function Footer({ categories = [], settings = {} }) {
           <FooterCol title="House of Siyana" items={house} />
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-line pt-8 text-[10px] uppercase tracking-[0.18em] text-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 flex flex-col gap-4 border-t border-line pt-8 text-[12px] uppercase tracking-[0.18em] text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} {settings.storeName ?? "Siyana"} — All Rights Reserved</p>
           <div className="flex items-center gap-4 text-ink font-medium">
             <span>Discreet Packaging</span>
@@ -54,7 +54,7 @@ export default function Footer({ categories = [], settings = {} }) {
 function FooterCol({ title, items }) {
   return (
     <div>
-      <h4 className="text-[10px] uppercase tracking-brand text-ink font-medium">{title}</h4>
+      <h4 className="text-[12px] uppercase tracking-brand text-ink font-medium">{title}</h4>
       <ul className="mt-6 space-y-3 text-sm text-muted">
         {items.map(([label, href]) => (
           <li key={label}>

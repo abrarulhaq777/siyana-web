@@ -15,12 +15,12 @@ export default async function Denied({ searchParams }) {
         <span className="text-ink">{PERMISSIONS[perm] ?? perm ?? "required"}</span> permission.
         Ask an administrator if you need it.
       </p>
-      <p className="mt-2 text-[10px] uppercase tracking-[0.16em] text-muted">
+      <p className="mt-2 text-[12px] uppercase tracking-[0.16em] text-muted">
         Signed in as {user.name}
       </p>
       <Link
         href="/admin"
-        className="mt-8 inline-block bg-ink px-8 py-3.5 text-[10px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
+        className="mt-8 inline-block bg-ink px-8 py-3.5 text-[12px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
       >
         Back to dashboard
       </Link>

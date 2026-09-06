@@ -23,7 +23,7 @@ export default async function CustomerDetail({ params }) {
 
   return (
     <>
-      <Link href="/admin/customers" className="text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+      <Link href="/admin/customers" className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
         ← Customers
       </Link>
 
@@ -42,7 +42,7 @@ export default async function CustomerDetail({ params }) {
           ["Joined", new Date(c.createdAt).toLocaleDateString("en-IN", { dateStyle: "medium" })],
         ].map(([k, v]) => (
           <div key={k} className="border border-line bg-paper p-5">
-            <p className="text-[9.5px] uppercase tracking-[0.16em] text-muted">{k}</p>
+            <p className="text-[11.5px] uppercase tracking-[0.16em] text-muted">{k}</p>
             <p className="mt-2.5 font-display text-[1.6rem] leading-none">{v}</p>
           </div>
         ))}
@@ -74,7 +74,7 @@ export default async function CustomerDetail({ params }) {
               <Cell><Badge tone={o.payment.status}>{o.payment.status}</Badge></Cell>
               <Cell><Badge tone={o.status}>{o.status}</Badge></Cell>
               <Cell className="text-right">
-                <Link href={`/admin/orders/${o._id}`} className="text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+                <Link href={`/admin/orders/${o._id}`} className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
                   Open →
                 </Link>
               </Cell>

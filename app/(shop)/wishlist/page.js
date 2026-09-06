@@ -14,7 +14,7 @@ export default function WishlistPage() {
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-16 lg:px-10">
       <h1 className="font-display text-[3rem] font-light leading-none">Saved</h1>
-      <p className="mt-4 text-[10px] uppercase tracking-brand text-muted">{saved.length} pieces</p>
+      <p className="mt-4 text-[12px] uppercase tracking-brand text-muted">{saved.length} pieces</p>
       <div className="mt-14 grid items-stretch gap-x-7 gap-y-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {saved.map((p) => (
           <ProductCard key={p.slug} product={p} />

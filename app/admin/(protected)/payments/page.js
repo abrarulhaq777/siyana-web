@@ -38,11 +38,11 @@ export default async function Payments({ searchParams }) {
     <>
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-brand text-muted">Money</p>
+          <p className="text-[12px] uppercase tracking-brand text-muted">Money</p>
           <h1 className="mt-2 font-display text-[2.4rem] font-light leading-none">Payments</h1>
         </div>
         {!razorpayEnabled() && (
-          <p className="border border-amber-200 bg-amber-50 px-4 py-2 text-[11px] text-amber-900">
+          <p className="border border-amber-200 bg-amber-50 px-4 py-2 text-[13px] text-amber-900">
             Razorpay keys not set — orders fall back to cash on delivery.
           </p>
         )}
@@ -55,9 +55,9 @@ export default async function Payments({ searchParams }) {
           ["Refunded", inr(refunded), "in the last 100 orders"],
         ].map(([k, v, hint]) => (
           <div key={k} className="border border-line bg-paper p-5">
-            <p className="text-[9.5px] uppercase tracking-[0.16em] text-muted">{k}</p>
+            <p className="text-[11.5px] uppercase tracking-[0.16em] text-muted">{k}</p>
             <p className="mt-3 font-display text-[1.9rem] leading-none">{v}</p>
-            <p className="mt-2 text-[10px] text-muted">{hint}</p>
+            <p className="mt-2 text-[12px] text-muted">{hint}</p>
           </div>
         ))}
       </div>
@@ -71,9 +71,9 @@ export default async function Payments({ searchParams }) {
           <option value="">All methods</option>
           {["upi", "card", "netbanking", "wallet", "cod"].map((m) => <option key={m} value={m}>{m}</option>)}
         </select>
-        <button className="bg-ink px-5 py-2.5 text-[10px] uppercase tracking-[0.16em] text-bone">Filter</button>
+        <button className="bg-ink px-5 py-2.5 text-[12px] uppercase tracking-[0.16em] text-bone">Filter</button>
         {(status || method) && (
-          <Link href="/admin/payments" className="px-3 py-2.5 text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+          <Link href="/admin/payments" className="px-3 py-2.5 text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
             Clear
           </Link>
         )}
@@ -90,15 +90,15 @@ export default async function Payments({ searchParams }) {
                   {new Date(o.createdAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}
                 </Cell>
                 <Cell className="text-muted">{o.customer.name}</Cell>
-                <Cell className="text-[10px] uppercase tracking-[0.14em] text-muted">{o.payment.method}</Cell>
-                <Cell className="font-mono text-[11px] text-muted">{o.payment.razorpayPaymentId ?? "—"}</Cell>
+                <Cell className="text-[12px] uppercase tracking-[0.14em] text-muted">{o.payment.method}</Cell>
+                <Cell className="font-mono text-[13px] text-muted">{o.payment.razorpayPaymentId ?? "—"}</Cell>
                 <Cell>
                   {inr(o.amounts.total)}
-                  {back > 0 && <span className="block text-[10px] text-muted">− {inr(back)} refunded</span>}
+                  {back > 0 && <span className="block text-[12px] text-muted">− {inr(back)} refunded</span>}
                 </Cell>
                 <Cell><Badge tone={o.payment.status}>{o.payment.status}</Badge></Cell>
                 <Cell className="text-right">
-                  <Link href={`/admin/orders/${o._id}`} className="text-[10px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+                  <Link href={`/admin/orders/${o._id}`} className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
                     Open →
                   </Link>
                 </Cell>
