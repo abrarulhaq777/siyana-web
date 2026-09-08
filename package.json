@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "node --env-file=.env.local scripts/seed.mjs",
+    "seed": "node scripts/seed.mjs",
+    "admin:create": "node scripts/create-admin.mjs",
     "check": "node lib/cart.check.mjs && node lib/permissions.check.mjs && node lib/coupons.check.mjs && node --env-file=.env.local scripts/orders.check.mjs"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.15.13",
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",

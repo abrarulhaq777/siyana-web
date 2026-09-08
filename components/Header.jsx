@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 import Wordmark from "./Wordmark";
 import { Star } from "./Ornament";
 import { useStore } from "@/lib/store";
 
 export default function Header({ categories = [], ticker = [] }) {
+  const pathname = usePathname();
   const links = [
     { href: "/collections", label: "All Creations" },
     ...categories.map((c) => ({ href: `/collections?c=${c.slug}`, label: c.name })),
@@ -18,29 +20,31 @@ export default function Header({ categories = [], ticker = [] }) {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="overflow-hidden border-b border-gold/20 bg-ink py-2">
-        <div className="animate-marquee flex w-max whitespace-nowrap text-[11px] uppercase tracking-brand text-bone/85">
-          {[0, 1].map((n) => (
-            <span key={n} className="flex shrink-0 items-center" aria-hidden={n === 1}>
-              {ticker.map((t) => (
-                <span key={t} className="flex items-center">
-                  <span className="px-7">{t}</span>
-                  <Star className="h-2.5 w-2.5 shrink-0 text-gold/70" />
-                </span>
-              ))}
-            </span>
-          ))}
-        </div>
-      </div>
-
       <div className={`border-b transition-colors duration-500 ${solid ? "border-line bg-paper/95 backdrop-blur-md shadow-xs" : "border-transparent bg-bone/90 backdrop-blur-sm"}`}>
         <div className="mx-auto grid h-20 max-w-[1400px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 lg:px-10">
           <nav className="hidden items-center gap-6 text-[11px] uppercase tracking-[0.16em] lg:flex">
-            {links.slice(0, 4).map((l) => (
-              <Link key={l.label} href={l.href} className="underline-grow py-1 text-ink/80 hover:text-ink">
-                {l.label}
-              </Link>
-            ))}
+            {links.slice(0, 3).map((l) => {
+              const active = pathname === l.href;
+              return (
+                <Link
+                  key={l.label}
+                  href={l.href}
+                  className={`underline-grow py-1 transition-colors ${
+                    active ? "text-ink font-semibold" : "text-ink/80 hover:text-ink"
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              );
+            })}
+            <Link
+              href="/offers"
+              className={`underline-grow py-1 transition-colors ${
+                pathname === "/offers" ? "text-gold-dark font-medium" : "text-ink/80 hover:text-ink"
+              }`}
+            >
+              Offers
+            </Link>
           </nav>
 
           <button
@@ -59,9 +63,28 @@ export default function Header({ categories = [], ticker = [] }) {
           </Link>
 
           <div className="flex items-center justify-end gap-5">
-            <Link href="/account" aria-label="Account" className="hidden sm:block text-ink/80 hover:text-ink">
+            <nav className="hidden items-center gap-5 text-[11px] uppercase tracking-[0.16em] xl:flex mr-2">
+              <Link
+                href="/about"
+                className={`underline-grow py-1 transition-colors ${
+                  pathname === "/about" ? "text-ink font-semibold" : "text-muted hover:text-ink"
+                }`}
+              >
+                About
+              </Link>
+              <Link
+                href="/contact"
+                className={`underline-grow py-1 transition-colors ${
+                  pathname === "/contact" ? "text-ink font-semibold" : "text-muted hover:text-ink"
+                }`}
+              >
+                Contact
+              </Link>
+            </nav>
+
+            <Link href="/account" aria-label="Account" className="text-ink/80 hover:text-ink">
               <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" stroke="currentColor" strokeWidth="1.2" fill="none">
-                <circle cx="12" cy="8" r="3.4" />
+                <circle cx="12" cy="8" r="3.2" />
                 <path d="M4.5 20c1.4-3.8 4.2-5.6 7.5-5.6s6.1 1.8 7.5 5.6" />
               </svg>
             </Link>
@@ -95,9 +118,32 @@ export default function Header({ categories = [], ticker = [] }) {
                 </Link>
               </li>
             ))}
-            <li className="pt-3 border-t border-line flex items-center justify-between text-[12px] uppercase tracking-brand text-muted">
-              <Link href="/account">My Account</Link>
-              <Link href="/wishlist">Saved Pieces ({wishlist.length})</Link>
+            <li>
+              <Link
+                href="/offers"
+                className={`font-display text-2xl flex items-center justify-between transition-colors ${
+                  pathname === "/offers" ? "text-gold-dark font-medium" : "text-ink"
+                }`}
+              >
+                <span>Seasonal Offers</span>
+                <span className="text-xs text-gold font-sans uppercase tracking-widest">
+                  {pathname === "/offers" ? "Active" : "Privilege"}
+                </span>
+              </Link>
+            </li>
+            <li className="pt-3 border-t border-line grid grid-cols-2 gap-3 text-[12px] uppercase tracking-brand text-muted">
+              <Link href="/about" className={`hover:text-ink ${pathname === "/about" ? "text-ink font-semibold" : ""}`}>
+                About Us
+              </Link>
+              <Link href="/contact" className={`hover:text-ink ${pathname === "/contact" ? "text-ink font-semibold" : ""}`}>
+                Contact Concierge
+              </Link>
+              <Link href="/account" className={`hover:text-ink ${pathname === "/account" ? "text-ink font-semibold" : ""}`}>
+                My Account
+              </Link>
+              <Link href="/wishlist" className={`hover:text-ink ${pathname === "/wishlist" ? "text-ink font-semibold" : ""}`}>
+                Saved Pieces ({wishlist.length})
+              </Link>
             </li>
           </ul>
         </nav>

@@ -3,6 +3,9 @@ import Reveal from "@/components/Reveal";
 import ArchFrame from "@/components/ArchFrame";
 import ProductCard from "@/components/ProductCard";
 import ProductMedia from "@/components/ProductMedia";
+import HeroSection from "@/components/HeroSection";
+import FabricStudio from "@/components/FabricStudio";
+import OccasionsLookbook from "@/components/OccasionsLookbook";
 import { Rosette, Star, Crescent, Lantern, Corner, Divider, Scallop } from "@/components/Ornament";
 import { inr } from "@/lib/products";
 import { getContent } from "@/lib/content";
@@ -21,13 +24,13 @@ export default async function Home() {
   // Order and visibility both come from the CMS, so an editor can reorder the
   // page without a deploy. Unknown ids are ignored rather than crashing.
   const sections = {
-    hero: <Hero c={cms.hero} />,
+    hero: <HeroSection c={cms.hero} />,
     assurances: <Assurances c={cms.assurances} />,
     categories: <Silhouettes c={cms.categories} categories={categories} />,
     newArrivals: <NewArrivals c={cms.newArrivals} items={arrivals} />,
     capsule: <CelebrationCapsule c={cms.capsule} items={capsule} />,
-    fabrics: <FabricTable />,
-    cuts: <CutStandard />,
+    fabrics: <FabricStudio />,
+    cuts: <OccasionsLookbook />,
     prayer: <PrayerSanctuary c={cms.prayer} />,
     ethos: <Ethos c={cms.ethos} />,
     staples: <Staples c={cms.staples} items={staples} />,
@@ -41,143 +44,6 @@ export default async function Home() {
   return <>{order.filter((id) => sections[id] && !hidden.includes(id)).map((id) => (
     <div key={id}>{sections[id]}</div>
   ))}</>;
-}
-
-/* ══════════════════════════════════════════════════════════ 01 · hero
-   Asymmetric split under an onion dome, flanked by hanging lanterns. */
-
-function Hero({ c }) {
-  return (
-    <section className="relative">
-      <div className="pattern-girih pointer-events-none absolute inset-0 opacity-[0.035]" />
-
-      {/* Lanterns hang from the top edge, as in classical Eid mastheads */}
-      <Lantern className="animate-sway pointer-events-none absolute left-[3%] top-0 hidden h-52 w-14 text-gold/70 xl:block" drop={26} />
-      <Lantern
-        className="animate-sway pointer-events-none absolute left-[9%] top-0 hidden h-36 w-11 text-gold/45 xl:block"
-        drop={12}
-        style={{ animationDelay: "1.4s" }}
-      />
-
-      <div className="relative mx-auto grid max-w-[1400px] items-center gap-14 px-6 pb-20 pt-12 lg:grid-cols-[1fr_0.92fr] lg:gap-16 lg:px-10 lg:pt-16">
-        <Reveal from="left">
-          <span className="inline-flex items-center gap-3 border border-gold/40 bg-paper/70 px-4 py-2 backdrop-blur-xs">
-            <Crescent className="h-3.5 w-3.5 text-gold" />
-            <span className="text-[11px] uppercase tracking-brand text-muted">{c.eyebrow}</span>
-          </span>
-
-          <h1 className="mt-8 font-display text-[3.4rem] font-light leading-[0.98] text-ink sm:text-[4.6rem] lg:text-[5.4rem]">
-            {c.titleTop}
-            <br />
-            <span className="italic font-normal text-gold-dark">{c.titleAccent}</span>
-          </h1>
-
-          <p className="mt-7 max-w-lg text-[17px] leading-relaxed text-muted">{c.body}</p>
-
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Link
-              href={c.primaryCta.href}
-              className="group relative bg-ink px-9 py-4 text-[12px] font-medium uppercase tracking-brand text-bone shadow-sm transition hover:bg-gold-dark"
-            >
-              <span className="absolute -right-1 -top-1 h-2.5 w-2.5">
-                <span className="animate-pulse-ring absolute inset-0 rounded-full bg-gold" />
-                <span className="absolute inset-0 rounded-full bg-gold" />
-              </span>
-              {c.primaryCta.label}
-            </Link>
-            <Link
-              href={c.secondaryCta.href}
-              className="border border-line bg-paper px-7 py-4 text-[12px] font-medium uppercase tracking-brand text-ink transition hover:border-gold"
-            >
-              {c.secondaryCta.label}
-            </Link>
-            <Link
-              href={c.tertiaryCta.href}
-              className="underline-grow py-2 text-[12px] font-medium uppercase tracking-brand text-muted hover:text-ink"
-            >
-              {c.tertiaryCta.label}
-            </Link>
-          </div>
-
-          <dl className="mt-12 grid max-w-xl grid-cols-3 gap-5 border-t border-line pt-6">
-            {c.stats.map((stat, i) => (
-              <div key={stat.k + i} className={i ? "border-l border-line pl-4" : ""}>
-                <dt className="whitespace-nowrap text-[12.5px] font-semibold uppercase tracking-[0.1em] text-ink">{stat.k}</dt>
-                <dd className="mt-1.5 text-[11px] uppercase leading-relaxed tracking-[0.08em] text-muted">{stat.v}</dd>
-              </div>
-            ))}
-          </dl>
-        </Reveal>
-
-        <Reveal from="scale" delay={140}>
-          <div className="group relative">
-            {/* Gold hairline that traces the dome, sitting just outside the mask */}
-            <svg
-              viewBox="0 0 100 140"
-              preserveAspectRatio="none"
-              className="pointer-events-none absolute -inset-x-2 -inset-y-2 h-[calc(100%+1rem)] w-[calc(100%+1rem)] text-gold/50"
-              aria-hidden="true"
-            >
-              <path
-                className="animate-trace"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.4"
-                vectorEffect="non-scaling-stroke"
-                d="M0 140 V70 C0 44 14 40 34 20 C40 13 46 6 50 0 c4 6 10 13 16 20 20 20 34 24 34 50 V140"
-              />
-            </svg>
-
-            <ArchFrame
-              src={c.image}
-              alt={c.captionTitle}
-              ratio="aspect-[4/4.6]"
-              shape="dome"
-              focus="object-[50%_30%]"
-              kenburns
-              frame={false}
-            >
-              <p className="max-w-[72%] font-display text-[2.1rem] font-light italic leading-tight text-white">
-                {c.captionTitle}
-              </p>
-              <p className="mt-2 max-w-[68%] text-[11.5px] font-medium uppercase tracking-brand text-bone/80">{c.captionSub}</p>
-            </ArchFrame>
-
-            {/* Light falling across the arch, with motes drifting up through it */}
-            <div className="dome pointer-events-none absolute inset-0 overflow-hidden">
-              <div className="animate-lightfall absolute -top-1/4 left-0 h-[150%] w-1/3 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
-              {[
-                { l: "22%", b: "18%", d: "0s" },
-                { l: "48%", b: "10%", d: "1.8s" },
-                { l: "68%", b: "24%", d: "3.4s" },
-                { l: "36%", b: "32%", d: "5.1s" },
-              ].map((m) => (
-                <span
-                  key={m.d}
-                  className="animate-drift absolute h-1 w-1 rounded-full bg-gold-light/80"
-                  style={{ left: m.l, bottom: m.b, animationDelay: m.d }}
-                />
-              ))}
-            </div>
-
-            <Corner className="absolute -bottom-4 -left-4 z-10 h-14 w-14 -scale-y-100 text-gold/60" />
-            <Corner className="absolute -bottom-4 -right-4 z-10 h-14 w-14 -scale-100 text-gold/60" />
-
-            {/* Rosette seal, clear of the dome's curved shoulders */}
-            <div className="absolute -bottom-8 right-6 hidden h-32 w-32 place-items-center rounded-full border border-gold/40 bg-paper shadow-lg sm:grid">
-              <Rosette className="absolute h-28 w-28 text-gold/35" spin />
-              <span className="relative text-center">
-                <span className="block font-display text-[2.1rem] leading-none text-gold-dark">17</span>
-                <span className="mt-1 block text-[9.5px] font-medium uppercase tracking-brand text-muted">Pieces</span>
-              </span>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-
-      <Scallop className="text-gold" />
-    </section>
-  );
 }
 
 /* ══════════════════════════════════════════ 02 · assurances
@@ -260,7 +126,9 @@ function NewArrivals({ c, items }) {
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-6">
           <div>
-            <p className="text-[12px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
+            <p className="text-[12px] uppercase tracking-brand text-muted">
+              {c.eyebrow && !/autumn/i.test(c.eyebrow) ? c.eyebrow : "Signature Modesty Edit"}
+            </p>
             <h2 className="mt-3 font-display text-[2.6rem] font-light leading-none">{c.heading}</h2>
             <p className="mt-3 max-w-lg text-sm text-muted">{c.body}</p>
           </div>
@@ -325,144 +193,6 @@ function CelebrationCapsule({ c, items }) {
             </Link>
           </div>
         </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ══════════════════════════════════════════ 06 · fabric guide
-   A comparison table, not another card row. Attributes read across,
-   so nothing can fall out of alignment. */
-
-const fabrics = [
-  { name: "Beechwood Modal", opacity: "5/5", grip: "5/5", air: "5/5", best: "Daily wear, long shifts, warm climates", note: "No pins needed — drape and toss over the shoulder." },
-  { name: "Korean Double Chiffon", opacity: "4/5", grip: "3.5/5", air: "4/5", best: "Formal dinners, nikah, fluid drapes", note: "Pair with a cotton undercap and magnetic pins." },
-  { name: "Silk-Touch Georgette", opacity: "4/5", grip: "4/5", air: "4.5/5", best: "Jummah, Eid, elevated occasions", note: "Press the front fold for an architectural frame." },
-  { name: "Four-Way Cotton Jersey", opacity: "5/5", grip: "5/5", air: "5/5", best: "Errands, school runs, travel", note: "Wrap once, no pins. Stretch moulds to the crown." },
-];
-
-function FabricTable() {
-  return (
-    <section className="mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
-      <Reveal>
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <p className="text-[12px] uppercase tracking-brand text-muted">Knowledge Base</p>
-            <h2 className="mt-4 font-display text-[2.6rem] font-light leading-none sm:text-[3.2rem]">
-              The Hijab Fabric Guide
-            </h2>
-            <p className="mt-3 max-w-xl text-sm text-muted">
-              Every weave behaves differently. Compare slip-resistance, opacity and airflow before you choose.
-            </p>
-          </div>
-          <Link href="/collections?c=hijabs" className="underline-grow shrink-0 pb-1 text-[12px] uppercase tracking-brand">
-            Shop all scarves →
-          </Link>
-        </div>
-      </Reveal>
-
-      <Reveal delay={120}>
-        <div className="mt-12 overflow-x-auto border border-line bg-paper">
-          <table className="w-full min-w-[760px] border-collapse text-left">
-            <thead>
-              <tr className="border-b border-line bg-sand/50 text-[11px] uppercase tracking-brand text-muted">
-                <th className="px-6 py-5 font-normal">Fabric</th>
-                <th className="px-4 py-5 text-center font-normal">Opacity</th>
-                <th className="px-4 py-5 text-center font-normal">Grip</th>
-                <th className="px-4 py-5 text-center font-normal">Airflow</th>
-                <th className="px-6 py-5 font-normal">Best for</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fabrics.map((f) => (
-                <tr key={f.name} className="group border-b border-line last:border-0 transition-colors hover:bg-sand/30">
-                  <td className="px-6 py-6 align-top">
-                    <span className="font-display text-[1.35rem] leading-tight text-ink">{f.name}</span>
-                    <span className="mt-1.5 block max-w-xs text-[13px] leading-relaxed text-muted">{f.note}</span>
-                  </td>
-                  <Cell v={f.opacity} />
-                  <Cell v={f.grip} />
-                  <Cell v={f.air} />
-                  <td className="px-6 py-6 align-top text-xs leading-relaxed text-muted">{f.best}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Reveal>
-    </section>
-  );
-}
-
-const Cell = ({ v }) => (
-  <td className="px-4 py-6 text-center align-top">
-    <span className="font-display text-[1.5rem] text-gold-dark">{v}</span>
-  </td>
-);
-
-/* ══════════════════════════════════════════ 07 · cut standard
-   A horizontal timeline of dome diagrams, joined by one hairline. */
-
-const cuts = [
-  ["Open Front", "Detachable sash belt. Wear it buttoned, knotted, or flowing open over a slip."],
-  ["Column Cut", "A disciplined vertical drop with back pleating. Never clings, always moves."],
-  ["Farasha", "A continuous wing from wrist to hem — voluminous, uninhibited coverage."],
-  ["Umbrella Sweep", 'Tapered at the bodice, widening to a 110" circumference that floats at the feet.'],
-];
-
-function CutStandard() {
-  return (
-    <section className="border-y border-line bg-paper py-24">
-      <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
-        <Reveal>
-          <div className="max-w-2xl">
-            <p className="text-[12px] uppercase tracking-brand text-muted">Architectural Cuts</p>
-            <h2 className="mt-4 font-display text-[2.6rem] font-light leading-none sm:text-[3.2rem]">
-              The Modesty Silhouette Standard
-            </h2>
-            <p className="mt-3 text-sm text-muted">
-              Every Siyana piece is developed against classic modest drape geometry —
-              full coverage held in balance with effortless grace.
-            </p>
-          </div>
-        </Reveal>
-
-        <div className="relative mt-20">
-          {/* The hairline that threads the four cuts together */}
-          <div className="absolute inset-x-0 top-[122px] hidden h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent lg:block" />
-
-          <div className="grid gap-14 sm:grid-cols-2 lg:grid-cols-4">
-            {cuts.map(([name, body], i) => (
-              <Reveal key={name} delay={i * 120} from="fade">
-                <div className="group relative text-center">
-                  <div className="relative mx-auto grid h-[140px] w-[104px] place-items-end">
-                    <svg viewBox="0 0 100 140" className="absolute inset-0 h-full w-full text-gold/45 transition-colors duration-500 group-hover:text-gold" aria-hidden="true">
-                      <path
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1"
-                        d="M4 138 V62 C4 30 22 34 40 14 c4-5 7-8 10-11 3 3 6 6 10 11 18 20 36 16 36 48 v76"
-                      />
-                      <path
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="0.6"
-                        opacity="0.5"
-                        d="M14 138 V66 C14 38 30 41 44 24 c3-4 5-6 6-8 1 2 3 4 6 8 14 17 30 14 30 42 v72"
-                      />
-                    </svg>
-                    <span className="relative z-10 grid h-9 w-9 place-items-center rounded-full border border-gold/50 bg-paper font-display text-[1.05rem] text-gold-dark">
-                      {i + 1}
-                    </span>
-                  </div>
-
-                  <h3 className="mt-6 font-display text-[1.5rem] leading-tight text-ink">{name}</h3>
-                  <p className="mx-auto mt-3 max-w-[15rem] text-xs leading-relaxed text-muted">{body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

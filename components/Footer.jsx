@@ -10,9 +10,9 @@ const help = [
 
 const house = [
   ["Our Story & Modesty Vision", "/about"],
+  ["Seasonal Offers & Privileges", "/offers"],
   ["The Modesty Standard", "/#ethos"],
-  ["Jummah & Eid Capsules", "/collections"],
-  ["Contact Concierge", "/about#contact"],
+  ["Contact Concierge", "/contact"],
 ];
 
 export default function Footer({ categories = [], settings = {} }) {

@@ -56,7 +56,7 @@ export default function CouponForm({ coupons, categories, products }) {
               className="font-mono uppercase" placeholder="SIYANA10" />
           </Field>
           <Field label="Internal note" hint="Shown to the shopper when the code applies.">
-            <Input name="description" defaultValue={editing?.description} placeholder="10% off the autumn capsule" />
+            <Input name="description" defaultValue={editing?.description} placeholder="10% off the signature edit" />
           </Field>
         </div>
 

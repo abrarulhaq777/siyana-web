@@ -39,7 +39,7 @@ export async function signUp(_prev, formData) {
 
 export async function signOut() {
   await destroySession();
-  redirect("/");
+  redirect("/signout");
 }
 
 export async function saveAddress(_prev, formData) {
