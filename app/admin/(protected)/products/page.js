@@ -7,6 +7,7 @@ import { inr } from "@/lib/products";
 import { Table, Row, Cell } from "../../_components/Table";
 import { Badge } from "../../_components/ui";
 import CategoryPanel from "./CategoryPanel";
+import DeleteProductButton from "./DeleteProductButton";
 
 export default async function Products({ searchParams }) {
   await requirePageAccess("products:read");
@@ -85,9 +86,12 @@ export default async function Products({ searchParams }) {
                 </Cell>
                 <Cell><Badge tone={p.active ? "active" : "disabled"}>{p.active ? "live" : "hidden"}</Badge></Cell>
                 <Cell className="text-right">
-                  <Link href={`/admin/products/${p._id}`} className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
-                    {writable ? "Edit →" : "View →"}
-                  </Link>
+                  <div className="flex items-center justify-end gap-3">
+                    <Link href={`/admin/products/${p._id}`} className="text-[12px] uppercase tracking-[0.16em] text-muted hover:text-ink">
+                      {writable ? "Edit →" : "View →"}
+                    </Link>
+                    {writable && <DeleteProductButton id={p._id} name={p.name} />}
+                  </div>
                 </Cell>
               </Row>
             );

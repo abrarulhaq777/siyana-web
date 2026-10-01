@@ -6,7 +6,7 @@ import { currentUser } from "@/lib/auth";
 import { createOrder, restock } from "@/lib/orders";
 import { applyCoupon } from "@/lib/coupons";
 import { Product } from "@/lib/models";
-import { razorpay, razorpayEnabled, paise, verifyPaymentSignature } from "@/lib/razorpay";
+import { razorpay, getRazorpay, razorpayEnabled, paise, verifyPaymentSignature } from "@/lib/razorpay";
 
 const fail = (error) => ({ ok: false, error });
 
@@ -84,7 +84,8 @@ export async function placeOrder(payload) {
   }
 
   try {
-    const rp = await razorpay.orders.create({
+    const rpClient = getRazorpay() || razorpay;
+    const rp = await rpClient.orders.create({
       amount: paise(order.amounts.total),
       currency: "INR",
       receipt: order.orderNo,
@@ -100,7 +101,7 @@ export async function placeOrder(payload) {
       orderId: String(order._id),
       razorpayOrderId: rp.id,
       amount: rp.amount,
-      keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID,
       prefill: { name: customer.name, email: customer.email, contact: customer.phone },
     };
   } catch (e) {

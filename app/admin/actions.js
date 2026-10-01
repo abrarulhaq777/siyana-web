@@ -202,6 +202,33 @@ export async function toggleProduct(_prev, formData) {
   return ok(p.active ? "Product is live." : "Product hidden from the storefront.");
 }
 
+export async function deleteProduct(_prev, formData) {
+  const user = await requirePermission("products:write");
+  const id = formData.get("id");
+  if (!id) return fail("Missing product ID.");
+
+  await db();
+  const product = await Product.findByIdAndDelete(id);
+  if (!product) return fail("Product not found.");
+
+  await log(user, "product.delete", {
+    entity: "Product",
+    entityId: id,
+    meta: { name: product.name, slug: product.slug },
+  });
+
+  revalidatePath("/admin/products");
+  revalidatePath("/");
+  revalidatePath("/collections");
+  revalidatePath(`/product/${product.slug}`);
+
+  const redirectTo = formData.get("redirectTo");
+  if (redirectTo) {
+    redirect(redirectTo);
+  }
+  return ok("Product deleted.");
+}
+
 export async function saveCategory(_prev, formData) {
   const user = await requirePermission("products:write");
   const id = formData.get("id");
@@ -227,6 +254,35 @@ export async function saveCategory(_prev, formData) {
   revalidatePath("/admin/products");
   revalidatePath("/");
   return ok("Collection saved.");
+}
+
+export async function deleteCategory(_prev, formData) {
+  const user = await requirePermission("products:write");
+  const id = formData.get("id");
+  if (!id) return fail("Missing collection ID.");
+
+  await db();
+  const cat = await Category.findById(id);
+  if (!cat) return fail("Collection not found.");
+
+  const count = await Product.countDocuments({ category: cat.slug });
+  if (count > 0) {
+    return fail(
+      `Cannot delete “${cat.name}”: ${count} product(s) still belong to it. Please reassign or delete those products first.`
+    );
+  }
+
+  await Category.findByIdAndDelete(id);
+  await log(user, "category.delete", {
+    entity: "Category",
+    entityId: id,
+    meta: { name: cat.name, slug: cat.slug },
+  });
+
+  revalidatePath("/admin/products");
+  revalidatePath("/");
+  revalidatePath("/collections");
+  return ok("Collection deleted.");
 }
 
 /* ─────────────────────────────────────────────────────────────── coupons */

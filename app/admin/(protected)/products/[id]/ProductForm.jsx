@@ -1,13 +1,14 @@
 "use client";
 
 import { useActionState } from "react";
-import { saveProduct, toggleProduct } from "@/app/admin/actions";
+import { saveProduct, toggleProduct, deleteProduct } from "@/app/admin/actions";
 import { Field, Input, Textarea, Select, Submit, Notice, Button } from "@/app/admin/_components/ui";
 import ImagePicker from "./ImagePicker";
 
 export default function ProductForm({ product, categories, sizes, writable }) {
   const [state, action] = useActionState(saveProduct, null);
   const [toggleState, toggleAction] = useActionState(toggleProduct, null);
+  const [deleteState, deleteAction, deletePending] = useActionState(deleteProduct, null);
   const p = product ?? {};
 
   const qtyFor = (size) => p.stock?.find((s) => s.size === size)?.qty ?? 0;
@@ -116,6 +117,34 @@ export default function ProductForm({ product, categories, sizes, writable }) {
           </div>
           <Button type="submit" variant="ghost">{p.active ? "Hide" : "Publish"}</Button>
         </form>
+      )}
+
+      {p._id && (
+        <section className="border border-red-200 bg-red-50/40 p-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-red-700">Delete product</p>
+              <p className="mt-1 text-[13px] text-red-600">
+                Permanently delete “{p.name}” from the catalogue. This action cannot be undone.
+              </p>
+              {deleteState && <div className="mt-2"><Notice state={deleteState} /></div>}
+            </div>
+            <form
+              action={deleteAction}
+              onSubmit={(e) => {
+                if (!window.confirm(`Are you sure you want to permanently delete "${p.name}"? This cannot be undone.`)) {
+                  e.preventDefault();
+                }
+              }}
+            >
+              <input type="hidden" name="id" value={p._id} />
+              <input type="hidden" name="redirectTo" value="/admin/products" />
+              <Button type="submit" variant="danger" disabled={deletePending}>
+                {deletePending ? "Deleting…" : "Delete product"}
+              </Button>
+            </form>
+          </div>
+        </section>
       )}
     </div>
   );

@@ -89,6 +89,11 @@ export default function CheckoutView({ settings, gateway, me }) {
     }
 
     // Hand off to Razorpay, then verify server-side
+    if (typeof window === "undefined" || !window.Razorpay) {
+      setBusy(false);
+      return setError("Payment gateway is loading. Please try again in a few moments.");
+    }
+
     const rzp = new window.Razorpay({
       key: result.keyId,
       order_id: result.razorpayOrderId,
@@ -118,12 +123,22 @@ export default function CheckoutView({ settings, gateway, me }) {
         },
       },
     });
+
+    rzp.on("payment.failed", function (response) {
+      setBusy(false);
+      setError(
+        response.error?.description ||
+          response.error?.reason ||
+          "Payment failed. Please try again or use another payment method."
+      );
+    });
+
     rzp.open();
   }
 
   return (
     <div className="bg-bone/40 pb-24 pt-8">
-      {gateway && <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />}
+      {gateway && <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />}
 
       <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
         
