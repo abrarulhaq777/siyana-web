@@ -17,7 +17,7 @@ const TYPES = { "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp"
 
 export async function POST(request) {
   const user = await currentUser();
-  if (!can(user, "products:write")) {
+  if (!can(user, "products:write") && !can(user, "content:write")) {
     return NextResponse.json({ error: "Not permitted." }, { status: 403 });
   }
 

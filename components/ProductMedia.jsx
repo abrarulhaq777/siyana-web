@@ -5,19 +5,45 @@ import ArchFrame from "./ArchFrame";
  * frame so faces and necklines land in the same place across a whole row.
  */
 export default function ProductMedia({ product, className = "", ratio = "aspect-[3/4]", children }) {
-  if (product?.image) {
+  const primaryImg = product?.image || product?.images?.[0];
+  const secondaryImg =
+    product?.images && product.images.length > 1 && product.images[1] !== primaryImg
+      ? product.images[1]
+      : null;
+
+  if (primaryImg) {
     return (
-      <ArchFrame
-        src={product.image}
-        alt={product.name}
-        ratio={ratio}
-        focus="object-top"
-        zoomOnHover
-        scrim={false}
-        className={className}
-      >
-        {children}
-      </ArchFrame>
+      <div className={`${ratio} arch relative overflow-hidden bg-sand/60 ${className}`}>
+        {/* Primary cover image */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={primaryImg}
+          alt={product.name}
+          loading="lazy"
+          className={`h-full w-full object-cover object-top transition-all duration-[1100ms] ease-out group-hover:scale-[1.06] ${
+            secondaryImg ? "group-hover:opacity-0" : ""
+          }`}
+        />
+
+        {/* Secondary image crossfade on hover if present */}
+        {secondaryImg && (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={secondaryImg}
+            alt={`${product.name} angle`}
+            loading="lazy"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-top opacity-0 transition-all duration-[1100ms] ease-out group-hover:scale-[1.06] group-hover:opacity-100"
+          />
+        )}
+
+        <div className="arch pointer-events-none absolute inset-2.5 border border-white/25 transition-colors duration-500 group-hover:border-gold/60" />
+
+        {children && (
+          <div className="arch-safe absolute inset-x-0 bottom-0 flex flex-col justify-end px-6 pb-7 sm:px-7 sm:pb-8">
+            {children}
+          </div>
+        )}
+      </div>
     );
   }
 

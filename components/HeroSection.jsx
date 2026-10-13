@@ -5,7 +5,7 @@ import Link from "next/link";
 import ArchFrame from "@/components/ArchFrame";
 import { Rosette, Star, Corner, Scallop } from "@/components/Ornament";
 
-export default function HeroSection({ c }) {
+export default function HeroSection({ c, totalProducts }) {
   const [activeLook, setActiveLook] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -15,7 +15,9 @@ export default function HeroSection({ c }) {
     { k: '52"–60"', v: "Tailored drop lengths" },
   ];
 
-  const LOOKS = [
+  const dynamicSlides = Array.isArray(c?.slides) && c.slides.length > 0 ? c.slides : null;
+
+  const defaultLooks = [
     {
       id: "abaya",
       image: c?.image || "/images/hero/hero-siyana.jpg",
@@ -27,6 +29,7 @@ export default function HeroSection({ c }) {
       previewPrice: "₹4,890",
       previewTag: "Bestseller",
       focus: "object-[50%_30%]",
+      link: "/product/noor-open-abaya",
     },
     {
       id: "hijabs",
@@ -39,6 +42,7 @@ export default function HeroSection({ c }) {
       previewPrice: "₹1,290",
       previewTag: "New Season",
       focus: "object-[50%_25%]",
+      link: "/product/hana-modal-hijab",
     },
     {
       id: "kaftans",
@@ -51,19 +55,34 @@ export default function HeroSection({ c }) {
       previewPrice: "₹6,490",
       previewTag: "Limited Batch",
       focus: "object-[50%_20%]",
+      link: "/product/zahra-kaftan",
     },
   ];
 
+  const LOOKS = (dynamicSlides || defaultLooks).map((item, idx) => ({
+    id: item.id || `slide-${idx}`,
+    image: item.image || (idx === 0 ? c?.image : null) || "/images/hero/hero-siyana.jpg",
+    badge: item.badge || "Signature Collection",
+    title: item.title || (idx === 0 ? c?.captionTitle : null) || "The Noble Art of Modesty",
+    sub: item.sub || (idx === 0 ? c?.captionSub : null) || "Japanese Nida & hand-rolled silks",
+    previewThumb: item.previewThumb || null,
+    previewName: item.previewName || null,
+    previewPrice: item.previewPrice || null,
+    previewTag: item.previewTag || "Featured",
+    focus: item.focus || "object-[50%_30%]",
+    link: item.link || "/collections",
+  }));
+
   /* ── Auto-rotate images every 4.2 seconds (pauses on hover) ── */
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || LOOKS.length <= 1) return;
     const interval = setInterval(() => {
       setActiveLook((prev) => (prev + 1) % LOOKS.length);
     }, 4200);
     return () => clearInterval(interval);
   }, [isPaused, LOOKS.length]);
 
-  const currentLook = LOOKS[activeLook] || LOOKS[0];
+  const currentLook = LOOKS[activeLook % LOOKS.length] || LOOKS[0];
 
   return (
     <section className="relative overflow-hidden bg-bone/40 pb-16 pt-3 sm:pb-20 sm:pt-4 lg:pb-24 lg:pt-6">
@@ -221,29 +240,36 @@ export default function HeroSection({ c }) {
               <Corner className="absolute -bottom-4 -right-4 z-10 h-14 w-14 -scale-100 text-gold/65" />
 
               {/* ── Floating Mini Product Feature Card ── */}
-              <div className="absolute -left-6 top-16 z-30 hidden w-52 rounded-md border border-line bg-paper/95 p-3 shadow-xl backdrop-blur-md transition-all duration-500 hover:scale-105 sm:block lg:-left-10">
-                <div className="flex items-center gap-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={currentLook.previewThumb}
-                    alt=""
-                    className="h-14 w-10.5 rounded-xs object-cover shadow-xs"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <span className="inline-block rounded-xs bg-gold/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-gold-dark">
-                      {currentLook.previewTag}
-                    </span>
-                    <p className="mt-1 truncate text-xs font-semibold text-ink">{currentLook.previewName}</p>
-                    <p className="mt-0.5 text-[11.5px] font-medium text-gold-dark">{currentLook.previewPrice}</p>
+              {currentLook.previewThumb && currentLook.previewName && (
+                <Link
+                  href={currentLook.link || "/collections"}
+                  className="absolute -left-6 top-16 z-30 hidden w-52 rounded-md border border-line bg-paper/95 p-3 shadow-xl backdrop-blur-md transition-all duration-500 hover:scale-105 sm:block lg:-left-10"
+                >
+                  <div className="flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={currentLook.previewThumb}
+                      alt=""
+                      className="h-14 w-10.5 rounded-xs object-cover shadow-xs"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <span className="inline-block rounded-xs bg-gold/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-gold-dark">
+                        {currentLook.previewTag}
+                      </span>
+                      <p className="mt-1 truncate text-xs font-semibold text-ink">{currentLook.previewName}</p>
+                      <p className="mt-0.5 text-[11.5px] font-medium text-gold-dark">{currentLook.previewPrice}</p>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </Link>
+              )}
 
               {/* ── Spinning 16-point Gold Rosette Medallion (Bottom-Right) ── */}
               <div className="absolute -bottom-7 right-4 z-30 hidden h-28 w-28 place-items-center rounded-full border border-gold/45 bg-paper/95 shadow-xl backdrop-blur-md sm:grid">
                 <Rosette className="absolute h-24 w-24 text-gold/35" spin />
                 <span className="relative text-center">
-                  <span className="block font-display text-[1.9rem] font-light leading-none text-gold-dark">17</span>
+                  <span className="block font-display text-[1.9rem] font-light leading-none text-gold-dark">
+                    {totalProducts ?? 17}
+                  </span>
                   <span className="mt-0.5 block text-[8.5px] font-semibold uppercase tracking-brand text-muted">
                     Pieces
                   </span>

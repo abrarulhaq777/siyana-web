@@ -9,22 +9,34 @@ import OccasionsLookbook from "@/components/OccasionsLookbook";
 import { Rosette, Star, Crescent, Lantern, Corner, Divider, Scallop } from "@/components/Ornament";
 import { inr } from "@/lib/products";
 import { getContent } from "@/lib/content";
-import { getCategories, getProductsBySlugs } from "@/lib/catalog";
+import { getCategories, getProductsBySlugs, getRecentProducts } from "@/lib/catalog";
+import db from "@/lib/db";
+import { Product } from "@/lib/models";
 
 export default async function Home() {
   const cms = await getContent();
 
-  const [categories, arrivals, capsule, staples] = await Promise.all([
+  const showRecentArrivals = cms.newArrivals?.autoRecent !== false;
+  const arrivalsPromise = showRecentArrivals
+    ? getRecentProducts({
+        limit: cms.newArrivals?.limit || 8,
+        fallbackSlugs: cms.newArrivals?.products || [],
+      })
+    : getProductsBySlugs(cms.newArrivals?.products || []);
+
+  await db();
+  const [categories, arrivals, capsule, staples, totalProducts] = await Promise.all([
     getCategories(),
-    getProductsBySlugs(cms.newArrivals.products),
+    arrivalsPromise,
     getProductsBySlugs(cms.capsule.products),
     getProductsBySlugs(cms.staples.products),
+    Product.countDocuments({ active: true }),
   ]);
 
   // Order and visibility both come from the CMS, so an editor can reorder the
   // page without a deploy. Unknown ids are ignored rather than crashing.
   const sections = {
-    hero: <HeroSection c={cms.hero} />,
+    hero: <HeroSection c={cms.hero} totalProducts={totalProducts} />,
     assurances: <Assurances c={cms.assurances} />,
     categories: <Silhouettes c={cms.categories} categories={categories} />,
     newArrivals: <NewArrivals c={cms.newArrivals} items={arrivals} />,
