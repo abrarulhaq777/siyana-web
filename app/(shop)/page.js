@@ -4,12 +4,16 @@ import ArchFrame from "@/components/ArchFrame";
 import ProductCard from "@/components/ProductCard";
 import ProductMedia from "@/components/ProductMedia";
 import HeroSection from "@/components/HeroSection";
+import CategoryArcade from "@/components/CategoryArcade";
+import OccasionEdit from "@/components/OccasionEdit";
 import FabricStudio from "@/components/FabricStudio";
-import OccasionsLookbook from "@/components/OccasionsLookbook";
+import StyleLookbook from "@/components/StyleLookbook";
+import WhySiyana from "@/components/WhySiyana";
 import { Rosette, Star, Crescent, Lantern, Corner, Divider, Scallop } from "@/components/Ornament";
 import { inr } from "@/lib/products";
-import { getContent } from "@/lib/content";
+import { getContent, DEFAULTS } from "@/lib/content";
 import { getCategories, getProductsBySlugs, getRecentProducts } from "@/lib/catalog";
+import { hasImage, withCategoryImages, withProductImages, STUDIO } from "@/lib/media";
 import db from "@/lib/db";
 import { Product } from "@/lib/models";
 
@@ -25,37 +29,56 @@ export default async function Home() {
     : getProductsBySlugs(cms.newArrivals?.products || []);
 
   await db();
-  const [categories, arrivals, capsule, staples, totalProducts] = await Promise.all([
+  const [categoryRows, arrivals, capsule, staples, totalProducts, counts] = await Promise.all([
     getCategories(),
     arrivalsPromise,
     getProductsBySlugs(cms.capsule.products),
     getProductsBySlugs(cms.staples.products),
     Product.countDocuments({ active: true }),
+    Product.aggregate([{ $match: { active: true } }, { $group: { _id: "$category", n: { $sum: 1 } } }]),
   ]);
+
+  const perCategory = Object.fromEntries(counts.map((r) => [r._id, r.n]));
+  const categories = withCategoryImages(categoryRows).map((cat) => ({ ...cat, count: perCategory[cat.slug] ?? 0 }));
 
   // Order and visibility both come from the CMS, so an editor can reorder the
   // page without a deploy. Unknown ids are ignored rather than crashing.
   const sections = {
-    hero: <HeroSection c={cms.hero} totalProducts={totalProducts} />,
-    assurances: <Assurances c={cms.assurances} />,
-    categories: <Silhouettes c={cms.categories} categories={categories} />,
-    newArrivals: <NewArrivals c={cms.newArrivals} items={arrivals} />,
-    capsule: <CelebrationCapsule c={cms.capsule} items={capsule} />,
-    fabrics: <FabricStudio />,
-    cuts: <OccasionsLookbook />,
-    prayer: <PrayerSanctuary c={cms.prayer} />,
-    ethos: <Ethos c={cms.ethos} />,
-    staples: <Staples c={cms.staples} items={staples} />,
-    gifting: <Gifting c={cms.gifting} />,
-    craft: <Craft />,
-    voices: <Voices c={cms.voices} />,
+    hero: <HeroSection c={withHeroImages(cms.hero)} totalProducts={totalProducts} />,
+    categories: <CategoryArcade c={cms.categories} categories={categories} />,
+    newArrivals: <NewArrivals c={cms.newArrivals} items={arrivals.map(withProductImages)} />,
+    occasionEdit: <OccasionEdit categories={categories} />,
+    fabricCraft: <FabricStudio />,
+    styleLookbook: <StyleLookbook />,
+    whySiyana: <WhySiyana ethos={cms.ethos} assurances={cms.assurances} />,
+    reviews: <Voices c={cms.voices} />,
     letter: <Letter c={cms.letter} />,
+    // Off the default page — an editor can switch these on from Section order.
+    assurances: <Assurances c={cms.assurances} />,
+    capsule: <CelebrationCapsule c={cms.capsule} items={capsule.map(withProductImages)} />,
+    prayer: <PrayerSanctuary c={cms.prayer} />,
+    staples: <Staples c={cms.staples} items={staples.map(withProductImages)} />,
+    gifting: <Gifting c={cms.gifting} />,
   };
 
   const { order, hidden } = cms.sections;
   return <>{order.filter((id) => sections[id] && !hidden.includes(id)).map((id) => (
     <div key={id}>{sections[id]}</div>
   ))}</>;
+}
+
+/* Slides saved with an upload that is not on this machine fall back to the default photography. */
+function withHeroImages(hero) {
+  const fallback = (i) => DEFAULTS.hero.slides[i]?.image ?? STUDIO.courtyard;
+  return {
+    ...hero,
+    image: hasImage(hero.image) ? hero.image : STUDIO.courtyard,
+    slides: hero.slides?.map((slide, i) => ({
+      ...slide,
+      image: hasImage(slide.image) ? slide.image : fallback(i),
+      previewThumb: hasImage(slide.previewThumb) ? slide.previewThumb : "",
+    })),
+  };
 }
 
 /* ══════════════════════════════════════════ 02 · assurances
@@ -72,56 +95,6 @@ function Assurances({ c }) {
               <h3 className="mt-4 font-display text-[1.3rem] leading-snug text-ink">{title}</h3>
               <p className="mt-2.5 text-xs leading-relaxed text-muted">{body}</p>
             </div>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ══════════════════════════════════════════ 03 · categories
-   Staggered mosaic — the middle column drops, so the row reads as
-   an arcade of arches rather than a flat table of boxes. */
-
-function Silhouettes({ c, categories }) {
-  return (
-    <section className="mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
-      <Reveal>
-        <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-          <div>
-            <p className="text-[12px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
-            <h2 className="mt-4 font-display text-[2.6rem] font-light leading-none sm:text-[3.4rem]">
-              {c.heading}
-            </h2>
-          </div>
-          <Link
-            href="/collections"
-            className="underline-grow shrink-0 pb-1 text-[12px] uppercase tracking-brand text-muted hover:text-ink"
-          >
-            View all {categories.length} collections →
-          </Link>
-        </div>
-      </Reveal>
-
-      <div className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-        {categories.map((cat, i) => (
-          <Reveal key={cat.slug} delay={(i % 3) * 110} className={i % 3 === 1 ? "lg:mt-20" : ""}>
-            <Link href={`/collections?c=${cat.slug}`} className="group block">
-              <ArchFrame
-                src={cat.image}
-                alt={cat.name}
-                ratio="aspect-[3/4]"
-                focus="object-top"
-                zoomOnHover
-              >
-                <span className="text-[10.5px] uppercase tracking-brand text-gold-light">{cat.count}</span>
-                <h3 className="mt-1.5 font-display text-[1.8rem] leading-none text-bone">{cat.name}</h3>
-                <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-bone/75">{cat.blurb}</p>
-                <span className="mt-3 inline-flex items-center gap-2 text-[11px] uppercase tracking-brand text-bone/70 transition-colors group-hover:text-gold-light">
-                  Explore <span className="transition-transform group-hover:translate-x-1">→</span>
-                </span>
-              </ArchFrame>
-            </Link>
           </Reveal>
         ))}
       </div>
@@ -272,26 +245,6 @@ function PrayerSanctuary({ c }) {
   );
 }
 
-/* ══════════════════════════════════════════ 09 · ethos */
-
-function Ethos({ c }) {
-  return (
-    <section id="ethos" className="relative overflow-hidden bg-ink py-28 text-bone">
-      <div className="pattern-girih-gold absolute inset-0 opacity-20" />
-      <Rosette className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 text-gold/10" spin />
-
-      <Reveal className="relative mx-auto max-w-3xl px-6 text-center" from="fade">
-        <Divider label={c.label} />
-        <p className="mt-10 font-display text-[2.2rem] font-light leading-[1.35] text-bone/95 sm:text-[2.8rem]">
-          {c.statement}
-        </p>
-        <div className="mx-auto mt-10 h-px w-20 bg-gold" />
-        <p className="mx-auto mt-8 max-w-xl text-xs leading-relaxed text-bone/65">{c.footnote}</p>
-      </Reveal>
-    </section>
-  );
-}
-
 /* ══════════════════════════════════════════ 10 · staples
    Editorial: one hero piece, three list rows. Not another 4-up grid. */
 
@@ -424,34 +377,6 @@ function Gifting({ c }) {
   );
 }
 
-/* ══════════════════════════════════════════ 12 · craft */
-
-const craft = [
-  ["Fabric before form", "We source Japanese Nida, washed desert linen and Korean crepe for opacity and weight — then design to what the cloth wants to do."],
-  ["Coverage as architecture", "Sleeve drop, neckline curve and hemline are set by modest coverage as the baseline, never as an afterthought."],
-  ["Small-batch integrity", "Garments run in batches of twenty to fifty. No overproduction, no clearing stock at a discount."],
-];
-
-function Craft() {
-  return (
-    <section className="border-y border-line bg-paper">
-      <div className="mx-auto grid max-w-[1400px] gap-14 px-6 py-24 lg:grid-cols-3 lg:px-10">
-        {craft.map(([title, body], i) => (
-          <Reveal key={title} delay={i * 110}>
-            <div className={i ? "lg:border-l lg:border-line lg:pl-12" : ""}>
-              <span className="font-display text-[2.6rem] font-light leading-none text-gold/60">
-                0{i + 1}
-              </span>
-              <h3 className="mt-5 font-display text-[1.7rem] leading-tight">{title}</h3>
-              <p className="mt-4 text-sm leading-relaxed text-muted">{body}</p>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 /* ══════════════════════════════════════════ 13 · voices */
 
 function Voices({ c }) {
@@ -467,8 +392,8 @@ function Voices({ c }) {
       <div className="mt-16 grid gap-10 lg:grid-cols-3">
         {c.items.map(({ quote, name, city }, i) => (
           <Reveal key={name + i} delay={i * 110} from="scale">
-            <figure className="flex h-full flex-col border border-line bg-paper p-8">
-              <div className="flex gap-1 text-gold">
+            <figure className="arch-sm flex h-full flex-col border border-line bg-paper px-8 pb-8 pt-14 text-center">
+              <div className="flex justify-center gap-1 text-gold">
                 {Array.from({ length: 5 }, (_, n) => (
                   <Star key={n} className="h-3 w-3" />
                 ))}

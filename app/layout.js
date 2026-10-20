@@ -26,7 +26,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${cormorant.variable} ${jost.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">{children}</body>
+      {/* Extensions like ColorZilla inject attributes on <body> before hydration. */}
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }
