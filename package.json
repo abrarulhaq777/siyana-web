@@ -9,7 +9,8 @@
     "lint": "eslint",
     "seed": "node scripts/seed.mjs",
     "admin:create": "node scripts/create-admin.mjs",
-    "check": "node lib/cart.check.mjs && node lib/permissions.check.mjs && node lib/coupons.check.mjs && node --env-file=.env.local scripts/orders.check.mjs"
+    "check": "node lib/cart.check.mjs && node lib/permissions.check.mjs && node lib/coupons.check.mjs && node --env-file=.env.local scripts/orders.check.mjs",
+    "uploads:import": "node --env-file=.env scripts/import-uploads.mjs"
   },
   "engines": {
     "node": ">=20.9.0"

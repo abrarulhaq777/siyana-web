@@ -11,9 +11,8 @@ import StyleLookbook from "@/components/StyleLookbook";
 import WhySiyana from "@/components/WhySiyana";
 import { Rosette, Star, Crescent, Lantern, Corner, Divider, Scallop } from "@/components/Ornament";
 import { inr } from "@/lib/products";
-import { getContent, DEFAULTS } from "@/lib/content";
+import { getContent } from "@/lib/content";
 import { getCategories, getProductsBySlugs, getRecentProducts } from "@/lib/catalog";
-import { hasImage, withCategoryImages, withProductImages, STUDIO } from "@/lib/media";
 import db from "@/lib/db";
 import { Product } from "@/lib/models";
 
@@ -39,14 +38,14 @@ export default async function Home() {
   ]);
 
   const perCategory = Object.fromEntries(counts.map((r) => [r._id, r.n]));
-  const categories = withCategoryImages(categoryRows).map((cat) => ({ ...cat, count: perCategory[cat.slug] ?? 0 }));
+  const categories = categoryRows.map((cat) => ({ ...cat, count: perCategory[cat.slug] ?? 0 }));
 
   // Order and visibility both come from the CMS, so an editor can reorder the
   // page without a deploy. Unknown ids are ignored rather than crashing.
   const sections = {
-    hero: <HeroSection c={withHeroImages(cms.hero)} totalProducts={totalProducts} />,
+    hero: <HeroSection c={cms.hero} totalProducts={totalProducts} />,
     categories: <CategoryArcade c={cms.categories} categories={categories} />,
-    newArrivals: <NewArrivals c={cms.newArrivals} items={arrivals.map(withProductImages)} />,
+    newArrivals: <NewArrivals c={cms.newArrivals} items={arrivals} />,
     occasionEdit: <OccasionEdit categories={categories} />,
     fabricCraft: <FabricStudio />,
     styleLookbook: <StyleLookbook />,
@@ -55,9 +54,9 @@ export default async function Home() {
     letter: <Letter c={cms.letter} />,
     // Off the default page — an editor can switch these on from Section order.
     assurances: <Assurances c={cms.assurances} />,
-    capsule: <CelebrationCapsule c={cms.capsule} items={capsule.map(withProductImages)} />,
+    capsule: <CelebrationCapsule c={cms.capsule} items={capsule} />,
     prayer: <PrayerSanctuary c={cms.prayer} />,
-    staples: <Staples c={cms.staples} items={staples.map(withProductImages)} />,
+    staples: <Staples c={cms.staples} items={staples} />,
     gifting: <Gifting c={cms.gifting} />,
   };
 
@@ -65,20 +64,6 @@ export default async function Home() {
   return <>{order.filter((id) => sections[id] && !hidden.includes(id)).map((id) => (
     <div key={id}>{sections[id]}</div>
   ))}</>;
-}
-
-/* Slides saved with an upload that is not on this machine fall back to the default photography. */
-function withHeroImages(hero) {
-  const fallback = (i) => DEFAULTS.hero.slides[i]?.image ?? STUDIO.courtyard;
-  return {
-    ...hero,
-    image: hasImage(hero.image) ? hero.image : STUDIO.courtyard,
-    slides: hero.slides?.map((slide, i) => ({
-      ...slide,
-      image: hasImage(slide.image) ? slide.image : fallback(i),
-      previewThumb: hasImage(slide.previewThumb) ? slide.previewThumb : "",
-    })),
-  };
 }
 
 /* ══════════════════════════════════════════ 02 · assurances
