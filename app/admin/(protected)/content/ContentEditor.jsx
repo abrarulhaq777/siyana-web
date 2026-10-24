@@ -244,10 +244,10 @@ function Panel({ tab, data, products, labels, codeOnly, writable }) {
                   onChange={(e) => set({ autoRecent: e.target.checked })}
                   className="accent-ink h-4 w-4"
                 />
-                <span>Automatically display recently added products (Newest first)</span>
+                <span>Automatically display recently added products (newest from each collection)</span>
               </label>
               <p className="text-xs text-muted">
-                When enabled, products newly added to the catalogue will automatically appear in the Quietly New section with all their imagery and details without needing to manually add them here.
+                When enabled, new arrivals appear here automatically: the newest piece from each collection, then the next newest from each, so one big upload never fills the whole row.
               </p>
               {draft.autoRecent !== false && (
                 <div className="pt-1 max-w-xs">
