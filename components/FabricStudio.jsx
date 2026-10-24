@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
-import ArchFrame from "@/components/ArchFrame";
-import { Crescent, Corner, Star } from "@/components/Ornament";
+import MihrabFrame from "@/components/MihrabFrame";
+import { Crescent, Star } from "@/components/Ornament";
 import { inr } from "@/lib/products";
 import { WEAVES } from "@/lib/showcase";
 
@@ -98,33 +98,16 @@ export default function FabricStudio({ products = {} }) {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[300px]">
-            <div className="group relative">
-              <Corner className="absolute -bottom-4 -left-4 z-10 h-12 w-12 -scale-y-100 text-gold/70" />
-              <Corner className="absolute -bottom-4 -right-4 z-10 h-12 w-12 -scale-100 text-gold/70" />
-
-              <Link key={current.id} href={`/product/${product.slug}`} className="animate-fade block overflow-hidden border border-line bg-sand/40 shadow-xl">
-                <ArchFrame
-                  src={product.image}
-                  alt={product.name}
-                  ratio="aspect-[2/5]"
-                  shape="dome"
-                  poster
-                  zoomOnHover
-                >
-                  <span className="text-[10.5px] uppercase tracking-brand text-gold-light">{current.name}</span>
-                  <p className="mt-1 font-display text-[1.7rem] font-light leading-tight text-white">{product.name}</p>
-                  <p className="mt-1 text-[12px] text-bone/80">
-                    {product.colorName} · {inr(product.price)}
-                  </p>
-                </ArchFrame>
-              </Link>
-
-              <div className="absolute -bottom-6 -left-4 hidden items-center gap-2 rounded-full border border-gold/40 bg-paper px-4 py-2 shadow-md sm:flex">
-                <Star className="h-4 w-4 text-gold" />
-                <span className="text-[11px] font-medium uppercase tracking-wider text-ink">Beautiful Details</span>
+          <div className="relative mx-auto w-full max-w-[400px]">
+            <Link key={current.id} href={`/product/${product.slug}`} className="animate-fade block">
+              <MihrabFrame src={product.image} alt={product.name} label={current.name} />
+              <div className="mt-5 text-center">
+                <p className="font-display text-[1.6rem] leading-tight text-ink">{product.name}</p>
+                <p className="mt-1 text-[12px] uppercase tracking-[0.16em] text-muted">
+                  {product.colorName} · {inr(product.price)}
+                </p>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import ArchFrame from "./ArchFrame";
+import MihrabFrame from "./MihrabFrame";
 import Reveal from "./Reveal";
-import { Corner, Divider, Lantern, Rosette } from "./Ornament";
+import { Divider, Lantern, Rosette } from "./Ornament";
 import { inr } from "@/lib/products";
 import { BRAND } from "@/lib/brand";
 import { OCCASIONS } from "@/lib/showcase";
@@ -89,14 +89,12 @@ export default function OccasionEdit({ products = {} }) {
             })}
           </ol>
 
-          <div className="relative order-first mx-auto w-full max-w-[300px] lg:order-none">
-            <Corner className="absolute -bottom-4 -left-4 z-10 h-14 w-14 -scale-y-100 text-gold/70" />
-            <Corner className="absolute -bottom-4 -right-4 z-10 h-14 w-14 -scale-100 text-gold/70" />
+          <div className="relative order-first mx-auto w-full max-w-[400px] lg:order-none">
             <Link key={current.id} href={`/product/${product.slug}`} className="animate-fade block">
-              <ArchFrame src={product.image} alt={product.name} ratio="aspect-[2/5]" shape="dome" poster>
-                <span className="text-[10.5px] uppercase tracking-brand text-gold-light">{current.label}</span>
-                <p className="mt-1.5 font-display text-[2rem] font-light italic leading-tight text-white">{current.title}</p>
-              </ArchFrame>
+              <MihrabFrame src={product.image} alt={product.name} label={current.label} tone="dark" />
+              <p className="mt-6 text-center font-display text-[1.9rem] font-light italic leading-tight text-gold-light">
+                {current.title}
+              </p>
             </Link>
           </div>
         </div>

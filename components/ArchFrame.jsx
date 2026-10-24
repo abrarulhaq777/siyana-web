@@ -4,10 +4,6 @@
  * The crown of an arch clips whatever sits in the top corners — that is what was
  * cutting the hero badge and the category labels in half. So overlay content is
  * only ever rendered inside `.arch-safe`, the straight-sided zone below the curve.
- *
- * `poster` frames a product photo: those are posters with title text on the left and
- * the model full-length on the right. In a tall 2:5 frame, a slight zoom to the right
- * shows her head to hem and leaves the text out.
  */
 const shapes = { arch: "arch", sm: "arch-sm", dome: "dome", square: "" };
 
@@ -21,7 +17,6 @@ export default function ArchFrame({
   scrim = true,
   frame = true,
   zoomOnHover = false,
-  poster = false,
   className = "",
   children,
 }) {
@@ -32,8 +27,7 @@ export default function ArchFrame({
         src={src}
         alt={alt}
         loading={kenburns ? "eager" : "lazy"}
-        style={poster ? { transform: "scale(1.32)", transformOrigin: "88% 30%" } : undefined}
-        className={`h-full w-full object-cover ${poster ? "object-right" : focus} ${kenburns ? "animate-kenburns" : ""} ${
+        className={`h-full w-full object-cover ${focus} ${kenburns ? "animate-kenburns" : ""} ${
           zoomOnHover ? "transition-transform duration-[1100ms] ease-out group-hover:scale-[1.06]" : ""
         }`}
       />

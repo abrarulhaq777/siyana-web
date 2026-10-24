@@ -1,14 +1,14 @@
 import Link from "next/link";
 import Reveal from "./Reveal";
-import ArchFrame from "./ArchFrame";
+import MihrabFrame from "./MihrabFrame";
 import { Crescent, Star } from "./Ornament";
 import { inr } from "@/lib/products";
 import { BRAND } from "@/lib/brand";
 
 /*
- * Five looks as a row of tall arched windows, like the arcade of a courtyard.
- * Every look is a real product and links to it; arch and dome alternate, and the
- * inner windows drop a step so the row reads as architecture rather than a grid.
+ * Five looks as a row of mihrab niches, like the arcade of a courtyard. Every look is
+ * a real product shown whole and links to it; the inner niches drop a step so the
+ * row reads as architecture rather than a grid.
  */
 const drop = ["", "lg:mt-14", "lg:mt-24", "lg:mt-14", ""];
 
@@ -39,18 +39,9 @@ export default function StyleLookbook({ looks = [] }) {
             <li key={look.slug} className={drop[i % drop.length]}>
               <Reveal delay={i * 100}>
                 <Link href={`/product/${look.slug}`} className="group block">
-                  <ArchFrame
-                    src={look.image}
-                    alt={look.name}
-                    ratio="aspect-[2/5]"
-                    shape={i % 2 ? "dome" : "arch"}
-                    poster
-                    scrim={false}
-                    zoomOnHover
-                  />
+                  <MihrabFrame src={look.image} alt={look.name} label={`Look 0${i + 1}`} />
                   <div className="mt-5 text-center">
-                    <p className="text-[10.5px] uppercase tracking-brand text-gold-dark">Look 0{i + 1}</p>
-                    <p className="mt-1 font-display text-[1.25rem] leading-tight text-ink transition-colors group-hover:text-gold-dark">
+                    <p className="font-display text-[1.25rem] leading-tight text-ink transition-colors group-hover:text-gold-dark">
                       {look.name}
                     </p>
                     <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-muted">

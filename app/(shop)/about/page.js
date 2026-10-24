@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ArchFrame from "@/components/ArchFrame";
+import MihrabFrame from "@/components/MihrabFrame";
 import Reveal from "@/components/Reveal";
 import { Crescent, Star, Corner, Scallop, Rosette, Divider } from "@/components/Ornament";
 import { BRAND, COLLECTION, WHY } from "@/lib/brand";
@@ -98,7 +99,7 @@ export default async function AboutPage() {
               <Reveal key={c.title} delay={i * 90}>
                 <Link href={c.href} className="group block">
                   {p && (
-                    <ArchFrame src={p.image} alt={c.title} ratio="aspect-[2/5]" poster scrim={false} zoomOnHover />
+                    <MihrabFrame src={p.image} alt={c.title} />
                   )}
                   <h3 className="mt-6 font-display text-[1.5rem] leading-tight text-ink transition-colors group-hover:text-gold-dark">
                     {c.title}
