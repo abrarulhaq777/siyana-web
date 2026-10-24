@@ -1,10 +1,7 @@
-import { Amiri } from "next/font/google";
 import Reveal from "./Reveal";
 import { Divider, Rosette, Star } from "./Ornament";
 import { BRAND } from "@/lib/brand";
-
-// Only this medallion sets Arabic, so the font is scoped here rather than in the root layout.
-const amiri = Amiri({ subsets: ["arabic"], weight: "400", preload: false });
+import { amiri } from "@/lib/fonts";
 
 function Pillar({ item, n, align }) {
   return (
