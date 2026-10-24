@@ -29,21 +29,21 @@ export default function CollectionsView({ categories = [], products = [] }) {
       <header className="mx-auto max-w-[1400px] px-6 pb-12 pt-14 lg:px-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <p className="text-[12px] uppercase tracking-brand text-muted">Curated Wardrobe</p>
+            <p className="text-[12px] uppercase tracking-brand text-muted">Our Collection</p>
             <h1 className="mt-4 font-display text-[3.2rem] font-light leading-none sm:text-[4rem]">
-              {category?.name ?? "All Creations"}
+              {category?.name ?? "All Collections"}
             </h1>
             <p className="mt-4 max-w-xl text-sm text-muted/90 leading-relaxed">
-              {category?.blurb ?? "The complete modesty repertoire — cut with intention, guaranteed zero-sheer, and crafted for real daily life."}
+              {category?.blurb ?? "Stylish co-ord sets, elegant maxi dresses, imported denim and beautifully detailed outfits — modest fashion for every moment."}
             </p>
           </div>
 
           <div className="hidden lg:flex items-center gap-4 border border-line bg-paper/60 px-5 py-3 rounded-xs text-[12px] uppercase tracking-[0.16em] text-muted">
-            <span className="text-gold font-medium">✓ 100% Opaque Guarantee</span>
+            <span className="text-gold font-medium">Modest yet modern</span>
             <span className="text-line">|</span>
-            <span>Wudu-Friendly Sleeves</span>
+            <span>Effortless styling</span>
             <span className="text-line">|</span>
-            <span>52″–60″ Lengths</span>
+            <span>Distinctive designs</span>
           </div>
         </div>
       </header>
@@ -77,8 +77,8 @@ export default function CollectionsView({ categories = [], products = [] }) {
 
       <section className="mx-auto max-w-[1400px] px-6 py-14 lg:px-10">
         <div className="flex items-center justify-between mb-10 text-[12px] uppercase tracking-brand text-muted">
-          <span>{list.length} creations available</span>
-          <span className="text-gold font-medium">Small-Batch Certified</span>
+          <span>{list.length} {list.length === 1 ? "piece" : "pieces"} available</span>
+          <span className="text-gold font-medium">Minimal. Sophisticated. Effortless.</span>
         </div>
         <div className="grid gap-x-7 gap-y-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {list.map((p, i) => (

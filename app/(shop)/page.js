@@ -9,9 +9,11 @@ import OccasionEdit from "@/components/OccasionEdit";
 import FabricStudio from "@/components/FabricStudio";
 import StyleLookbook from "@/components/StyleLookbook";
 import WhySiyana from "@/components/WhySiyana";
+import FaqSection from "@/components/FaqSection";
 import { Rosette, Star, Crescent, Lantern, Corner, Divider, Scallop } from "@/components/Ornament";
 import { inr } from "@/lib/products";
 import { getContent } from "@/lib/content";
+import { LOOKBOOK_SLUGS, OCCASIONS, WEAVES, SHOWCASE_SLUGS } from "@/lib/showcase";
 import { getCategories, getProductsBySlugs, getRecentProducts } from "@/lib/catalog";
 import db from "@/lib/db";
 import { Product } from "@/lib/models";
@@ -28,14 +30,19 @@ export default async function Home() {
     : getProductsBySlugs(cms.newArrivals?.products || []);
 
   await db();
-  const [categoryRows, arrivals, capsule, staples, totalProducts, counts] = await Promise.all([
+  const [categoryRows, arrivals, capsule, staples, totalProducts, counts, showcase] = await Promise.all([
     getCategories(),
     arrivalsPromise,
     getProductsBySlugs(cms.capsule.products),
     getProductsBySlugs(cms.staples.products),
     Product.countDocuments({ active: true }),
     Product.aggregate([{ $match: { active: true } }, { $group: { _id: "$category", n: { $sum: 1 } } }]),
+    getProductsBySlugs(SHOWCASE_SLUGS),
   ]);
+
+  // Editorial sections are illustrated with real products; a deleted or hidden one simply drops out.
+  const bySlug = Object.fromEntries(showcase.map((p) => [p.slug, p]));
+  const pick = (slugs) => Object.fromEntries(slugs.filter((s) => bySlug[s]).map((s) => [s, bySlug[s]]));
 
   const perCategory = Object.fromEntries(counts.map((r) => [r._id, r.n]));
   const categories = categoryRows.map((cat) => ({ ...cat, count: perCategory[cat.slug] ?? 0 }));
@@ -46,13 +53,14 @@ export default async function Home() {
     hero: <HeroSection c={cms.hero} totalProducts={totalProducts} />,
     categories: <CategoryArcade c={cms.categories} categories={categories} />,
     newArrivals: <NewArrivals c={cms.newArrivals} items={arrivals} />,
-    occasionEdit: <OccasionEdit categories={categories} />,
-    fabricCraft: <FabricStudio />,
-    styleLookbook: <StyleLookbook />,
+    occasionEdit: <OccasionEdit products={pick(OCCASIONS.map((o) => o.slug))} />,
+    fabricCraft: <FabricStudio products={pick(WEAVES.map((w) => w.slug))} />,
+    styleLookbook: <StyleLookbook looks={LOOKBOOK_SLUGS.map((s) => bySlug[s]).filter(Boolean)} />,
     whySiyana: <WhySiyana ethos={cms.ethos} assurances={cms.assurances} />,
-    reviews: <Voices c={cms.voices} />,
+    faq: <FaqSection />,
     letter: <Letter c={cms.letter} />,
     // Off the default page — an editor can switch these on from Section order.
+    reviews: <Voices c={cms.voices} />,
     assurances: <Assurances c={cms.assurances} />,
     capsule: <CelebrationCapsule c={cms.capsule} items={capsule} />,
     prayer: <PrayerSanctuary c={cms.prayer} />,

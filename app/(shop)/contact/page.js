@@ -1,11 +1,13 @@
 import ContactView from "./ContactView";
+import { getKey } from "@/lib/content";
 
 export const metadata = {
-  title: "Contact Client Concierge & Sizing Guidance — Siyana",
+  title: "Contact Us",
   description:
-    "Connect with the House of Siyana client concierge. Inquire about abaya drop lengths (52\"–60\"), wudu-friendly tailoring, bespoke festive orders, and order assistance.",
+    "Get in touch with Siyana Daily Modesty for help with sizing, fabrics, orders and delivery. Message us on Instagram @siyana_dailymodesty.",
 };
 
-export default function ContactPage() {
-  return <ContactView />;
+export default async function ContactPage() {
+  const settings = await getKey("settings");
+  return <ContactView email={settings.supportEmail} phone={settings.supportPhone} />;
 }

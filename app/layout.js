@@ -14,11 +14,11 @@ const jost = Jost({
 });
 
 export const metadata = {
-  metadataBase: new URL(process.env.SITE_URL ?? "https://siyana.example"),
-  title: { default: "Siyana — The Daily Modesty", template: "%s · Siyana" },
+  metadataBase: new URL(process.env.SITE_URL ?? "https://siyanamodesty.com"),
+  title: { default: "Siyana Daily Modesty — Where Modesty Meets Timeless Elegance", template: "%s · Siyana Daily Modesty" },
   description:
-    "Modest wear for Muslim women. Abayas, hijabs, kaftans and prayer wear in considered cuts and honest fabric.",
-  openGraph: { title: "Siyana — The Daily Modesty", images: ["/siyana-logo.png"] },
+    "Premium modest wear for the modern woman — stylish co-ord sets, elegant maxi dresses, imported denim and beautifully detailed outfits. Minimal. Sophisticated. Effortless.",
+  openGraph: { title: "Siyana Daily Modesty — Where Modesty Meets Timeless Elegance", images: ["/siyana-logo.png"] },
 };
 
 /* Chrome lives in the route groups: (shop) has the storefront header and footer,

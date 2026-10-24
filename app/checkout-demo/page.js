@@ -44,7 +44,7 @@ export default function CheckoutDemoPage() {
             <RazorpayCheckoutButton
               amount={amountPaise}
               currency="INR"
-              name="Siyana Atelier"
+              name="Siyana Daily Modesty"
               description="Demo Payment Verification"
               prefill={{
                 name: "Test Customer",

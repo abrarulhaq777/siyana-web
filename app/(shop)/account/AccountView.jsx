@@ -106,7 +106,7 @@ export default function AccountView({ user, orders }) {
               <p className="mt-1 font-display text-[1.8rem] font-light text-ink">
                 {inr(spend)}
               </p>
-              <p className="text-[11px] text-muted">Total atelier spend</p>
+              <p className="text-[11px] text-muted">Total spend</p>
             </div>
 
             <div className="border-l border-line/70 pl-4">
@@ -152,13 +152,13 @@ export default function AccountView({ user, orders }) {
                   <Rosette className="mx-auto h-12 w-12 text-gold/50" />
                   <p className="mt-4 font-display text-[1.6rem] text-ink">Your Wardrobe Awaits</p>
                   <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-muted">
-                    You have not placed any orders yet. Explore our signature Japanese Nida abayas and tailored everyday modest essentials.
+                    You have not placed any orders yet. Explore our co-ord sets, maxi dresses, rompers and imported denim.
                   </p>
                   <Link
                     href="/collections"
                     className="mt-6 inline-block bg-ink px-8 py-3.5 text-[12px] font-medium uppercase tracking-brand text-bone shadow-xs transition hover:bg-gold-dark"
                   >
-                    Explore Atelier Drops
+                    Explore the Collections
                   </Link>
                 </div>
               ) : (
@@ -322,7 +322,7 @@ export default function AccountView({ user, orders }) {
                   disabled={isPending}
                   className="mt-2 w-full bg-ink py-3 text-[11.5px] font-medium uppercase tracking-brand text-bone shadow-xs transition hover:bg-gold-dark disabled:opacity-50"
                 >
-                  {isPending ? "Updating Atelier..." : "Save Delivery Address"}
+                  {isPending ? "Saving..." : "Save Delivery Address"}
                 </button>
               </form>
             </section>
@@ -334,7 +334,7 @@ export default function AccountView({ user, orders }) {
                 <span>Need Sizing or Order Help?</span>
               </div>
               <p className="mt-2 leading-relaxed">
-                Our atelier concierge team is available to assist with length adjustments, exchanges, or custom bridal requests.
+                We are happy to help with sizing, an order, or a damaged or incorrect item — message us on Instagram @siyana_dailymodesty.
               </p>
               <Link
                 href="/contact"

@@ -1,6 +1,7 @@
 import { Amiri } from "next/font/google";
 import Reveal from "./Reveal";
 import { Divider, Rosette, Star } from "./Ornament";
+import { BRAND } from "@/lib/brand";
 
 // Only this medallion sets Arabic, so the font is scoped here rather than in the root layout.
 const amiri = Amiri({ subsets: ["arabic"], weight: "400", preload: false });
@@ -18,7 +19,7 @@ function Pillar({ item, n, align }) {
   );
 }
 
-/* The ethos statement, then the four promises set around the name it comes from */
+/* The philosophy statement, then the reasons to choose Siyana set around the name it comes from */
 export default function WhySiyana({ ethos, assurances }) {
   const items = assurances.items ?? [];
   const half = Math.ceil(items.length / 2);
@@ -30,13 +31,19 @@ export default function WhySiyana({ ethos, assurances }) {
 
       <div className="relative mx-auto max-w-[1400px] px-6 lg:px-10">
         <Reveal from="fade" className="mx-auto max-w-3xl text-center">
-          <Divider label="Why Siyana" />
+          <Divider label={ethos.label} />
           <p className="mt-9 font-display text-[1.9rem] font-light leading-[1.35] text-bone/95 sm:text-[2.5rem]">
             {ethos.statement}
           </p>
         </Reveal>
 
-        <div className="mt-20 grid items-center gap-14 lg:grid-cols-[1fr_auto_1fr] lg:gap-16">
+        <Reveal from="fade">
+          <p className="mt-20 text-center text-[11px] uppercase tracking-brand text-gold-light/80">
+            Why choose {BRAND.name}?
+          </p>
+        </Reveal>
+
+        <div className="mt-12 grid items-center gap-14 lg:grid-cols-[1fr_auto_1fr] lg:gap-16">
           <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-1">
             {sides[0].map((item, i) => (
               <Reveal key={item.title + i} from="left" delay={i * 120}>

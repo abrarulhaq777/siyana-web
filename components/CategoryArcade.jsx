@@ -52,7 +52,7 @@ export default function CategoryArcade({ c, categories }) {
                 {c.heading}
               </h2>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-muted">
-                Every collection stands in its own arch. Step through to see each piece cut in that silhouette.
+                Thoughtfully curated for women who appreciate modesty, sophistication, and effortless style.
               </p>
             </div>
 

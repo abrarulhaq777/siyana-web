@@ -1,9 +1,9 @@
 import OffersView from "./OffersView";
 
 export const metadata = {
-  title: "Seasonal Offers & Privileges — Siyana",
+  title: "Offers",
   description:
-    "Explore current Siyana promotional courtesy codes, first-order discounts, and complimentary shipping tiers across modest abayas and hijabs.",
+    "Current Siyana Daily Modesty offers — first-order discount, savings on larger orders and complimentary shipping over ₹2,999.",
 };
 
 export default function OffersPage() {

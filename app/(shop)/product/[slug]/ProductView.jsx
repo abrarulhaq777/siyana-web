@@ -6,7 +6,8 @@ import Gallery from "@/components/Gallery";
 import Stars from "@/components/Stars";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
-import { inr, sizes, abayaLengths } from "@/lib/products";
+import { inr, sizesOf, abayaLengths } from "@/lib/products";
+import { BRAND } from "@/lib/brand";
 import { useStore } from "@/lib/store";
 
 export default function ProductView({ product, related, categories = [] }) {
@@ -45,14 +46,14 @@ export default function ProductView({ product, related, categories = [] }) {
           <Gallery images={product.images?.length ? product.images : product.image ? [product.image] : []} alt={product.name} />
           <div className="grid grid-cols-2 gap-4">
             <div className="arch-sm relative aspect-[4/3] overflow-hidden bg-sand/60 p-6 flex flex-col justify-end border border-line">
-              <span className="text-[11px] uppercase tracking-brand text-gold font-medium">Modesty Standard</span>
-              <p className="mt-1 font-display text-lg leading-tight text-ink">{product.opacity}</p>
-              <p className="text-[13px] text-muted mt-1">Light transmission checked to guarantee zero sheer.</p>
+              <span className="text-[11px] uppercase tracking-brand text-gold font-medium">Fabric</span>
+              <p className="mt-1 font-display text-lg leading-tight text-ink">{product.fabric}</p>
+              <p className="text-[13px] text-muted mt-1">Premium fabrics with beautiful, carefully chosen details.</p>
             </div>
             <div className="arch-sm relative aspect-[4/3] overflow-hidden bg-sand/60 p-6 flex flex-col justify-end border border-line">
               <span className="text-[11px] uppercase tracking-brand text-gold font-medium">Silhouette Cut</span>
               <p className="mt-1 font-display text-lg leading-tight text-ink">{product.silhouette}</p>
-              <p className="text-[13px] text-muted mt-1">Designed for full coverage and graceful natural drape.</p>
+              <p className="text-[13px] text-muted mt-1">Clean, modest silhouettes that feel modern and timeless.</p>
             </div>
           </div>
         </div>
@@ -89,7 +90,7 @@ export default function ProductView({ product, related, categories = [] }) {
                 </>
               )}
             </p>
-            <p className="mt-1 text-[12px] uppercase tracking-[0.18em] text-muted">Inclusive of all duties & taxes</p>
+            <p className="mt-1 text-[12px] uppercase tracking-[0.18em] text-muted">Shipping calculated at checkout</p>
           </div>
 
           <p className="text-[17px] leading-relaxed text-muted/90 border-t border-line pt-6">
@@ -117,12 +118,12 @@ export default function ProductView({ product, related, categories = [] }) {
             <div>
               <div className="flex items-center justify-between">
                 <p className="text-[12px] uppercase tracking-brand text-ink">1. Select Size</p>
-                <Link href="/help/sizing" className="underline-grow text-[11.5px] uppercase tracking-[0.18em] text-muted">
-                  Size guide
+                <Link href="/contact" className="underline-grow text-[11.5px] uppercase tracking-[0.18em] text-muted">
+                  Need help with size?
                 </Link>
               </div>
               <div className="mt-3 flex flex-wrap gap-2.5">
-                {sizes.map((s) => {
+                {sizesOf(product).map((s) => {
                   const left = stockFor(s);
                   return (
                     <button
@@ -134,7 +135,7 @@ export default function ProductView({ product, related, categories = [] }) {
                       }}
                       aria-pressed={size === s}
                       title={left === 0 ? "Out of stock" : left <= 2 ? `Only ${left} left` : undefined}
-                      className={`h-11 w-14 border text-[13px] tracking-[0.1em] transition ${
+                      className={`h-11 min-w-14 px-3 border text-[13px] tracking-[0.1em] transition ${
                         left === 0
                           ? "cursor-not-allowed border-line/60 bg-sand/40 text-muted/50 line-through"
                           : size === s
@@ -151,7 +152,7 @@ export default function ProductView({ product, related, categories = [] }) {
               {size && stockFor(size) <= 2 && stockFor(size) > 0 && (
                 <p className="mt-2 text-[13px] text-gold-dark">Only {stockFor(size)} left in {size}.</p>
               )}
-              {soldOut && <p className="mt-2 text-[13px] text-muted">This piece is sold out. New stock is cut every few weeks.</p>}
+              {soldOut && <p className="mt-2 text-[13px] text-muted">This piece is sold out. Follow us on Instagram {BRAND.instagram.handle} for restock updates.</p>}
             </div>
 
             {isLongGarment && (
@@ -211,10 +212,10 @@ export default function ProductView({ product, related, categories = [] }) {
           </ul>
 
           <dl className="space-y-3 border-t border-line pt-6 text-[12.5px] uppercase tracking-[0.16em] text-muted">
-            <Row k="Dispatch" v="Ships within 24 hours" />
-            <Row k="Modesty Guarantee" v="Free 15-day exchanges" />
-            <Row k="Packaging" v="Discreet Luxury Box with Ribbon" />
-            <Row k="Payment Methods" v="UPI · Cards · Cash on Delivery" />
+            <Row k="Shipping" v="Calculated at checkout" />
+            <Row k="Returns & Exchanges" v="As per our store policy" />
+            <Row k="Payment Methods" v="Shown at checkout" />
+            <Row k="Questions" v={BRAND.instagram.handle} />
           </dl>
         </div>
       </section>
@@ -222,7 +223,7 @@ export default function ProductView({ product, related, categories = [] }) {
       {related.length > 0 && (
         <section className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10 border-t border-line">
           <div className="flex items-baseline justify-between mb-12">
-            <h2 className="font-display text-[2.2rem] font-light">Complete the Modest Wardrobe</h2>
+            <h2 className="font-display text-[2.2rem] font-light">You May Also Like</h2>
             <Link href={`/collections?c=${product.category}`} className="underline-grow text-[11.5px] uppercase tracking-brand text-muted hover:text-ink">
               View more in this category
             </Link>

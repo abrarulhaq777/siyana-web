@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Collections",
-  description: "Abayas, hijabs, kaftans, modest dresses, co-ords and prayer wear.",
+  description: "Shop Siyana Daily Modesty — co-ord sets, maxi dresses, rompers, imported denim skirt and co-ord sets, and long kurta co-ords.",
 };
 
 export default async function CollectionsPage() {

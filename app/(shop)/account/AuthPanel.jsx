@@ -69,27 +69,27 @@ export default function AuthPanel({ next }) {
                     {/* Bottom Poetic Narrative & Feature Pills */}
                     <div>
                       <span className="text-[10px] uppercase tracking-brand text-gold-light">
-                        Atelier Vision
+                        Siyana Daily Modesty
                       </span>
                       <h2 className="mt-2 font-display text-[2.2rem] font-light italic leading-tight text-white sm:text-[2.6rem]">
-                        &ldquo;Grace in every thread,
+                        &ldquo;Where modesty meets
                         <br />
-                        dignity in every stride.&rdquo;
+                        timeless elegance.&rdquo;
                       </h2>
                       <p className="mt-3 text-xs leading-relaxed text-bone/80">
-                        Preserve your tailored 52&quot;–60&quot; abaya drop measurements, manage order dispatches, and access seasonal creations.
+                        Track your orders, save your delivery address and keep a wishlist of the styles that speak to you.
                       </p>
 
                       {/* Clean Understated Features */}
                       <div className="mt-6 flex flex-wrap gap-2 border-t border-white/20 pt-4 text-[11px] text-white/90">
                         <span className="rounded-xs border border-white/20 bg-black/40 px-2.5 py-1 backdrop-blur-xs">
-                          ✓ Zero-Sheer Standard
+                          ✓ Order Tracking
                         </span>
                         <span className="rounded-xs border border-white/20 bg-black/40 px-2.5 py-1 backdrop-blur-xs">
-                          ✓ Saved Sizing
+                          ✓ Saved Address
                         </span>
                         <span className="rounded-xs border border-white/20 bg-black/40 px-2.5 py-1 backdrop-blur-xs">
-                          ✓ Discreet Courier
+                          ✓ Wishlist
                         </span>
                       </div>
                     </div>

@@ -3,7 +3,7 @@ import db, { plain } from "@/lib/db";
 import { Review } from "@/lib/models";
 import { getProduct, getProducts, getCategories } from "@/lib/catalog";
 import { currentUser } from "@/lib/auth";
-import { sizes } from "@/lib/products";
+import { sizesOf } from "@/lib/products";
 import ProductView from "./ProductView";
 import Reviews from "./Reviews";
 
@@ -39,7 +39,7 @@ export default async function ProductPage({ params }) {
         rating={product.rating ?? 0}
         count={product.reviewCount ?? 0}
         signedIn={!!user}
-        sizes={sizes}
+        sizes={sizesOf(product)}
       />
     </>
   );

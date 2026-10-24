@@ -25,7 +25,7 @@ export default function CheckoutView({ settings, gateway, me }) {
     return (
       <Empty
         title="Order Placed"
-        copy={`Your order number is ${done}. A confirmation email has been dispatched. Our atelier prepares each garment with utmost care within one working day.`}
+        copy={`Thank you for shopping with Siyana Daily Modesty. Your order number is ${done} — you can follow it from your account, and we will prepare your pieces with care.`}
         href="/collections"
         cta="Continue Browsing"
       />
@@ -155,7 +155,7 @@ export default function CheckoutView({ settings, gateway, me }) {
         <header className="mb-12 border-b border-line pb-8">
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.24em] text-gold font-medium">Siyana Atelier</p>
+              <p className="text-[11px] uppercase tracking-[0.24em] text-gold font-medium">Siyana Daily Modesty</p>
               <h1 className="mt-1 font-display text-[2.75rem] font-light leading-none text-ink sm:text-[3.25rem]">
                 Order Checkout
               </h1>
@@ -377,7 +377,7 @@ export default function CheckoutView({ settings, gateway, me }) {
 
                 {!gateway && !settings.codEnabled && (
                   <p className="text-[13px] text-muted">
-                    No payment gateways are currently active. Please contact atelier concierge.
+                    No payment gateways are currently active. Please contact us for help placing your order.
                   </p>
                 )}
               </div>
@@ -524,7 +524,7 @@ export default function CheckoutView({ settings, gateway, me }) {
                 </Link>
               </div>
 
-              {/* Atelier Trust Badges */}
+              {/* Trust badges */}
               <div className="mt-6 space-y-2 border-t border-line/70 pt-5 text-[11px] text-muted">
                 <div className="flex items-center gap-2.5">
                   <svg className="h-3.5 w-3.5 shrink-0 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -536,13 +536,13 @@ export default function CheckoutView({ settings, gateway, me }) {
                   <svg className="h-3.5 w-3.5 shrink-0 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
-                  <span>Complimentary Size Exchanges within 7 Days</span>
+                  <span>Complimentary shipping over ₹2,999</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <svg className="h-3.5 w-3.5 shrink-0 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span>100% Zero-Sheer & Modesty Standard Tested</span>
+                  <span>Questions? Message us on Instagram @siyana_dailymodesty</span>
                 </div>
               </div>
 

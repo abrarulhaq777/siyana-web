@@ -46,7 +46,7 @@ export default function Intro() {
         closing ? "-translate-y-full opacity-90 pointer-events-none" : "translate-y-0 opacity-100"
       }`}
       role="status"
-      aria-label="Siyana Atelier — The Daily Modesty"
+      aria-label="Siyana Daily Modesty"
     >
       {/* Background Girih Islamic Star Pattern */}
       <div className="pattern-girih pointer-events-none absolute inset-0 opacity-[0.04]" />

@@ -5,51 +5,40 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import { Crescent, Star, Rosette, Scallop, Corner } from "@/components/Ornament";
 
+// Codes must match active coupons in the admin (Admin → Coupons); the terms below mirror them.
 const OFFERS = [
   {
     code: "WELCOME10",
-    title: "Welcome to Siyana Privilege",
+    title: "Welcome to Siyana",
     discount: "10% OFF",
-    scope: "First Order Entire Collection",
-    minOrder: "₹1,500 minimum order",
-    validity: "Valid for new members",
+    scope: "Your first order, entire collection",
+    minOrder: "₹1,500 minimum order · up to ₹1,000 off",
+    validity: "First order only",
     description:
-      "A token of our appreciation for joining the House of Siyana. Valid across all signature Japanese Nida abayas, breathable bamboo hijabs, and tailored co-ords.",
-    tag: "New Customer Exclusive",
+      "A warm welcome to Siyana Daily Modesty. Enjoy 10% off your first order across our co-ord sets, maxi dresses, rompers and imported denim.",
+    tag: "New Customer",
   },
   {
     code: "SIYANA500",
-    title: "The Capsule Wardrobe Courtesy",
+    title: "Build Your Everyday Wardrobe",
     discount: "₹500 OFF",
-    scope: "Orders Above ₹3,000",
+    scope: "Orders above ₹3,000",
     minOrder: "₹3,000 minimum order",
-    validity: "Ongoing Season Offer",
+    validity: "Once per customer",
     description:
-      "Curate your modest essentials for the season ahead. Applies automatically to cart subtotals over ₹3,000, combining seamlessly with complimentary shipping.",
+      "Pair a co-ord set with a maxi dress, or pick up two favourites at once — take ₹500 off any order above ₹3,000.",
     tag: "Most Popular",
   },
   {
     code: "AUTO-APPLIED",
-    title: "Complimentary Express Courier",
+    title: "Complimentary Shipping",
     discount: "FREE SHIPPING",
-    scope: "Nationwide & Discreet Delivery",
+    scope: "Every order over ₹2,999",
     minOrder: "Orders over ₹2,999",
     validity: "Always active",
     description:
-      "Enjoy premium express shipping packed in our discreet Siyana matte black protective mailers. No discount code needed — discount applies automatically at checkout.",
-    tag: "Standard Privilege",
-    isAuto: true,
-  },
-  {
-    code: "SANCTUARY",
-    title: "The Gifting Sanctuary Gift",
-    discount: "GIFT POUCH",
-    scope: "Any 2-Piece Prayer Set or Kaftan",
-    minOrder: "With qualifying pieces",
-    validity: "While supplies last",
-    description:
-      "Receive our signature gold-embossed velvet travel pouch and a handwritten Arabic du'a card with every festive kaftan or two-piece prayerwear set.",
-    tag: "Seasonal Gift",
+      "Shipping is on us for orders over ₹2,999. No code needed — it is applied automatically at checkout.",
+    tag: "Always On",
     isAuto: true,
   },
 ];
@@ -89,18 +78,18 @@ export default function OffersView() {
             <div className="mt-4 inline-flex items-center gap-2.5 rounded-full border border-gold/40 bg-bone/90 px-4 py-1.5 shadow-2xs backdrop-blur-xs">
               <Crescent className="h-3.5 w-3.5 text-gold-dark" />
               <span className="text-[10px] font-medium uppercase tracking-[0.24em] text-ink">
-                The Siyana Vault · Seasonal Privileges
+                Siyana Daily Modesty · Current Offers
               </span>
             </div>
 
             <h1 className="mt-6 font-display text-[3.2rem] font-light leading-[1.04] text-ink sm:text-[4.2rem] lg:text-[4.6rem]">
-              Sacred Courtesy &
+              Elegance, with
               <br />
-              <span className="italic font-normal text-gold-dark">graceful privileges.</span>
+              <span className="italic font-normal text-gold-dark">a little something extra.</span>
             </h1>
 
             <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-relaxed text-muted">
-              Every garment in our atelier is an investment in dignity. Enjoy active courtesy codes and complimentary packaging privileges curated for your modest wardrobe.
+              Discover your everyday elegance for less. Copy a code below and apply it at checkout.
             </p>
 
             {/* Interactive Hero Quick-Privilege Chips */}
@@ -120,7 +109,7 @@ export default function OffersView() {
                       {item.discount}
                     </span>
                     <span className="text-[9.5px] text-muted uppercase tracking-wider">
-                      {item.code === "AUTO-APPLIED" || item.code === "SANCTUARY" ? "Auto-Applied" : `Code: ${item.code}`}
+                      {item.isAuto ? "Auto-Applied" : `Code: ${item.code}`}
                     </span>
                   </div>
                 </button>
@@ -129,7 +118,7 @@ export default function OffersView() {
 
             {copied && (
               <p className="mt-3 text-xs font-medium text-emerald-800 animate-fade-in">
-                ✓ Privilege code <strong className="font-mono">{copied}</strong> copied to clipboard!
+                ✓ Code <strong className="font-mono">{copied}</strong> copied to clipboard!
               </p>
             )}
           </Reveal>
@@ -140,19 +129,19 @@ export default function OffersView() {
           <div className="flex items-center justify-center gap-6 text-[10.5px] font-medium uppercase tracking-[0.24em] text-gold-dark whitespace-nowrap px-4">
             <span className="inline-flex items-center gap-2">
               <Star className="h-3 w-3 text-gold" />
-              Complimentary Express Shipping Over ₹2,999
+              Complimentary Shipping Over ₹2,999
             </span>
             <span className="hidden md:inline-flex items-center gap-2">
               <Rosette className="h-3 w-3 text-gold" />
-              Velvet Travel Pouch with 2-Piece Sets
+              ₹500 Off Orders Above ₹3,000
             </span>
             <span className="inline-flex items-center gap-2">
               <Star className="h-3 w-3 text-gold" />
-              10% Courtesy on First Atelier Order
+              10% Off Your First Order
             </span>
             <span className="hidden lg:inline-flex items-center gap-2">
               <Crescent className="h-3 w-3 text-gold" />
-              100% Zero-Sheer Certified
+              Minimal. Sophisticated. Effortless.
             </span>
           </div>
         </div>
@@ -189,12 +178,6 @@ export default function OffersView() {
                           <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
                           <circle cx="5.5" cy="18.5" r="2.5" />
                           <circle cx="18.5" cy="18.5" r="2.5" />
-                        </svg>
-                      )}
-                      {offer.code === "SANCTUARY" && (
-                        <svg viewBox="0 0 24 24" className="h-3 w-3 text-gold-dark" fill="none" stroke="currentColor" strokeWidth="1.6">
-                          <rect x="3" y="8" width="18" height="13" rx="1" />
-                          <path d="M12 8v13M3 13h18" strokeLinecap="round" />
                         </svg>
                       )}
                       <span>{offer.tag}</span>
@@ -283,10 +266,10 @@ export default function OffersView() {
             <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 className="font-display text-[1.6rem] text-ink">
-                  How to Redeem Your Courtesy Code
+                  How to Use a Code
                 </h3>
                 <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-muted">
-                  Simply click &ldquo;Copy Code&rdquo; on any offer above, add your desired garments to the bag, and paste the code into the Coupon field during checkout. The discount is calculated and verified server-side instantaneously.
+                  Click &ldquo;Copy Code&rdquo; on an offer above, add your favourite pieces to the bag, and paste the code into the coupon field at checkout. Your discount is applied straight away.
                 </p>
               </div>
               <Link

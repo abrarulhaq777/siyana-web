@@ -10,11 +10,7 @@ import { getKey } from "@/lib/content";
 export const dynamic = "force-dynamic";
 
 export default async function ShopLayout({ children }) {
-  const [categories, announcement, settings] = await Promise.all([
-    getCategories(),
-    getKey("announcement"),
-    getKey("settings"),
-  ]);
+  const [categories, announcement] = await Promise.all([getCategories(), getKey("announcement")]);
 
   return (
     <>
@@ -22,7 +18,7 @@ export default async function ShopLayout({ children }) {
       <StoreProvider>
         <Header categories={categories} ticker={announcement.items} />
         <main className="flex-1">{children}</main>
-        <Footer categories={categories} settings={settings} />
+        <Footer categories={categories} />
       </StoreProvider>
     </>
   );

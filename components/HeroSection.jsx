@@ -4,67 +4,23 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import ArchFrame from "@/components/ArchFrame";
 import { Rosette, Star, Corner, Scallop } from "@/components/Ornament";
+import { DEFAULTS } from "@/lib/content-defaults";
 
 export default function HeroSection({ c, totalProducts }) {
   const [activeLook, setActiveLook] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const stats = c?.stats || [
-    { k: "100% Opaque", v: "Zero-sheer guarantee" },
-    { k: "Wudu Friendly", v: "Easy sleeve access" },
-    { k: '52"–60"', v: "Tailored drop lengths" },
-  ];
+  // The CMS merges its defaults in already; these cover a slide or field saved empty.
+  const d = DEFAULTS.hero;
+  const stats = c?.stats?.length ? c.stats : d.stats;
+  const slides = Array.isArray(c?.slides) && c.slides.length > 0 ? c.slides : d.slides;
 
-  const dynamicSlides = Array.isArray(c?.slides) && c.slides.length > 0 ? c.slides : null;
-
-  const defaultLooks = [
-    {
-      id: "abaya",
-      image: c?.image || "/images/hero/hero-siyana.jpg",
-      badge: "Signature Collection",
-      title: c?.captionTitle || "The Noble Art of Modesty",
-      sub: c?.captionSub || "Japanese Nida & hand-rolled silks",
-      previewThumb: "/images/products/noor-open-abaya.jpg",
-      previewName: "Noor Open Abaya",
-      previewPrice: "₹4,890",
-      previewTag: "Bestseller",
-      focus: "object-[50%_30%]",
-      link: "/product/noor-open-abaya",
-    },
-    {
-      id: "hijabs",
-      image: "/images/categories/hijabs.jpg",
-      badge: "Breathable Weave",
-      title: "Weightless All-Day Drapes",
-      sub: "Non-slip finish • 100% opaque modal",
-      previewThumb: "/images/products/hana-modal-hijab.jpg",
-      previewName: "Hana Modal Shawl",
-      previewPrice: "₹1,290",
-      previewTag: "New Season",
-      focus: "object-[50%_25%]",
-      link: "/product/hana-modal-hijab",
-    },
-    {
-      id: "kaftans",
-      image: "/images/categories/kaftans.jpg",
-      badge: "Hand-Finished",
-      title: "Royal Ceremonial Silhouette",
-      sub: "Tonal metallic gold embroidery",
-      previewThumb: "/images/products/zahra-kaftan.jpg",
-      previewName: "Zahra Kaftan",
-      previewPrice: "₹6,490",
-      previewTag: "Limited Batch",
-      focus: "object-[50%_20%]",
-      link: "/product/zahra-kaftan",
-    },
-  ];
-
-  const LOOKS = (dynamicSlides || defaultLooks).map((item, idx) => ({
+  const LOOKS = slides.map((item, idx) => ({
     id: item.id || `slide-${idx}`,
-    image: item.image || (idx === 0 ? c?.image : null) || "/images/hero/hero-siyana.jpg",
-    badge: item.badge || "Signature Collection",
-    title: item.title || (idx === 0 ? c?.captionTitle : null) || "The Noble Art of Modesty",
-    sub: item.sub || (idx === 0 ? c?.captionSub : null) || "Japanese Nida & hand-rolled silks",
+    image: item.image || c?.image || d.image,
+    badge: item.badge || d.eyebrow,
+    title: item.title || c?.captionTitle || d.captionTitle,
+    sub: item.sub || c?.captionSub || d.captionSub,
     previewThumb: item.previewThumb || null,
     previewName: item.previewName || null,
     previewPrice: item.previewPrice || null,
@@ -103,52 +59,51 @@ export default function HeroSection({ c, totalProducts }) {
               <span className="inline-flex items-center gap-2.5 border border-gold/40 bg-paper/70 px-4 py-2 backdrop-blur-xs">
                 <Star className="h-3.5 w-3.5 text-gold-dark" />
                 <span className="text-[11px] uppercase tracking-brand text-muted">
-                  {c?.eyebrow && !/autumn/i.test(c.eyebrow) ? c.eyebrow : "Signature Modesty Edit"}
+                  {c?.eyebrow || d.eyebrow}
                 </span>
               </span>
             </div>
 
             {/* Main Headline */}
             <h1 className="mt-7 font-display text-[3.2rem] font-light leading-[1] text-ink sm:text-[4.4rem] lg:text-[5rem] xl:text-[5.5rem]">
-              {c?.titleTop || "Dressed with"}
+              {c?.titleTop || d.titleTop}
               <br />
               <span className="italic font-normal text-gold-dark">
-                {c?.titleAccent || "grace & dignity."}
+                {c?.titleAccent || d.titleAccent}
               </span>
             </h1>
 
             {/* Editorial Body */}
             <p className="mt-6 max-w-lg text-[16px] leading-relaxed text-muted sm:text-[17px]">
-              {c?.body ||
-                "Abayas, hijabs and timeless modest garments cut for uncompromised coverage — tailored in Japanese Nida, breathable linens and opaque crepes for sacred moments, workdays and ordinary Tuesdays alike."}
+              {c?.body || d.body}
             </p>
 
             {/* CTAs */}
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                href={c?.primaryCta?.href || "/collections"}
+                href={c?.primaryCta?.href || d.primaryCta.href}
                 className="group relative inline-flex items-center gap-3 bg-ink px-9 py-4 text-[12px] font-medium uppercase tracking-brand text-bone shadow-md transition hover:bg-gold-dark"
               >
                 <span className="absolute -right-1 -top-1 h-2.5 w-2.5">
                   <span className="animate-pulse-ring absolute inset-0 rounded-full bg-gold" />
                   <span className="absolute inset-0 rounded-full bg-gold" />
                 </span>
-                <span>{c?.primaryCta?.label || "Shop the Collection"}</span>
+                <span>{c?.primaryCta?.label || d.primaryCta.label}</span>
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </Link>
 
               <Link
-                href={c?.secondaryCta?.href || "/collections?c=abayas"}
+                href={c?.secondaryCta?.href || d.secondaryCta.href}
                 className="border border-line bg-paper px-7 py-4 text-[12px] font-medium uppercase tracking-brand text-ink transition hover:border-gold hover:bg-white"
               >
-                {c?.secondaryCta?.label || "Abayas"}
+                {c?.secondaryCta?.label || d.secondaryCta.label}
               </Link>
 
               <Link
-                href={c?.tertiaryCta?.href || "/collections?c=hijabs"}
+                href={c?.tertiaryCta?.href || d.tertiaryCta.href}
                 className="underline-grow py-2 text-[12px] font-medium uppercase tracking-brand text-muted hover:text-ink"
               >
-                {c?.tertiaryCta?.label || "Hijabs & Shawls →"}
+                {c?.tertiaryCta?.label || d.tertiaryCta.label}
               </Link>
             </div>
 

@@ -9,7 +9,7 @@ import Script from "next/script";
  * @param {Object} props
  * @param {number} props.amount Amount in paise (minimum 100 paise = ₹1)
  * @param {string} [props.currency="INR"] Currency code
- * @param {string} [props.name="Siyana Atelier"] Merchant name shown in modal
+ * @param {string} [props.name="Siyana Daily Modesty"] Merchant name shown in modal
  * @param {string} [props.description="Order Payment"] Order description
  * @param {string} [props.receipt] Receipt identifier
  * @param {Object} [props.prefill] Shopper prefill details: { name, email, contact }
@@ -21,7 +21,7 @@ import Script from "next/script";
 export default function RazorpayCheckoutButton({
   amount = 10000, // 10000 paise = ₹100
   currency = "INR",
-  name = "Siyana Atelier",
+  name = "Siyana Daily Modesty",
   description = "Order Payment",
   receipt,
   prefill = {},

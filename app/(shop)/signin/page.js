@@ -3,8 +3,8 @@ import { currentUser } from "@/lib/auth";
 import AuthPanel from "../account/AuthPanel";
 
 export const metadata = {
-  title: "Sign In — Siyana",
-  description: "Sign in to your Siyana Account to track orders and manage saved drop lengths.",
+  title: "Sign In",
+  description: "Sign in to your Siyana Daily Modesty account to track orders and manage your wishlist.",
 };
 
 export default async function SignInPage({ searchParams }) {

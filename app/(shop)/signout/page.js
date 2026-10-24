@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Rosette } from "@/components/Ornament";
 
 export const metadata = {
-  title: "Signed Out — Siyana",
+  title: "Signed Out",
   description: "You have been signed out of your Siyana Account.",
 };
 
@@ -23,7 +23,7 @@ export default function SignOutPage() {
             </span>
 
             <p className="mt-2 text-[10.5px] uppercase tracking-[0.24em] text-muted font-medium">
-              Siyana Modesty Atelier
+              Siyana Daily Modesty
             </p>
 
             <h1 className="mt-4 font-display text-[2.4rem] font-light leading-snug text-ink sm:text-[2.8rem]">
