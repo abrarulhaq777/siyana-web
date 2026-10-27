@@ -1,10 +1,13 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import db from "@/lib/db";
 import { User } from "@/lib/models";
 import { login, destroySession, createSession, hashPassword, currentUser } from "@/lib/auth";
+import { emailResetLink, resetPassword } from "@/lib/password-reset";
+import { siteUrl } from "@/lib/site";
 
 const fail = (error) => ({ ok: false, error });
 
@@ -64,4 +67,32 @@ export async function saveAddress(_prev, formData) {
 
   revalidatePath("/account");
   return { ok: true, message: "Address saved." };
+}
+
+/* ───────────────────────────────────────────────────── forgot password */
+
+export async function requestPasswordReset(_prev, formData) {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!/^\S+@\S+\.\S+$/.test(email)) return fail("Enter the email address you signed up with.");
+
+  // Sent after the response, so the reply takes the same time whether or not the account exists.
+  const base = await siteUrl();
+  after(() => emailResetLink(email, base).catch((e) => console.error("Reset email failed:", e)));
+  return { ok: true, email };
+}
+
+export async function completePasswordReset(_prev, formData) {
+  const token = String(formData.get("token") ?? "");
+  const password = String(formData.get("password") ?? "");
+  const confirm = String(formData.get("confirm") ?? "");
+
+  if (password.length < 8) return fail("Choose a password of at least 8 characters.");
+  if (password !== confirm) return fail("The two passwords don't match.");
+
+  try {
+    const role = await resetPassword(token, password);
+    return { ok: true, staff: role !== "customer" };
+  } catch (e) {
+    return fail(e.message);
+  }
 }

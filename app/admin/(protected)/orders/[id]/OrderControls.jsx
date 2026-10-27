@@ -34,9 +34,16 @@ export default function OrderControls({ order, statuses, canWrite, canRefund, re
               {statuses.map((s) => <option key={s} value={s}>{s}</option>)}
             </Select>
           </Field>
-          <Field label="Note" hint="Recorded on the order history.">
-            <Textarea name="note" rows={2} placeholder="Courier, AWB, reason for cancellation…" />
+          <Field label="Internal note" hint="Only on the order history — the customer never sees it.">
+            <Textarea name="note" rows={2} placeholder="Packed by…, reason for cancellation…" />
           </Field>
+          <Field label="Message to the customer" hint="Optional. Included in their email — e.g. courier and tracking number.">
+            <Textarea name="message" rows={2} placeholder="Shipped with Delhivery · AWB 1234567890" />
+          </Field>
+          <label className="flex items-center gap-2.5 text-[13px] text-ink">
+            <input type="checkbox" name="notify" defaultChecked className="accent-ink" />
+            Email the customer about this update
+          </label>
           <Submit className="w-full">Update order</Submit>
         </form>
       )}
@@ -64,6 +71,10 @@ export default function OrderControls({ order, statuses, canWrite, canRefund, re
           <Field label="Reason">
             <Input name="note" placeholder="Returned, damaged, cancelled…" />
           </Field>
+          <label className="flex items-center gap-2.5 text-[13px] text-ink">
+            <input type="checkbox" name="notify" defaultChecked className="accent-ink" />
+            Email the customer that the refund was issued
+          </label>
           <Submit variant="danger" className="w-full">Issue refund</Submit>
         </form>
       )}

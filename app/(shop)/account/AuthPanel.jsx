@@ -212,10 +212,10 @@ export default function AuthPanel({ next }) {
                       </label>
                       {!signup && (
                         <Link
-                          href="/contact?subject=reset"
+                          href="/forgot-password"
                           className="text-[10.5px] uppercase tracking-wider text-gold-dark hover:underline"
                         >
-                          Need Help?
+                          Forgot password?
                         </Link>
                       )}
                     </div>

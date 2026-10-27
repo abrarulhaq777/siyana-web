@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import db from "@/lib/db";
 import { Order } from "@/lib/models";
 import { verifyWebhookSignature } from "@/lib/razorpay";
+import { sendInvoice } from "@/lib/order-emails";
 
 /*
  * Razorpay's own confirmation. This is the source of truth — a shopper whose
@@ -43,6 +44,8 @@ export async function POST(request) {
     if (wasCancelled) order.timeline.push({ label: "Paid after cancellation — check stock and confirm or refund" });
     await order.save();
   }
+
+  if (event.event === "payment.captured") after(() => sendInvoice(order._id));
 
   // A failed attempt is not the end: Razorpay lets the shopper retry in the same window.
   // The order is only cancelled (and its stock released) when they close the window.

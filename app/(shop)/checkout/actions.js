@@ -1,10 +1,12 @@
 "use server";
 
+import { after } from "next/server";
 import db from "@/lib/db";
 import { Order } from "@/lib/models";
 import { currentUser } from "@/lib/auth";
 import { createOrder, restock } from "@/lib/orders";
 import { razorpay, getRazorpay, razorpayEnabled, paise, verifyPaymentSignature } from "@/lib/razorpay";
+import { sendInvoice } from "@/lib/order-emails";
 
 const fail = (error) => ({ ok: false, error });
 
@@ -51,6 +53,7 @@ export async function placeOrder(payload) {
 
   // Cash on delivery: nothing more to collect now.
   if (method === "cod") {
+    after(() => sendInvoice(order._id));
     return { ok: true, mode: "placed", orderNo: order.orderNo, orderId: String(order._id) };
   }
 
@@ -104,6 +107,7 @@ export async function confirmPayment({ orderId, razorpayOrderId, razorpayPayment
     else order.status = "confirmed";
     await order.save();
   }
+  after(() => sendInvoice(order._id));
   return { ok: true, orderNo: order.orderNo };
 }
 

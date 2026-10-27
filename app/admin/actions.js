@@ -8,6 +8,7 @@ import { login, destroySession, requirePermission, hashPassword, log } from "@/l
 import { ALL } from "@/lib/permissions";
 import { setKey, DEFAULTS } from "@/lib/content";
 import { razorpay } from "@/lib/razorpay";
+import { sendInvoice, sendStatusEmail, sendRefundEmail, NOTIFY_STATUSES } from "@/lib/order-emails";
 import { isStaff } from "@/lib/permissions";
 import { currentUser } from "@/lib/auth";
 
@@ -46,11 +47,14 @@ export async function setOrderStatus(_prev, formData) {
   const id = formData.get("id");
   const status = formData.get("status");
   const note = formData.get("note")?.trim();
+  const message = formData.get("message")?.trim().slice(0, 1000);
+  const notify = formData.get("notify") === "on";
 
   await db();
   const order = await Order.findById(id);
   if (!order) return fail("Order not found.");
-  if (order.status === status && !note) return fail("Nothing changed.");
+  const changed = order.status !== status;
+  if (!changed && !note && !message) return fail("Nothing changed.");
 
   order.status = status;
   order.timeline.push({ label: `Status → ${status}`, note, by: user._id });
@@ -63,9 +67,25 @@ export async function setOrderStatus(_prev, formData) {
   await order.save();
 
   await log(user, "order.status", { entity: "Order", entityId: id, meta: { status } });
+
+  // The internal note stays internal; only `message` goes to the customer.
+  let emailed = "";
+  if (notify && NOTIFY_STATUSES.includes(status)) {
+    try {
+      await sendStatusEmail(order, status, message);
+      order.timeline.push({ label: `Customer emailed: ${status}`, note: message || undefined, by: user._id });
+      emailed = ` Email sent to ${order.customer.email}.`;
+    } catch (e) {
+      console.error("Status email failed:", e);
+      order.timeline.push({ label: "Status email failed", note: e.message, by: user._id });
+      emailed = " The customer email could not be sent — check the email settings.";
+    }
+    await order.save();
+  }
+
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${id}`);
-  return ok(`Order marked ${status}.`);
+  return ok(`Order marked ${status}.${emailed}`);
 }
 
 export async function markOrderPaid(_prev, formData) {
@@ -82,9 +102,10 @@ export async function markOrderPaid(_prev, formData) {
   await order.save();
 
   await log(user, "payment.manual_paid", { entity: "Order", entityId: id });
+  const invoice = await sendInvoice(order._id);
   revalidatePath(`/admin/orders/${id}`);
   revalidatePath("/admin/payments");
-  return ok("Payment recorded.");
+  return ok(invoice.sent ? "Payment recorded. Invoice emailed to the customer." : "Payment recorded.");
 }
 
 export async function refundOrder(_prev, formData) {
@@ -92,6 +113,7 @@ export async function refundOrder(_prev, formData) {
   const id = formData.get("id");
   const amount = Number(formData.get("amount"));
   const note = formData.get("note")?.trim();
+  const notify = formData.get("notify") === "on";
 
   await db();
   const order = await Order.findById(id);
@@ -122,9 +144,22 @@ export async function refundOrder(_prev, formData) {
   await order.save();
 
   await log(user, "payment.refund", { entity: "Order", entityId: id, meta: { amount, reference } });
+
+  let emailed = "";
+  if (notify) {
+    try {
+      await sendRefundEmail(order, amount);
+      await Order.updateOne({ _id: order._id }, { $push: { timeline: { label: `Customer emailed: refund ₹${amount}`, by: user._id } } });
+      emailed = " Customer emailed.";
+    } catch (e) {
+      console.error("Refund email failed:", e);
+      emailed = " The customer email could not be sent.";
+    }
+  }
+
   revalidatePath(`/admin/orders/${id}`);
   revalidatePath("/admin/payments");
-  return ok(`₹${amount} refunded.`);
+  return ok(`₹${amount} refunded.${emailed}`);
 }
 
 /* ────────────────────────────────────────────────────────────── products */

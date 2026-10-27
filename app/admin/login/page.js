@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { adminSignIn } from "../actions";
 import { Field, Input, Submit, Notice } from "../_components/ui";
 
@@ -24,6 +25,11 @@ export default function AdminLogin() {
             <Input name="password" type="password" required autoComplete="current-password" />
           </Field>
           <Submit className="w-full">Sign in</Submit>
+          <p className="text-center">
+            <Link href="/forgot-password" className="text-[12px] uppercase tracking-[0.14em] text-muted hover:text-ink">
+              Forgot password?
+            </Link>
+          </p>
         </form>
 
         <p className="mt-6 text-center text-[12px] uppercase tracking-[0.16em] text-muted">
