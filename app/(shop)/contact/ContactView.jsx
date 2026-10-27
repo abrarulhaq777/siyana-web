@@ -7,7 +7,7 @@ import { FaqList } from "@/components/FaqSection";
 import { BRAND } from "@/lib/brand";
 import { sendInquiry } from "./actions";
 
-export default function ContactView({ email, phone }) {
+export default function ContactView({ email, phone, faq = [] }) {
   // Bumping the key remounts the form, which clears it and its send state.
   const [round, setRound] = useState(0);
 
@@ -186,7 +186,7 @@ export default function ContactView({ email, phone }) {
 
             <div id="faq" className="border border-line bg-sand/30 p-8">
               <h3 className="font-display text-[1.5rem] text-ink">Frequently Asked Questions</h3>
-              <FaqList className="mt-4" />
+              <FaqList items={faq} className="mt-4" />
             </div>
           </Reveal>
 

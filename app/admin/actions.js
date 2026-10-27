@@ -6,7 +6,7 @@ import db from "@/lib/db";
 import { User, Product, Category, Order, Coupon, Review } from "@/lib/models";
 import { login, destroySession, requirePermission, hashPassword, log } from "@/lib/auth";
 import { ALL } from "@/lib/permissions";
-import { setKey } from "@/lib/content";
+import { setKey, DEFAULTS } from "@/lib/content";
 import { razorpay } from "@/lib/razorpay";
 import { isStaff } from "@/lib/permissions";
 import { currentUser } from "@/lib/auth";
@@ -479,6 +479,7 @@ export async function saveContent(_prev, formData) {
   const user = await requirePermission("content:write");
   const key = formData.get("__key");
   const payload = formData.get("__json");
+  if (!Object.hasOwn(DEFAULTS, key)) return fail("Unknown content section.");
 
   let data;
   try {

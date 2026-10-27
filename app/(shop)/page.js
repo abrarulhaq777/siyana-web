@@ -13,7 +13,6 @@ import FaqSection from "@/components/FaqSection";
 import { Rosette, Star, Crescent, Lantern, Corner, Divider, Scallop } from "@/components/Ornament";
 import { inr } from "@/lib/products";
 import { getContent } from "@/lib/content";
-import { LOOKBOOK_SLUGS, OCCASIONS, WEAVES, SHOWCASE_SLUGS } from "@/lib/showcase";
 import { getCategories, getProductsBySlugs, getRecentProducts } from "@/lib/catalog";
 import db from "@/lib/db";
 import { Product } from "@/lib/models";
@@ -29,6 +28,11 @@ export default async function Home() {
       })
     : getProductsBySlugs(cms.newArrivals?.products || []);
 
+  // Products the editorial sections show — chosen per section in Admin → Content.
+  const slugsOf = (items) => (items ?? []).map((x) => x.slug).filter(Boolean);
+  const lookSlugs = cms.styleLookbook.products ?? [];
+  const showcaseSlugs = [...new Set([...slugsOf(cms.occasionEdit.items), ...slugsOf(cms.fabricCraft.items), ...lookSlugs])];
+
   await db();
   const [categoryRows, arrivals, capsule, staples, totalProducts, counts, showcase] = await Promise.all([
     getCategories(),
@@ -37,7 +41,7 @@ export default async function Home() {
     getProductsBySlugs(cms.staples.products),
     Product.countDocuments({ active: true }),
     Product.aggregate([{ $match: { active: true } }, { $group: { _id: "$category", n: { $sum: 1 } } }]),
-    getProductsBySlugs(SHOWCASE_SLUGS),
+    getProductsBySlugs(showcaseSlugs),
   ]);
 
   // Editorial sections are illustrated with real products; a deleted or hidden one simply drops out.
@@ -53,11 +57,11 @@ export default async function Home() {
     hero: <HeroSection c={cms.hero} totalProducts={totalProducts} />,
     categories: <CategoryArcade c={cms.categories} categories={categories} />,
     newArrivals: <NewArrivals c={cms.newArrivals} items={arrivals} />,
-    occasionEdit: <OccasionEdit products={pick(OCCASIONS.map((o) => o.slug))} />,
-    fabricCraft: <FabricStudio products={pick(WEAVES.map((w) => w.slug))} />,
-    styleLookbook: <StyleLookbook looks={LOOKBOOK_SLUGS.map((s) => bySlug[s]).filter(Boolean)} />,
+    occasionEdit: <OccasionEdit c={cms.occasionEdit} products={pick(slugsOf(cms.occasionEdit.items))} />,
+    fabricCraft: <FabricStudio c={cms.fabricCraft} products={pick(slugsOf(cms.fabricCraft.items))} />,
+    styleLookbook: <StyleLookbook c={cms.styleLookbook} looks={lookSlugs.map((s) => bySlug[s]).filter(Boolean)} />,
     whySiyana: <WhySiyana ethos={cms.ethos} assurances={cms.assurances} />,
-    faq: <FaqSection />,
+    faq: <FaqSection c={cms.faq} />,
     letter: <Letter c={cms.letter} />,
     // Off the default page — an editor can switch these on from Section order.
     reviews: <Voices c={cms.voices} />,

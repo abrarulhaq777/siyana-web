@@ -6,14 +6,15 @@ import MihrabFrame from "./MihrabFrame";
 import Reveal from "./Reveal";
 import { Divider, Lantern, Rosette } from "./Ornament";
 import { inr } from "@/lib/products";
-import { BRAND } from "@/lib/brand";
-import { OCCASIONS } from "@/lib/showcase";
 
-export default function OccasionEdit({ products = {} }) {
-  const moments = OCCASIONS.filter((o) => products[o.slug]);
+/* Copy and moments come from the CMS (Admin → Content → For every moment); each moment is
+ * shown in the product its `slug` names, and drops out if that product is gone. */
+export default function OccasionEdit({ c, products = {} }) {
+  const moments = (c.items ?? []).filter((o) => products[o.slug]);
   const [active, setActive] = useState(0);
   if (!moments.length) return null;
-  const current = moments[Math.min(active, moments.length - 1)];
+  const at = Math.min(active, moments.length - 1);
+  const current = moments[at];
   const product = products[current.slug];
 
   return (
@@ -29,23 +30,21 @@ export default function OccasionEdit({ products = {} }) {
       <div className="relative mx-auto max-w-[1400px] px-6 py-24 lg:px-10 lg:py-28">
         <Reveal from="fade">
           <div className="mx-auto max-w-2xl text-center">
-            <Divider label="For Every Moment" />
+            <Divider label={c.label} />
             <h2 className="mt-7 font-display text-[2.6rem] font-light leading-tight text-bone sm:text-[3.4rem]">
-              Fashion that reflects <span className="italic text-gold-light">your elegance</span>
+              {c.heading} {c.accent && <span className="italic text-gold-light">{c.accent}</span>}
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-bone/65">
-              Whether you are dressing for a casual outing, a day with friends, a family gathering, or a special occasion, {BRAND.name} offers stylish choices for every moment in your life.
-            </p>
+            {c.body && <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-bone/65">{c.body}</p>}
           </div>
         </Reveal>
 
         <div className="mt-16 grid items-center gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
           <ol className="border-t border-bone/15">
             {moments.map((o, i) => {
-              const open = o.id === current.id;
+              const open = i === at;
               const p = products[o.slug];
               return (
-                <li key={o.id} className="border-b border-bone/15">
+                <li key={o.slug + i} className="border-b border-bone/15">
                   <button
                     onClick={() => setActive(i)}
                     aria-expanded={open}
@@ -90,7 +89,7 @@ export default function OccasionEdit({ products = {} }) {
           </ol>
 
           <div className="relative order-first mx-auto w-full max-w-[400px] lg:order-none">
-            <Link key={current.id} href={`/product/${product.slug}`} className="animate-fade block">
+            <Link key={at} href={`/product/${product.slug}`} className="animate-fade block">
               <MihrabFrame src={product.image} alt={product.name} label={current.label} tone="dark" />
               <p className="mt-6 text-center font-display text-[1.9rem] font-light italic leading-tight text-gold-light">
                 {current.title}

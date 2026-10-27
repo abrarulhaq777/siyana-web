@@ -1,16 +1,16 @@
 import Link from "next/link";
 import Reveal from "./Reveal";
 import { Divider, Rosette } from "./Ornament";
-import { BRAND, FAQ } from "@/lib/brand";
+import { BRAND } from "@/lib/brand";
 
 /* Native <details>, so every answer opens without JavaScript and is in the page for search */
-export function FaqList({ className = "" }) {
+export function FaqList({ items = [], className = "" }) {
   return (
     <div className={`divide-y divide-line border-y border-line ${className}`}>
-      {FAQ.map(({ q, a }, i) => (
-        <details key={q} className="group py-1" open={i === 0}>
+      {items.filter((x) => x.q).map(({ q, a }, i) => (
+        <details key={q + i} className="group py-1" open={i === 0}>
           <summary className="flex cursor-pointer list-none items-baseline gap-5 py-5 [&::-webkit-details-marker]:hidden">
-            <span className="font-display text-[1.1rem] text-gold">0{i + 1}</span>
+            <span className="font-display text-[1.1rem] text-gold">{String(i + 1).padStart(2, "0")}</span>
             <span className="flex-1 font-display text-[1.45rem] leading-snug text-ink transition-colors group-hover:text-gold-dark">
               {q}
             </span>
@@ -23,7 +23,8 @@ export function FaqList({ className = "" }) {
   );
 }
 
-export default function FaqSection() {
+/* Questions and copy come from the CMS (Admin → Content → FAQ); the contact page shows the same list. */
+export default function FaqSection({ c }) {
   return (
     <section id="faq" className="relative mx-auto max-w-[1400px] px-6 py-24 lg:px-10">
       <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
@@ -32,13 +33,11 @@ export default function FaqSection() {
             <div className="pattern-girih pointer-events-none absolute inset-0 opacity-[0.05]" />
             <Rosette className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 text-gold/15" spin />
             <div className="relative">
-              <Divider label="FAQ" />
+              <Divider label={c.label} />
               <h2 className="mt-6 font-display text-[2.4rem] font-light leading-tight sm:text-[2.8rem]">
-                Questions, <span className="italic text-gold-dark">answered</span>
+                {c.heading} {c.accent && <span className="italic text-gold-dark">{c.accent}</span>}
               </h2>
-              <p className="mx-auto mt-4 max-w-xs text-sm leading-relaxed text-muted">
-                Everything you need to know before you shop. Still curious? We are happy to help.
-              </p>
+              {c.body && <p className="mx-auto mt-4 max-w-xs text-sm leading-relaxed text-muted">{c.body}</p>}
               <div className="mt-7 flex flex-col items-center gap-3">
                 <a
                   href={BRAND.instagram.url}
@@ -57,7 +56,7 @@ export default function FaqSection() {
         </Reveal>
 
         <Reveal from="right" delay={120}>
-          <FaqList />
+          <FaqList items={c.items} />
         </Reveal>
       </div>
     </section>

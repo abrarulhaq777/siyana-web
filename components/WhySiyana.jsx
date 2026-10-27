@@ -1,6 +1,5 @@
 import Reveal from "./Reveal";
 import { Divider, Rosette, Star } from "./Ornament";
-import { BRAND } from "@/lib/brand";
 import { amiri } from "@/lib/fonts";
 
 function Pillar({ item, n, align }) {
@@ -21,6 +20,7 @@ export default function WhySiyana({ ethos, assurances }) {
   const items = assurances.items ?? [];
   const half = Math.ceil(items.length / 2);
   const sides = [items.slice(0, half), items.slice(half)];
+  const medallion = ethos.medallion ?? {};
 
   return (
     <section id="ethos" className="relative overflow-hidden bg-ink py-24 text-bone lg:py-28">
@@ -36,7 +36,7 @@ export default function WhySiyana({ ethos, assurances }) {
 
         <Reveal from="fade">
           <p className="mt-20 text-center text-[11px] uppercase tracking-brand text-gold-light/80">
-            Why choose {BRAND.name}?
+            {ethos.whyHeading}
           </p>
         </Reveal>
 
@@ -55,10 +55,10 @@ export default function WhySiyana({ ethos, assurances }) {
               <div className="relative grid h-48 w-48 place-items-center rounded-full border border-gold/50 bg-ink text-center shadow-[0_0_60px_rgba(197,160,89,0.18)] sm:h-52 sm:w-52">
                 <div>
                   <p lang="ar" dir="rtl" className={`${amiri.className} text-[3.2rem] leading-none text-gold-light`}>
-                    صيانة
+                    {medallion.arabic}
                   </p>
-                  <p className="mt-3 font-display text-[1.15rem] italic text-bone/90">Siyāna</p>
-                  <p className="mt-1.5 text-[9.5px] uppercase tracking-[0.16em] text-bone/50">to preserve · to protect</p>
+                  <p className="mt-3 font-display text-[1.15rem] italic text-bone/90">{medallion.name}</p>
+                  <p className="mt-1.5 text-[9.5px] uppercase tracking-[0.16em] text-bone/50">{medallion.meaning}</p>
                 </div>
               </div>
             </div>

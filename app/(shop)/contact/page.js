@@ -8,6 +8,6 @@ export const metadata = {
 };
 
 export default async function ContactPage() {
-  const settings = await getKey("settings");
-  return <ContactView email={settings.supportEmail} phone={settings.supportPhone} />;
+  const [settings, faq] = await Promise.all([getKey("settings"), getKey("faq")]);
+  return <ContactView email={settings.supportEmail} phone={settings.supportPhone} faq={faq.items} />;
 }

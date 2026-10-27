@@ -1,6 +1,6 @@
 import { requirePageAccess, currentUser } from "@/lib/auth";
 import { can } from "@/lib/permissions";
-import { getContent, SECTION_LABELS, CODE_ONLY } from "@/lib/content";
+import { getContent, SECTION_LABELS } from "@/lib/content";
 import { getProducts } from "@/lib/catalog";
 import ContentEditor from "./ContentEditor";
 
@@ -26,9 +26,8 @@ export default async function ContentPage() {
 
       <ContentEditor
         content={content}
-        products={products.map((p) => ({ slug: p.slug, name: p.name, active: p.active }))}
+        products={products.map((p) => ({ slug: p.slug, name: p.name, colorName: p.colorName ?? "", active: p.active }))}
         labels={SECTION_LABELS}
-        codeOnly={CODE_ONLY}
         writable={can(user, "content:write")}
       />
     </>

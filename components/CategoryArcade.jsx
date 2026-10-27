@@ -61,16 +61,16 @@ export default function CategoryArcade({ c, categories }) {
       <div className="relative mx-auto max-w-[1400px] px-6 pt-16 lg:px-10">
         <Reveal from="fade">
           <div className="mx-auto max-w-2xl text-center">
-            <p lang="ar" dir="rtl" className={`${amiri.className} text-[2.1rem] leading-none text-gold-dark`}>
-              مجموعتنا
-            </p>
+            {c.arabic && (
+              <p lang="ar" dir="rtl" className={`${amiri.className} text-[2.1rem] leading-none text-gold-dark`}>
+                {c.arabic}
+              </p>
+            )}
             <Divider label={c.eyebrow} className="mt-5" />
             <h2 className="mt-6 font-display text-[2.8rem] font-light leading-[1.05] sm:text-[3.8rem]">
               {words.join(" ")} {accent && <span className="italic text-gold-dark">{accent}</span>}
             </h2>
-            <p className="mx-auto mt-5 max-w-md text-[15px] leading-relaxed text-muted">
-              Thoughtfully curated for women who appreciate modesty, sophistication, and effortless style.
-            </p>
+            {c.body && <p className="mx-auto mt-5 max-w-md text-[15px] leading-relaxed text-muted">{c.body}</p>}
           </div>
         </Reveal>
 

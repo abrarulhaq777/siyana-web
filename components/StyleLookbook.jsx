@@ -3,7 +3,6 @@ import Reveal from "./Reveal";
 import MihrabFrame from "./MihrabFrame";
 import { Crescent, Star } from "./Ornament";
 import { inr } from "@/lib/products";
-import { BRAND } from "@/lib/brand";
 
 /*
  * Five looks as a row of mihrab niches, like the arcade of a courtyard. Every look is
@@ -12,7 +11,7 @@ import { BRAND } from "@/lib/brand";
  */
 const drop = ["", "lg:mt-14", "lg:mt-24", "lg:mt-14", ""];
 
-export default function StyleLookbook({ looks = [] }) {
+export default function StyleLookbook({ c, looks = [] }) {
   if (!looks.length) return null;
 
   return (
@@ -23,14 +22,11 @@ export default function StyleLookbook({ looks = [] }) {
         <Reveal from="fade">
           <div className="mx-auto max-w-2xl text-center">
             <Crescent className="mx-auto h-6 w-6 text-gold" />
-            <p className="mt-5 text-[11px] uppercase tracking-brand text-muted">The Siyana Lookbook</p>
+            <p className="mt-5 text-[11px] uppercase tracking-brand text-muted">{c.eyebrow}</p>
             <h2 className="mt-3 font-display text-[2.6rem] font-light leading-tight sm:text-[3.4rem]">
-              Discover your <span className="italic text-gold-dark">everyday elegance</span>
+              {c.heading} {c.accent && <span className="italic text-gold-dark">{c.accent}</span>}
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted">
-              Clean silhouettes, elegant colours, beautiful textures and carefully chosen details — {looks.length} looks
-              from our latest collections.
-            </p>
+            {c.body && <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted">{c.body}</p>}
           </div>
         </Reveal>
 
@@ -39,7 +35,7 @@ export default function StyleLookbook({ looks = [] }) {
             <li key={look.slug} className={drop[i % drop.length]}>
               <Reveal delay={i * 100}>
                 <Link href={`/product/${look.slug}`} className="group block">
-                  <MihrabFrame src={look.image} alt={look.name} label={`Look 0${i + 1}`} />
+                  <MihrabFrame src={look.image} alt={look.name} label={`Look ${String(i + 1).padStart(2, "0")}`} />
                   <div className="mt-5 text-center">
                     <p className="font-display text-[1.25rem] leading-tight text-ink transition-colors group-hover:text-gold-dark">
                       {look.name}
@@ -56,17 +52,21 @@ export default function StyleLookbook({ looks = [] }) {
 
         <Reveal from="fade">
           <div className="mt-16 flex flex-col items-center gap-6">
-            <Link
-              href="/collections"
-              className="bg-ink px-8 py-4 text-[12px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
-            >
-              Shop the looks
-            </Link>
-            <p className="flex items-center justify-center gap-4 text-center text-[11px] uppercase tracking-brand text-muted">
-              <Star className="h-3.5 w-3.5 text-gold" />
-              {BRAND.name} — {BRAND.motto}
-              <Star className="h-3.5 w-3.5 text-gold" />
-            </p>
+            {c.cta?.label && (
+              <Link
+                href={c.cta.href || "/collections"}
+                className="bg-ink px-8 py-4 text-[12px] uppercase tracking-brand text-bone transition hover:bg-gold-dark"
+              >
+                {c.cta.label}
+              </Link>
+            )}
+            {c.motto && (
+              <p className="flex items-center justify-center gap-4 text-center text-[11px] uppercase tracking-brand text-muted">
+                <Star className="h-3.5 w-3.5 text-gold" />
+                {c.motto}
+                <Star className="h-3.5 w-3.5 text-gold" />
+              </p>
+            )}
           </div>
         </Reveal>
       </div>

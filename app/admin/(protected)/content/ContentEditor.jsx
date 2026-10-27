@@ -12,35 +12,45 @@ const TABS = [
   ["settings", "Store settings"],
   ["sections", "Section order"],
   ["announcement", "Ticker"],
+  // The home page, top to bottom
   ["hero", "Hero"],
-  ["assurances", "Why Siyana · promises"],
-  ["categories", "Category arcade"],
+  ["categories", "Collections"],
   ["newArrivals", "New arrivals"],
-  ["capsule", "Celebration capsule"],
-  ["prayer", "Prayer sanctuary"],
-  ["ethos", "Why Siyana · ethos"],
-  ["staples", "Considered few"],
-  ["gifting", "Gifting"],
-  ["voices", "Testimonials"],
-  ["letter", "Newsletter"],
+  ["occasionEdit", "For every moment"],
+  ["fabricCraft", "Premium fabrics"],
+  ["styleLookbook", "Lookbook"],
+  ["ethos", "Why Siyana · philosophy"],
+  ["assurances", "Why Siyana · reasons"],
+  ["faq", "FAQ"],
+  // Hidden from the home page unless switched on in Section order
+  ["voices", "Testimonials", "hidden"],
+  ["letter", "Newsletter", "hidden"],
+  ["capsule", "Celebration capsule", "hidden"],
+  ["prayer", "Prayer sanctuary", "hidden"],
+  ["staples", "Considered few", "hidden"],
+  ["gifting", "Gifting", "hidden"],
 ];
 
-export default function ContentEditor({ content, products, labels, codeOnly, writable }) {
+export default function ContentEditor({ content, products, labels, writable }) {
   const [tab, setTab] = useState("hero");
 
   return (
     <div className="mt-8 grid gap-8 lg:grid-cols-[200px_1fr] lg:items-start">
       <nav className="flex flex-wrap gap-1.5 border border-line bg-paper p-2 lg:flex-col lg:sticky lg:top-6">
-        {TABS.map(([key, label]) => (
-          <button
-            key={key}
-            onClick={() => setTab(key)}
-            className={`px-3 py-2 text-left text-[12px] uppercase tracking-[0.14em] transition ${
-              tab === key ? "bg-ink text-bone" : "text-muted hover:bg-sand/60 hover:text-ink"
-            }`}
-          >
-            {label}
-          </button>
+        {TABS.map(([key, label, group], i) => (
+          <div key={key} className="contents">
+            {group && !TABS[i - 1][2] && (
+              <p className="w-full px-3 pb-1 pt-4 text-[10.5px] uppercase tracking-[0.16em] text-muted/70">Not on the home page</p>
+            )}
+            <button
+              onClick={() => setTab(key)}
+              className={`px-3 py-2 text-left text-[12px] uppercase tracking-[0.14em] transition ${
+                tab === key ? "bg-ink text-bone" : "text-muted hover:bg-sand/60 hover:text-ink"
+              }`}
+            >
+              {label}
+            </button>
+          </div>
         ))}
       </nav>
 
@@ -50,14 +60,13 @@ export default function ContentEditor({ content, products, labels, codeOnly, wri
         data={content[tab]}
         products={products}
         labels={labels}
-        codeOnly={codeOnly}
         writable={writable}
       />
     </div>
   );
 }
 
-function Panel({ tab, data, products, labels, codeOnly, writable }) {
+function Panel({ tab, data, products, labels, writable }) {
   const [state, action] = useActionState(saveContent, null);
   const [draft, setDraft] = useState(data);
 
@@ -66,6 +75,7 @@ function Panel({ tab, data, products, labels, codeOnly, writable }) {
     set({ [field]: draft[field].map((row, n) => (n === i ? { ...row, ...patch } : row)) });
   const addRow = (field, blank) => set({ [field]: [...(draft[field] ?? []), blank] });
   const dropRow = (field, i) => set({ [field]: draft[field].filter((_, n) => n !== i) });
+  const moveRow = (field, i, d) => set({ [field]: move(draft[field], i, d) });
 
   return (
     <form action={action} className="space-y-6">
@@ -104,9 +114,6 @@ function Panel({ tab, data, products, labels, codeOnly, writable }) {
                     <span className="w-6 text-[13px] text-muted">{i + 1}</span>
                     <span className={`flex-1 text-sm ${hidden ? "text-muted line-through" : "text-ink"}`}>
                       {labels[id] ?? id}
-                      {codeOnly.includes(id) && (
-                        <span className="ml-2 text-[11.5px] uppercase tracking-[0.14em] text-muted">fixed copy</span>
-                      )}
                     </span>
                     <button type="button" disabled={i === 0} onClick={() => set({ order: move(draft.order, i, -1) })}
                       className="px-2 text-xs text-muted disabled:opacity-25 hover:text-ink">↑</button>
@@ -199,7 +206,8 @@ function Panel({ tab, data, products, labels, codeOnly, writable }) {
 
         {tab === "assurances" && (
           <>
-            <SectionTitle>Assurance strip</SectionTitle>
+            <SectionTitle>Why Siyana · reasons</SectionTitle>
+            <p className="text-xs text-muted">Shown around the medallion, half on each side.</p>
             <Rows
               rows={draft.items}
               onAdd={() => addRow("items", { title: "", body: "" })}
@@ -216,20 +224,23 @@ function Panel({ tab, data, products, labels, codeOnly, writable }) {
 
         {tab === "categories" && (
           <>
-            <SectionTitle>Category mosaic</SectionTitle>
+            <SectionTitle>Collections arcade</SectionTitle>
             <p className="text-xs text-muted">
-              The tiles themselves come from Catalogue → Collections. This sets the heading above them.
+              The arches themselves come from Products → Collections (name, photo, description). This sets the text above them.
+              The last two words of the heading are set in gold italic.
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
+              <Text label="Arabic calligraphy" v={draft.arabic} on={(v) => set({ arabic: v })} />
               <Text label="Eyebrow" v={draft.eyebrow} on={(v) => set({ eyebrow: v })} />
               <Text label="Heading" v={draft.heading} on={(v) => set({ heading: v })} />
             </div>
+            <Area label="Line under the heading" v={draft.body} on={(v) => set({ body: v })} rows={2} />
           </>
         )}
 
         {tab === "newArrivals" && (
           <>
-            <SectionTitle>New arrivals &middot; Quietly New</SectionTitle>
+            <SectionTitle>New arrivals</SectionTitle>
             <div className="grid gap-4 sm:grid-cols-2">
               <Text label="Eyebrow" v={draft.eyebrow} on={(v) => set({ eyebrow: v })} />
               <Text label="Heading" v={draft.heading} on={(v) => set({ heading: v })} />
@@ -268,6 +279,123 @@ function Panel({ tab, data, products, labels, codeOnly, writable }) {
                 on={(v) => set({ products: v })}
               />
             )}
+          </>
+        )}
+
+        {tab === "occasionEdit" && (
+          <>
+            <SectionTitle>For every moment</SectionTitle>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Text label="Divider label" v={draft.label} on={(v) => set({ label: v })} />
+              <Text label="Heading" v={draft.heading} on={(v) => set({ heading: v })} />
+              <Text label="Heading — gold italic end" v={draft.accent} on={(v) => set({ accent: v })} />
+            </div>
+            <Area label="Body" v={draft.body} on={(v) => set({ body: v })} rows={3} />
+
+            <SectionTitle>Moments</SectionTitle>
+            <p className="text-xs text-muted -mt-2">Each moment opens to show its product. A moment whose product is hidden or deleted is skipped.</p>
+            <Cards
+              rows={draft.items}
+              title={(row, i) => `${i + 1}. ${row.label || "New moment"}`}
+              onAdd={() => addRow("items", { label: "", time: "", title: "", body: "", slug: "", href: "/collections" })}
+              onDrop={(i) => dropRow("items", i)}
+              onMove={(i, d) => moveRow("items", i, d)}
+              render={(row, i) => (
+                <>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Text label="Name" v={row.label} on={(v) => setList("items", i, { label: v })} />
+                    <Text label="Small line under the name" v={row.time} on={(v) => setList("items", i, { time: v })} />
+                    <Text label="Title under the photo" v={row.title} on={(v) => setList("items", i, { title: v })} />
+                    <Text label="“Shop” button link" v={row.href} on={(v) => setList("items", i, { href: v })} />
+                  </div>
+                  <Area label="Description" v={row.body} on={(v) => setList("items", i, { body: v })} rows={2} />
+                  <ProductSelect products={products} v={row.slug} on={(v) => setList("items", i, { slug: v })} />
+                </>
+              )}
+            />
+          </>
+        )}
+
+        {tab === "fabricCraft" && (
+          <>
+            <SectionTitle>Premium fabrics</SectionTitle>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Text label="Eyebrow" v={draft.eyebrow} on={(v) => set({ eyebrow: v })} />
+              <Text label="Heading" v={draft.heading} on={(v) => set({ heading: v })} />
+            </div>
+            <Area label="Body" v={draft.body} on={(v) => set({ body: v })} rows={3} />
+            <Cta label="Link beside the heading" v={draft.link} on={(v) => set({ link: v })} />
+
+            <SectionTitle>Fabrics</SectionTitle>
+            <p className="text-xs text-muted -mt-2">Each fabric is a tab. A fabric whose product is hidden or deleted is skipped.</p>
+            <Cards
+              rows={draft.items}
+              title={(row, i) => `${i + 1}. ${row.name || "New fabric"}`}
+              onAdd={() => addRow("items", { name: "", tag: "", subtitle: "", description: "", notes: [], bestFor: "", slug: "", cta: { label: "Shop now →", href: "/collections" } })}
+              onDrop={(i) => dropRow("items", i)}
+              onMove={(i, d) => moveRow("items", i, d)}
+              render={(row, i) => (
+                <>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Text label="Fabric name (tab)" v={row.name} on={(v) => setList("items", i, { name: v })} />
+                    <Text label="Small label above the name" v={row.tag} on={(v) => setList("items", i, { tag: v })} />
+                  </div>
+                  <Text label="Italic sub-line" v={row.subtitle} on={(v) => setList("items", i, { subtitle: v })} />
+                  <Area label="Description" v={row.description} on={(v) => setList("items", i, { description: v })} rows={3} />
+                  <Area
+                    label="Highlights — one per line"
+                    v={(row.notes ?? []).join("\n")}
+                    on={(v) => setList("items", i, { notes: v.split("\n") })}
+                    rows={4}
+                  />
+                  <Text label="Perfect for" v={row.bestFor} on={(v) => setList("items", i, { bestFor: v })} />
+                  <Cta label="Button" v={row.cta} on={(v) => setList("items", i, { cta: v })} />
+                  <ProductSelect products={products} v={row.slug} on={(v) => setList("items", i, { slug: v })} />
+                </>
+              )}
+            />
+          </>
+        )}
+
+        {tab === "styleLookbook" && (
+          <>
+            <SectionTitle>Lookbook</SectionTitle>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Text label="Eyebrow" v={draft.eyebrow} on={(v) => set({ eyebrow: v })} />
+              <Text label="Heading" v={draft.heading} on={(v) => set({ heading: v })} />
+              <Text label="Heading — gold italic end" v={draft.accent} on={(v) => set({ accent: v })} />
+            </div>
+            <Area label="Body" v={draft.body} on={(v) => set({ body: v })} rows={2} />
+            <Picker label="Looks — five fit one row on a computer" products={products} value={draft.products} on={(v) => set({ products: v })} />
+            <Cta label="Button" v={draft.cta} on={(v) => set({ cta: v })} />
+            <Text label="Line under the button" v={draft.motto} on={(v) => set({ motto: v })} />
+          </>
+        )}
+
+        {tab === "faq" && (
+          <>
+            <SectionTitle>FAQ</SectionTitle>
+            <p className="text-xs text-muted">Shown on the home page and on the Contact page.</p>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Text label="Divider label" v={draft.label} on={(v) => set({ label: v })} />
+              <Text label="Heading" v={draft.heading} on={(v) => set({ heading: v })} />
+              <Text label="Heading — gold italic end" v={draft.accent} on={(v) => set({ accent: v })} />
+            </div>
+            <Area label="Body" v={draft.body} on={(v) => set({ body: v })} rows={2} />
+            <SectionTitle>Questions</SectionTitle>
+            <Cards
+              rows={draft.items}
+              title={(row, i) => `${i + 1}. ${row.q || "New question"}`}
+              onAdd={() => addRow("items", { q: "", a: "" })}
+              onDrop={(i) => dropRow("items", i)}
+              onMove={(i, d) => moveRow("items", i, d)}
+              render={(row, i) => (
+                <>
+                  <Text label="Question" v={row.q} on={(v) => setList("items", i, { q: v })} />
+                  <Area label="Answer" v={row.a} on={(v) => setList("items", i, { a: v })} rows={3} />
+                </>
+              )}
+            />
           </>
         )}
 
@@ -327,9 +455,15 @@ function Panel({ tab, data, products, labels, codeOnly, writable }) {
 
         {tab === "ethos" && (
           <>
-            <SectionTitle>Ethos band</SectionTitle>
+            <SectionTitle>Why Siyana · philosophy</SectionTitle>
             <Text label="Divider label" v={draft.label} on={(v) => set({ label: v })} />
             <Area label="Statement" v={draft.statement} on={(v) => set({ statement: v })} rows={4} />
+            <Text label="Heading above the reasons" v={draft.whyHeading} on={(v) => set({ whyHeading: v })} />
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Text label="Medallion — Arabic" v={draft.medallion?.arabic} on={(v) => set({ medallion: { ...draft.medallion, arabic: v } })} />
+              <Text label="Medallion — name" v={draft.medallion?.name} on={(v) => set({ medallion: { ...draft.medallion, name: v } })} />
+              <Text label="Medallion — meaning" v={draft.medallion?.meaning} on={(v) => set({ medallion: { ...draft.medallion, meaning: v } })} />
+            </div>
             <Area label="Footnote" v={draft.footnote} on={(v) => set({ footnote: v })} rows={3} />
           </>
         )}
@@ -468,6 +602,42 @@ function Rows({ rows = [], render, onAdd, onDrop }) {
   );
 }
 
+/** Repeatable group of fields, one card per row, with reorder and remove. */
+function Cards({ rows = [], title, render, onAdd, onDrop, onMove }) {
+  return (
+    <div className="space-y-4">
+      {rows.map((row, i) => (
+        <div key={i} className="space-y-3 border border-line bg-bone p-4">
+          <div className="flex items-center gap-2 border-b border-line/70 pb-2">
+            <span className="flex-1 truncate text-[12px] uppercase tracking-[0.14em] text-ink">{title(row, i)}</span>
+            <button type="button" disabled={i === 0} onClick={() => onMove(i, -1)} className="px-1.5 text-xs text-muted disabled:opacity-25 hover:text-ink">↑</button>
+            <button type="button" disabled={i === rows.length - 1} onClick={() => onMove(i, 1)} className="px-1.5 text-xs text-muted disabled:opacity-25 hover:text-ink">↓</button>
+            <button type="button" onClick={() => onDrop(i)} aria-label="Remove" className="px-1.5 text-sm text-muted hover:text-red-600">×</button>
+          </div>
+          {render(row, i)}
+        </div>
+      ))}
+      <Button type="button" variant="ghost" onClick={onAdd}>Add</Button>
+    </div>
+  );
+}
+
+/** One product, picked by name; the storefront shows its photo, name and price. */
+function ProductSelect({ products, v, on }) {
+  const missing = v && !products.some((p) => p.slug === v);
+  return (
+    <Field label="Product shown">
+      <select value={v ?? ""} onChange={(e) => on(e.target.value)} className={inputClass}>
+        <option value="">Choose a product…</option>
+        {missing && <option value={v}>{v} (missing)</option>}
+        {products.map((p) => (
+          <option key={p.slug} value={p.slug}>{p.name}{p.colorName ? ` · ${p.colorName}` : ""}{p.active ? "" : " (hidden)"}</option>
+        ))}
+      </select>
+    </Field>
+  );
+}
+
 /** Ordered product picker — the order chosen here is the order rendered. */
 function Picker({ label, products, value = [], on }) {
   const add = (slug) => !value.includes(slug) && on([...value, slug]);
@@ -482,7 +652,7 @@ function Picker({ label, products, value = [], on }) {
             <li key={slug} className="flex items-center gap-3 border border-line bg-bone px-3 py-2 text-sm">
               <span className="w-5 text-[13px] text-muted">{i + 1}</span>
               <span className="flex-1 truncate">
-                {p?.name ?? slug}
+                {p ? `${p.name}${p.colorName ? ` · ${p.colorName}` : ""}` : slug}
                 {p && !p.active && <span className="ml-2 text-[12px] uppercase tracking-[0.14em] text-amber-700">hidden</span>}
                 {!p && <span className="ml-2 text-[12px] uppercase tracking-[0.14em] text-red-600">missing</span>}
               </span>
@@ -496,7 +666,7 @@ function Picker({ label, products, value = [], on }) {
       <select onChange={(e) => { add(e.target.value); e.target.value = ""; }} defaultValue="" className={inputClass}>
         <option value="" disabled>Add a product…</option>
         {products.filter((p) => !value.includes(p.slug)).map((p) => (
-          <option key={p.slug} value={p.slug}>{p.name}{p.active ? "" : " (hidden)"}</option>
+          <option key={p.slug} value={p.slug}>{p.name}{p.colorName ? ` · ${p.colorName}` : ""}{p.active ? "" : " (hidden)"}</option>
         ))}
       </select>
     </div>
