@@ -57,7 +57,9 @@ export async function placeOrder(payload) {
     state: String(payload.state ?? "").trim(),
     pincode: String(payload.pincode ?? "").trim(),
   };
-  const method = ["upi", "card", "netbanking", "cod"].includes(payload.method) ? payload.method : "cod";
+  // The shopper picks UPI, card, netbanking or a wallet inside the Razorpay window.
+  const method = payload.method === "cod" ? "cod" : "online";
+  if (method === "online" && !razorpayEnabled()) return fail("Online payment isn't available right now. Please message us on Instagram to order.");
 
   if (!customer.name || !/^\S+@\S+\.\S+$/.test(customer.email)) return fail("Enter a valid name and email.");
   if (!/^\d{10}$/.test(customer.phone)) return fail("Enter a 10-digit phone number.");
@@ -78,8 +80,8 @@ export async function placeOrder(payload) {
     return fail(e.message);
   }
 
-  // Cash on delivery, or no gateway configured: nothing more to collect now.
-  if (method === "cod" || !razorpayEnabled()) {
+  // Cash on delivery: nothing more to collect now.
+  if (method === "cod") {
     return { ok: true, mode: "placed", orderNo: order.orderNo, orderId: String(order._id) };
   }
 

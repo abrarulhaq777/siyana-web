@@ -24,6 +24,14 @@ export async function POST(request) {
   const order = await Order.findOne({ "payment.razorpayOrderId": entity.order_id });
   if (!order) return NextResponse.json({ ok: true });
 
+  // The shopper chose UPI, card, … inside Razorpay's window; record which. This usually
+  // arrives after the browser has already confirmed the payment, so it runs either way.
+  const known = Order.schema.path("payment.method").enumValues;
+  if (event.event === "payment.captured" && order.payment.method === "online" && known.includes(entity.method)) {
+    order.payment.method = entity.method;
+    await order.save();
+  }
+
   if (event.event === "payment.captured" && order.payment.status !== "paid") {
     const wasCancelled = order.status === "cancelled";
     order.payment.status = "paid";

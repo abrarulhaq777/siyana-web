@@ -17,7 +17,8 @@ export default function CheckoutView({ settings, gateway, me }) {
   const [coupon, setCoupon] = useState(null); // { code, discount, description }
   const [couponError, setCouponError] = useState(null);
   const [checking, setChecking] = useState(false);
-  const [selectedMethod, setSelectedMethod] = useState(gateway ? "upi" : "cod");
+  // "online" opens Razorpay, where the shopper picks UPI, card, netbanking or a wallet.
+  const [selectedMethod, setSelectedMethod] = useState(gateway ? "online" : settings.codEnabled ? "cod" : null);
 
   if (!hydrated) return null;
 
@@ -130,7 +131,7 @@ export default function CheckoutView({ settings, gateway, me }) {
       setError(
         response.error?.description ||
           response.error?.reason ||
-          "Payment failed. Please try again or use another payment method."
+          "Payment failed. Please try again or choose another option in the payment window."
       );
     });
 
@@ -202,7 +203,7 @@ export default function CheckoutView({ settings, gateway, me }) {
                 </span>
                 <div>
                   <h2 className="text-sm font-medium uppercase tracking-[0.14em] text-ink">Contact Details</h2>
-                  <p className="text-xs text-muted">Order confirmation and courier status updates will be sent here.</p>
+                  <p className="text-xs text-muted">We will use these to contact you about your order.</p>
                 </div>
               </div>
 
@@ -248,7 +249,7 @@ export default function CheckoutView({ settings, gateway, me }) {
                 </span>
                 <div>
                   <h2 className="text-sm font-medium uppercase tracking-[0.14em] text-ink">Delivery Address</h2>
-                  <p className="text-xs text-muted">Shipped securely in unmarked, discreet luxury packaging.</p>
+                  <p className="text-xs text-muted">Where should we deliver your order?</p>
                 </div>
               </div>
 
@@ -292,93 +293,70 @@ export default function CheckoutView({ settings, gateway, me }) {
               </div>
             </section>
 
-            {/* Step 3: Payment Options */}
+            {/* Step 3: Payment */}
             <section className="rounded-xs border border-line bg-paper p-6 sm:p-8 shadow-sm transition">
               <div className="flex items-center gap-3 border-b border-line pb-5">
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-xs font-semibold text-bone">
                   03
                 </span>
                 <div>
-                  <h2 className="text-sm font-medium uppercase tracking-[0.14em] text-ink">Payment Method</h2>
-                  <p className="text-xs text-muted">Select your payment method below.</p>
+                  <h2 className="text-sm font-medium uppercase tracking-[0.14em] text-ink">Payment</h2>
+                  <p className="text-xs text-muted">You will choose how to pay in the secure Razorpay window.</p>
                 </div>
               </div>
 
               <div className="mt-6 space-y-3">
-                {gateway && (
+                {gateway && settings.codEnabled && (
                   <>
                     <PaymentOption
-                      id="method-upi"
+                      id="method-online"
                       name="method"
-                      value="upi"
-                      selected={selectedMethod === "upi"}
-                      onSelect={() => setSelectedMethod("upi")}
-                      title="UPI Instant Transfer"
-                      description="Google Pay, PhonePe, Paytm, BHIM & all standard UPI apps"
-                      badge="Instant"
-                      icon={
-                        <svg className="h-5 w-5 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-                          <rect x="2" y="5" width="20" height="14" rx="2" />
-                          <line x1="2" y1="10" x2="22" y2="10" />
-                        </svg>
-                      }
+                      value="online"
+                      selected={selectedMethod === "online"}
+                      onSelect={() => setSelectedMethod("online")}
+                      title="Pay online"
+                      description="UPI, cards, netbanking and wallets — choose in the next step"
+                      badge="Secure"
+                      icon={<ShieldIcon />}
                     />
-
                     <PaymentOption
-                      id="method-card"
+                      id="method-cod"
                       name="method"
-                      value="card"
-                      selected={selectedMethod === "card"}
-                      onSelect={() => setSelectedMethod("card")}
-                      title="Credit or Debit Card"
-                      description="Visa, Mastercard, RuPay, Maestro & American Express"
+                      value="cod"
+                      selected={selectedMethod === "cod"}
+                      onSelect={() => setSelectedMethod("cod")}
+                      title="Cash on Delivery"
+                      description="Pay when your parcel is delivered"
                       icon={
                         <svg className="h-5 w-5 text-ink/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-                          <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                          <line x1="1" y1="10" x2="23" y2="10" />
-                        </svg>
-                      }
-                    />
-
-                    <PaymentOption
-                      id="method-netbanking"
-                      name="method"
-                      value="netbanking"
-                      selected={selectedMethod === "netbanking"}
-                      onSelect={() => setSelectedMethod("netbanking")}
-                      title="Net Banking"
-                      description="Access all recognized Indian banking portals"
-                      icon={
-                        <svg className="h-5 w-5 text-ink/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-                          <path d="M3 21h18M3 10h18M5 10v11M9 10v11M15 10v11M19 10v11M12 2L2 7h20L12 2z" />
+                          <rect x="2" y="6" width="20" height="12" rx="1" />
+                          <circle cx="12" cy="12" r="3" />
                         </svg>
                       }
                     />
                   </>
                 )}
 
-                {settings.codEnabled && (
-                  <PaymentOption
-                    id="method-cod"
-                    name="method"
-                    value="cod"
-                    selected={selectedMethod === "cod"}
-                    onSelect={() => setSelectedMethod("cod")}
-                    title="Cash on Delivery (COD)"
-                    description="Pay in cash or standard courier QR when parcel is delivered"
-                    icon={
-                      <svg className="h-5 w-5 text-ink/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-                        <rect x="2" y="6" width="20" height="12" rx="1" />
-                        <circle cx="12" cy="12" r="3" />
-                        <path d="M6 12h.01M18 12h.01" />
-                      </svg>
-                    }
-                  />
+                {gateway && !settings.codEnabled && (
+                  <div className="flex items-start gap-4 rounded-xs border border-gold/50 bg-gold/[0.04] p-5">
+                    <ShieldIcon />
+                    <div>
+                      <p className="text-xs font-semibold text-ink">Secure online payment by Razorpay</p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted">
+                        Press <strong className="font-semibold text-ink">Pay Now</strong> and choose UPI (Google Pay, PhonePe,
+                        Paytm), a debit or credit card, netbanking or a wallet in the payment window.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {!gateway && settings.codEnabled && (
+                  <p className="text-[13px] text-muted">Your order will be paid by cash on delivery.</p>
                 )}
 
                 {!gateway && !settings.codEnabled && (
                   <p className="text-[13px] text-muted">
-                    No payment gateways are currently active. Please contact us for help placing your order.
+                    Online payment isn&rsquo;t available right now. Please message us on Instagram @siyana_dailymodesty to place your order.
                   </p>
                 )}
               </div>
@@ -492,7 +470,7 @@ export default function CheckoutView({ settings, gateway, me }) {
               <div className="mt-4 flex items-baseline justify-between border-t border-line pt-4">
                 <div>
                   <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink">Total Payable</span>
-                  <p className="text-[10px] text-muted">Inclusive of all taxes</p>
+                  <p className="text-[10px] text-muted">Including shipping</p>
                 </div>
                 <span className="font-display text-2xl font-normal text-ink">{inr(total)}</span>
               </div>
@@ -500,7 +478,7 @@ export default function CheckoutView({ settings, gateway, me }) {
               {/* Submit Button */}
               <button
                 type="submit"
-                disabled={busy}
+                disabled={busy || !selectedMethod}
                 className="mt-6 flex w-full items-center justify-center gap-2 rounded-xs bg-ink py-4 text-xs font-semibold uppercase tracking-[0.2em] text-bone transition hover:bg-gold-dark disabled:opacity-60"
               >
                 {busy ? (
@@ -509,10 +487,10 @@ export default function CheckoutView({ settings, gateway, me }) {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                     </svg>
-                    <span>Processing Order…</span>
+                    <span>{selectedMethod === "cod" ? "Placing Order…" : "Opening Payment…"}</span>
                   </>
                 ) : (
-                  <span>Place Order · {inr(total)}</span>
+                  <span>{selectedMethod === "cod" ? "Place Order" : "Pay Now"} · {inr(total)}</span>
                 )}
               </button>
 
@@ -626,5 +604,14 @@ function PaymentOption({ id, name, value, selected, onSelect, title, description
 
       <div className="shrink-0">{icon}</div>
     </label>
+  );
+}
+
+function ShieldIcon() {
+  return (
+    <svg className="h-5 w-5 shrink-0 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="M9 12l2 2 4-4" />
+    </svg>
   );
 }

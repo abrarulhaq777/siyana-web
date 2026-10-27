@@ -69,7 +69,7 @@ export default async function Payments({ searchParams }) {
         </select>
         <select name="method" defaultValue={method} className="border border-line bg-bone px-3 py-2.5 text-sm outline-none focus:border-gold">
           <option value="">All methods</option>
-          {["upi", "card", "netbanking", "wallet", "cod"].map((m) => <option key={m} value={m}>{m}</option>)}
+          {["online", "upi", "card", "netbanking", "wallet", "emi", "paylater", "cod"].map((m) => <option key={m} value={m}>{m}</option>)}
         </select>
         <button className="bg-ink px-5 py-2.5 text-[12px] uppercase tracking-[0.16em] text-bone">Filter</button>
         {(status || method) && (
