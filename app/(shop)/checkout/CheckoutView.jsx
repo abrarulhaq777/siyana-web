@@ -5,7 +5,7 @@ import Script from "next/script";
 import { useState } from "react";
 import ProductMedia from "@/components/ProductMedia";
 import Empty from "@/components/Empty";
-import { inr } from "@/lib/products";
+import { shippingFor, inr } from "@/lib/products";
 import { useStore } from "@/lib/store";
 import { placeOrder, confirmPayment, abandonOrder } from "./actions";
 
@@ -40,7 +40,7 @@ export default function CheckoutView({ settings, gateway, me }) {
     );
 
   const bag = lines.map((l) => ({ slug: l.slug, size: l.size, qty: l.qty }));
-  const shipping = subtotal >= settings.freeShippingAbove ? 0 : settings.shippingFee;
+  const shipping = shippingFor(settings);
   const total = subtotal + shipping;
   const address = me?.addresses?.find((a) => a.isDefault) ?? me?.addresses?.[0];
 
@@ -380,7 +380,7 @@ export default function CheckoutView({ settings, gateway, me }) {
                 <div className="flex justify-between">
                   <span>Shipping</span>
                   <span className="font-medium text-ink">
-                    {shipping === 0 ? "Complimentary" : inr(shipping)}
+                    {shipping === 0 ? "Free" : inr(shipping)}
                   </span>
                 </div>
               </div>
@@ -429,12 +429,6 @@ export default function CheckoutView({ settings, gateway, me }) {
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                   <span>Verified Secure Checkout</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <svg className="h-3.5 w-3.5 shrink-0 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
-                  <span>Complimentary shipping over ₹2,999</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <svg className="h-3.5 w-3.5 shrink-0 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

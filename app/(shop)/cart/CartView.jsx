@@ -3,7 +3,7 @@
 import Link from "next/link";
 import ProductMedia from "@/components/ProductMedia";
 import Empty from "@/components/Empty";
-import { inr } from "@/lib/products";
+import { shippingFor, inr } from "@/lib/products";
 import { useStore } from "@/lib/store";
 
 export default function CartView({ settings }) {
@@ -13,8 +13,7 @@ export default function CartView({ settings }) {
   if (lines.length === 0)
     return <Empty title="Your bag is empty" copy="Nothing set aside yet." href="/collections" cta="Browse the collection" />;
 
-  const freeAbove = settings.freeShippingAbove;
-  const shipping = subtotal >= freeAbove ? 0 : settings.shippingFee;
+  const shipping = shippingFor(settings);
 
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-16 lg:px-10">
@@ -63,18 +62,12 @@ export default function CartView({ settings }) {
           <h2 className="text-[12px] uppercase tracking-brand">Summary</h2>
           <dl className="mt-8 space-y-4 border-t border-line pt-8 text-sm">
             <Line k="Subtotal" v={inr(subtotal)} />
-            <Line k="Shipping" v={shipping === 0 ? "Complimentary" : inr(shipping)} />
+            <Line k="Shipping" v={shipping === 0 ? "Free" : inr(shipping)} />
             <div className="flex justify-between border-t border-line pt-5 font-display text-2xl">
               <dt>Total</dt>
               <dd>{inr(subtotal + shipping)}</dd>
             </div>
           </dl>
-
-          {shipping > 0 && (
-            <p className="mt-5 text-[13px] leading-relaxed text-muted">
-              Add {inr(freeAbove - subtotal)} more for complimentary shipping.
-            </p>
-          )}
 
           <Link
             href="/checkout"

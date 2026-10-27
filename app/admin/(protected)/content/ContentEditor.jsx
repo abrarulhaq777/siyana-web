@@ -92,9 +92,9 @@ function Panel({ tab, data, products, labels, writable }) {
               <Text label="Tagline" v={draft.tagline} on={(v) => set({ tagline: v })} />
               <Text label="Support email" v={draft.supportEmail} on={(v) => set({ supportEmail: v })} />
               <Text label="Support phone" v={draft.supportPhone} on={(v) => set({ supportPhone: v })} />
-              <Num label="Free shipping above (₹)" v={draft.freeShippingAbove} on={(v) => set({ freeShippingAbove: v })} />
-              <Num label="Shipping fee (₹)" v={draft.shippingFee} on={(v) => set({ shippingFee: v })} />
+              <Num label="Shipping fee per order (₹)" v={draft.shippingFee} on={(v) => set({ shippingFee: v })} />
             </div>
+            <ShippingSwitch on={draft.chargeShipping !== false} set={(v) => set({ chargeShipping: v })} fee={draft.shippingFee} />
             <Check label="Offer cash on delivery" v={draft.codEnabled} on={(v) => set({ codEnabled: v })} />
           </>
         )}
@@ -541,6 +541,25 @@ function Panel({ tab, data, products, labels, writable }) {
 }
 
 /* ─────────────────────────────────────────────────────────────── inputs */
+
+/** One switch for shipping: on charges the fee on every order, off makes every order free. */
+const ShippingSwitch = ({ on, set, fee }) => (
+  <div className="flex items-center justify-between gap-4 border border-line bg-bone p-4">
+    <div>
+      <p className="text-sm font-medium text-ink">{on ? `Shipping charged · ₹${fee ?? 0} on every order` : "Free shipping on every order"}</p>
+      <p className="mt-0.5 text-xs text-muted">Turn off to stop charging shipping. Saved with “Publish changes”.</p>
+    </div>
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      onClick={() => set(!on)}
+      className={`relative h-7 w-12 shrink-0 rounded-full transition ${on ? "bg-ink" : "bg-line"}`}
+    >
+      <span className={`absolute top-1 h-5 w-5 rounded-full bg-paper shadow transition-all ${on ? "left-6" : "left-1"}`} />
+    </button>
+  </div>
+);
 
 const move = (arr, i, d) => {
   const copy = [...arr];

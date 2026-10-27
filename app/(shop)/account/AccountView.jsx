@@ -92,7 +92,7 @@ export default function AccountView({ user, orders }) {
           </div>
 
           {/* Account Summary Metrics Strip */}
-          <div className="relative mt-8 grid grid-cols-2 gap-4 border-t border-line/80 pt-6 sm:grid-cols-4">
+          <div className="relative mt-8 grid max-w-md grid-cols-2 gap-4 border-t border-line/80 pt-6">
             <div>
               <span className="text-[10px] uppercase tracking-wider text-muted">Order History</span>
               <p className="mt-1 font-display text-[1.8rem] font-light text-ink">
@@ -109,21 +109,6 @@ export default function AccountView({ user, orders }) {
               <p className="text-[11px] text-muted">Total spend</p>
             </div>
 
-            <div className="border-l border-line/70 pl-4">
-              <span className="text-[10px] uppercase tracking-wider text-muted">Courier Privilege</span>
-              <p className="mt-1 font-display text-[1.5rem] text-gold-dark">
-                Complimentary
-              </p>
-              <p className="text-[11px] text-muted">On orders &gt; ₹2,999</p>
-            </div>
-
-            <div className="border-l border-line/70 pl-4">
-              <span className="text-[10px] uppercase tracking-wider text-muted">Concierge Desk</span>
-              <p className="mt-1 font-display text-[1.5rem] text-ink">
-                Active 24/7
-              </p>
-              <p className="text-[11px] text-muted">Sizing & drop advisory</p>
-            </div>
           </div>
         </header>
 

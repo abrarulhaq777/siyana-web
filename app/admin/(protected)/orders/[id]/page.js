@@ -62,7 +62,7 @@ export default async function OrderDetail({ params }) {
             </ul>
             <dl className="space-y-2 border-t border-line px-5 py-4 text-sm">
               <Line k="Subtotal" v={inr(o.amounts.subtotal)} />
-              <Line k="Shipping" v={o.amounts.shipping ? inr(o.amounts.shipping) : "Complimentary"} />
+              <Line k="Shipping" v={o.amounts.shipping ? inr(o.amounts.shipping) : "Free"} />
               {o.amounts.discount > 0 && <Line k="Discount" v={`− ${inr(o.amounts.discount)}`} />}
               <div className="flex justify-between border-t border-line pt-3 font-display text-xl">
                 <dt>Total</dt>
