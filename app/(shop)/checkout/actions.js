@@ -11,10 +11,6 @@ import { razorpay, getRazorpay, razorpayEnabled, paise, verifyPaymentSignature }
 const fail = (error) => ({ ok: false, error });
 
 /**
- * Step one of checkout. Creates the order from server-side prices and, when
- * Razorpay is configured for a prepaid method, an accompanying gateway order.
- */
-/**
  * Previews a coupon against server-side prices so the shopper sees the real
  * figure before paying. It is validated again at order time regardless.
  */
@@ -43,6 +39,10 @@ export async function checkCoupon(code, items) {
     : fail(result.error);
 }
 
+/**
+ * Step one of checkout. Creates the order from server-side prices and, when
+ * Razorpay is configured for a prepaid method, an accompanying gateway order.
+ */
 export async function placeOrder(payload) {
   const user = await currentUser();
 
@@ -124,11 +124,13 @@ export async function confirmPayment({ orderId, razorpayOrderId, razorpayPayment
   if (!order) return fail("Order not found.");
 
   if (order.payment.status !== "paid") {
+    const wasCancelled = order.status === "cancelled";
     order.payment.status = "paid";
     order.payment.razorpayPaymentId = razorpayPaymentId;
     order.payment.paidAt = new Date();
-    order.status = "confirmed";
     order.timeline.push({ label: "Payment received" });
+    if (wasCancelled) order.timeline.push({ label: "Paid after cancellation — check stock and confirm or refund" });
+    else order.status = "confirmed";
     await order.save();
   }
   return { ok: true, orderNo: order.orderNo };
@@ -138,7 +140,10 @@ export async function confirmPayment({ orderId, razorpayOrderId, razorpayPayment
 export async function abandonOrder(orderId) {
   await db();
   const order = await Order.findById(orderId);
-  if (!order || order.payment.status === "paid") return { ok: true };
+  // Only an unpaid online-payment order can be abandoned; COD orders never open the window.
+  if (!order || !order.payment.razorpayOrderId || order.payment.status !== "pending" || order.status !== "pending") {
+    return { ok: true };
+  }
 
   await restock(order);
   order.status = "cancelled";

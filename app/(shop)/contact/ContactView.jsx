@@ -1,23 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import Reveal from "@/components/Reveal";
 import { Crescent, Star, Corner, Scallop } from "@/components/Ornament";
 import { FaqList } from "@/components/FaqSection";
 import { BRAND } from "@/lib/brand";
+import { sendInquiry } from "./actions";
 
 export default function ContactView({ email, phone }) {
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-    }, 900);
-  };
+  // Bumping the key remounts the form, which clears it and its send state.
+  const [round, setRound] = useState(0);
 
   return (
     <div className="bg-bone/40 pb-24">
@@ -181,107 +173,7 @@ export default function ContactView({ email, phone }) {
                 Fill in your details below and we will get back to you.
               </p>
 
-              {submitted ? (
-                <div className="mt-8 rounded-xs border border-gold/50 bg-sand/30 p-8 text-center">
-                  <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-gold/15 text-gold-dark">
-                    ✓
-                  </div>
-                  <h3 className="mt-4 font-display text-[1.6rem] text-ink">Message Received with Gratitude</h3>
-                  <p className="mt-2 text-sm text-muted">
-                    Thank you for reaching out. We will review your message and reply to your email.
-                  </p>
-                  <button
-                    onClick={() => setSubmitted(false)}
-                    className="mt-6 inline-block text-[11px] uppercase tracking-brand text-gold-dark hover:underline"
-                  >
-                    Send another message
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-[11px] uppercase tracking-wider text-muted font-medium">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Fatima Al-Zahra"
-                        className="mt-2 w-full border border-line bg-bone px-4 py-3 text-sm outline-none transition focus:border-gold"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] uppercase tracking-wider text-muted font-medium">
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        placeholder="your.email@domain.com"
-                        className="mt-2 w-full border border-line bg-bone px-4 py-3 text-sm outline-none transition focus:border-gold"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-[11px] uppercase tracking-wider text-muted font-medium">
-                        Topic *
-                      </label>
-                      <select
-                        required
-                        className="mt-2 w-full border border-line bg-bone px-4 py-3 text-sm outline-none transition focus:border-gold"
-                      >
-                        <option value="sizing">Sizing help</option>
-                        <option value="product">Product &amp; fabric questions</option>
-                        <option value="order">Order &amp; delivery</option>
-                        <option value="issue">Damaged or incorrect item</option>
-                        <option value="other">Something else</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] uppercase tracking-wider text-muted font-medium">
-                        Order Number (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. SY-1024"
-                        className="mt-2 w-full border border-line bg-bone px-4 py-3 text-sm outline-none transition focus:border-gold"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-muted font-medium">
-                      Message *
-                    </label>
-                    <textarea
-                      required
-                      rows={4}
-                      placeholder="How can we help you today?"
-                      className="mt-2 w-full border border-line bg-bone p-4 text-sm outline-none transition focus:border-gold"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="inline-flex items-center gap-3 bg-ink px-9 py-4 text-[12px] font-medium uppercase tracking-brand text-bone shadow-sm transition hover:bg-gold-dark disabled:opacity-50"
-                  >
-                    {loading ? (
-                      <span>Sending...</span>
-                    ) : (
-                      <>
-                        <span>Send Message</span>
-                        <span>→</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
+              <InquiryForm key={round} onReset={() => setRound((r) => r + 1)} />
             </div>
           </Reveal>
 
@@ -303,5 +195,81 @@ export default function ContactView({ email, phone }) {
 
       <Scallop className="mt-12 text-gold" />
     </div>
+  );
+}
+
+const field = "mt-2 w-full border border-line bg-bone px-4 py-3 text-sm outline-none transition focus:border-gold";
+const labelCls = "block text-[11px] uppercase tracking-wider text-muted font-medium";
+
+/* Sends through a server action, which emails the store inbox (see ./actions.js). */
+function InquiryForm({ onReset }) {
+  const [state, action, isPending] = useActionState(sendInquiry, null);
+  const v = state?.values ?? {};
+
+  if (state?.ok) {
+    return (
+      <div className="mt-8 rounded-xs border border-gold/50 bg-sand/30 p-8 text-center">
+        <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-gold/15 text-gold-dark">✓</div>
+        <h3 className="mt-4 font-display text-[1.6rem] text-ink">Message Received with Gratitude</h3>
+        <p className="mt-2 text-sm text-muted">Thank you for reaching out. We will review your message and reply to your email.</p>
+        <button onClick={onReset} className="mt-6 inline-block text-[11px] uppercase tracking-brand text-gold-dark hover:underline">
+          Send another message
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form action={action} className="mt-8 space-y-6">
+      <div className="grid gap-6 sm:grid-cols-2">
+        <label className={labelCls}>
+          Full Name *
+          <input name="name" type="text" required maxLength={120} defaultValue={v.name} placeholder="e.g. Fatima Al-Zahra" className={field} />
+        </label>
+        <label className={labelCls}>
+          Email Address *
+          <input name="email" type="email" required maxLength={200} defaultValue={v.email} placeholder="your.email@domain.com" className={field} />
+        </label>
+      </div>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <label className={labelCls}>
+          Topic *
+          <select name="topic" required defaultValue={v.topic ?? "sizing"} className={field}>
+            <option value="sizing">Sizing help</option>
+            <option value="product">Product &amp; fabric questions</option>
+            <option value="order">Order &amp; delivery</option>
+            <option value="issue">Damaged or incorrect item</option>
+            <option value="other">Something else</option>
+          </select>
+        </label>
+        <label className={labelCls}>
+          Order Number (Optional)
+          <input name="order" type="text" maxLength={60} defaultValue={v.order} placeholder="e.g. SY-1024" className={field} />
+        </label>
+      </div>
+
+      <label className={labelCls}>
+        Message *
+        <textarea name="message" required rows={4} maxLength={5000} defaultValue={v.message} placeholder="How can we help you today?" className={`${field} p-4`} />
+      </label>
+
+      {/* Spam trap: hidden from people, filled in by bots */}
+      <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+
+      {state?.error && (
+        <p role="alert" className="border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {state.error}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={isPending}
+        className="inline-flex items-center gap-3 bg-ink px-9 py-4 text-[12px] font-medium uppercase tracking-brand text-bone shadow-sm transition hover:bg-gold-dark disabled:opacity-50"
+      >
+        {isPending ? <span>Sending...</span> : <><span>Send Message</span><span>→</span></>}
+      </button>
+    </form>
   );
 }

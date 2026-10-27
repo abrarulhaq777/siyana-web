@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 import { Order } from "@/lib/models";
-import { restock } from "@/lib/orders";
 import { verifyWebhookSignature } from "@/lib/razorpay";
 
 /*
@@ -26,19 +25,21 @@ export async function POST(request) {
   if (!order) return NextResponse.json({ ok: true });
 
   if (event.event === "payment.captured" && order.payment.status !== "paid") {
+    const wasCancelled = order.status === "cancelled";
     order.payment.status = "paid";
     order.payment.razorpayPaymentId = entity.id;
     order.payment.paidAt = new Date();
     if (order.status === "pending") order.status = "confirmed";
     order.timeline.push({ label: "Payment captured (webhook)" });
+    // Its stock was already released when the shopper closed the payment window.
+    if (wasCancelled) order.timeline.push({ label: "Paid after cancellation — check stock and confirm or refund" });
     await order.save();
   }
 
+  // A failed attempt is not the end: Razorpay lets the shopper retry in the same window.
+  // The order is only cancelled (and its stock released) when they close the window.
   if (event.event === "payment.failed" && order.payment.status === "pending") {
-    await restock(order);
-    order.payment.status = "failed";
-    order.status = "cancelled";
-    order.timeline.push({ label: `Payment failed (webhook): ${entity.error_description ?? "declined"}` });
+    order.timeline.push({ label: `Payment attempt failed: ${entity.error_description ?? "declined"}` });
     await order.save();
   }
 

@@ -10,7 +10,8 @@
     "seed": "node scripts/seed.mjs",
     "admin:create": "node scripts/create-admin.mjs",
     "check": "node lib/cart.check.mjs && node lib/permissions.check.mjs && node lib/coupons.check.mjs && node --env-file=.env.local scripts/orders.check.mjs",
-    "uploads:import": "node --env-file=.env scripts/import-uploads.mjs"
+    "uploads:import": "node --env-file=.env scripts/import-uploads.mjs",
+    "razorpay:check": "node --env-file=.env scripts/check-razorpay.mjs"
   },
   "engines": {
     "node": ">=20.9.0"
@@ -19,6 +20,7 @@
     "bcryptjs": "^3.0.3",
     "mongoose": "^9.9.5",
     "next": "16.4.2",
+    "nodemailer": "10.1.7",
     "razorpay": "^2.9.8",
     "react": "19.2.8",
     "react-dom": "19.2.8",

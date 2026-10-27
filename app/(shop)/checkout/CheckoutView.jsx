@@ -99,8 +99,9 @@ export default function CheckoutView({ settings, gateway, me }) {
       order_id: result.razorpayOrderId,
       amount: result.amount,
       currency: "INR",
-      name: settings.storeName,
+      name: "Siyana Daily Modesty",
       description: `Order ${result.orderNo}`,
+      image: `${window.location.origin}/siyana-logo.png`,
       prefill: result.prefill,
       theme: { color: "#141311" },
       handler: async (response) => {
