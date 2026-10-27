@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { setOrderStatus, refundOrder, markOrderPaid } from "@/app/admin/actions";
-import { Field, Input, Textarea, Select, Submit, Notice } from "@/app/admin/_components/ui";
+import { Field, Input, Textarea, Select, Submit, Notice, Badge } from "@/app/admin/_components/ui";
 import { inr } from "@/lib/products";
 
 export default function OrderControls({ order, statuses, canWrite, canRefund, refunded }) {
@@ -26,11 +26,18 @@ export default function OrderControls({ order, statuses, canWrite, canRefund, re
     <div className="space-y-5">
       {canWrite && (
         <form action={statusAction} className="space-y-4 border border-line bg-paper p-5">
-          <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Update status</h2>
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-[12px] uppercase tracking-[0.16em] text-muted">Update status</h2>
+            <p className="text-[13px] text-muted">
+              Currently <span className="ml-1"><Badge tone={order.status}>{order.status}</Badge></span>
+            </p>
+          </div>
           <Notice state={statusState} />
           <input type="hidden" name="id" value={order._id} />
-          <Field label="Status">
-            <Select name="status" defaultValue={order.status}>
+          <Field label="New status">
+            {/* React resets the form after the action runs; keying on the saved status
+                remounts the select so it lands on the new status, not the one first loaded. */}
+            <Select key={order.status} name="status" defaultValue={order.status}>
               {statuses.map((s) => <option key={s} value={s}>{s}</option>)}
             </Select>
           </Field>
