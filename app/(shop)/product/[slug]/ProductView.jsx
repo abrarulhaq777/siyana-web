@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import Gallery from "@/components/Gallery";
-import Stars from "@/components/Stars";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
 import { inr, sizesOf, abayaLengths } from "@/lib/products";
@@ -71,13 +70,6 @@ export default function ProductView({ product, related, categories = [] }) {
             <h1 className="mt-4 font-display text-[2.8rem] font-light leading-none sm:text-[3.4rem]">
               {product.name}
             </h1>
-
-            {product.reviewCount > 0 && (
-              <a href="#reviews" className="mt-3 inline-flex items-center gap-2.5 text-[13px] text-muted hover:text-ink">
-                <Stars value={product.rating} />
-                <span>{product.rating.toFixed(1)} · {product.reviewCount} {product.reviewCount === 1 ? "review" : "reviews"}</span>
-              </a>
-            )}
 
             <p className="mt-6 flex items-baseline gap-3">
               <span className="text-2xl font-normal text-ink">{inr(product.price)}</span>

@@ -7,16 +7,13 @@ import ProductMedia from "@/components/ProductMedia";
 import Empty from "@/components/Empty";
 import { inr } from "@/lib/products";
 import { useStore } from "@/lib/store";
-import { placeOrder, confirmPayment, abandonOrder, checkCoupon } from "./actions";
+import { placeOrder, confirmPayment, abandonOrder } from "./actions";
 
 export default function CheckoutView({ settings, gateway, me }) {
   const { hydrated, lines, subtotal, clear } = useStore();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const [done, setDone] = useState(null);
-  const [coupon, setCoupon] = useState(null); // { code, discount, description }
-  const [couponError, setCouponError] = useState(null);
-  const [checking, setChecking] = useState(false);
   // "online" opens Razorpay, where the shopper picks UPI, card, netbanking or a wallet.
   const [selectedMethod, setSelectedMethod] = useState(gateway ? "online" : settings.codEnabled ? "cod" : null);
 
@@ -43,27 +40,9 @@ export default function CheckoutView({ settings, gateway, me }) {
     );
 
   const bag = lines.map((l) => ({ slug: l.slug, size: l.size, qty: l.qty }));
-  const discount = coupon?.discount ?? 0;
   const shipping = subtotal >= settings.freeShippingAbove ? 0 : settings.shippingFee;
-  const total = Math.max(0, subtotal - discount) + shipping;
+  const total = subtotal + shipping;
   const address = me?.addresses?.find((a) => a.isDefault) ?? me?.addresses?.[0];
-
-  async function redeem(e) {
-    e.preventDefault();
-    const code = new FormData(e.currentTarget).get("code");
-    if (!code) return;
-
-    setChecking(true);
-    setCouponError(null);
-    const result = await checkCoupon(code, bag);
-    setChecking(false);
-
-    if (!result.ok) {
-      setCoupon(null);
-      return setCouponError(result.error);
-    }
-    setCoupon(result);
-  }
 
   async function submit(e) {
     e.preventDefault();
@@ -75,7 +54,6 @@ export default function CheckoutView({ settings, gateway, me }) {
       ...form,
       method: selectedMethod,
       items: bag,
-      couponCode: coupon?.code ?? null,
     });
 
     if (!result.ok) {
@@ -178,8 +156,6 @@ export default function CheckoutView({ settings, gateway, me }) {
           </div>
         </header>
 
-        {/* Coupon form reference for external button */}
-        <form id="coupon-form" onSubmit={redeem} />
 
         {/* Main Grid */}
         <form onSubmit={submit} className="grid gap-12 lg:grid-cols-[1.35fr_0.85fr] lg:gap-16">
@@ -395,69 +371,12 @@ export default function CheckoutView({ settings, gateway, me }) {
                 ))}
               </div>
 
-              {/* Coupon Redemption Box */}
-              <div className="border-t border-line pt-4">
-                {coupon ? (
-                  <div className="flex items-center justify-between rounded-xs border border-emerald-300 bg-emerald-50/60 px-3.5 py-2.5">
-                    <div>
-                      <p className="text-xs font-semibold text-emerald-800">
-                        {coupon.code} <span className="font-normal text-emerald-700">applied</span>
-                      </p>
-                      <p className="text-[11px] text-emerald-600">
-                        {coupon.description || `Discount: ${inr(coupon.discount)}`}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCoupon(null);
-                        setCouponError(null);
-                      }}
-                      className="text-[11px] font-medium uppercase tracking-[0.14em] text-red-700 hover:underline"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ) : (
-                  <div>
-                    <label htmlFor="code" className="block text-[11px] font-medium uppercase tracking-[0.16em] text-muted">
-                      Promotional Code
-                    </label>
-                    <div className="mt-1.5 flex gap-2">
-                      <input
-                        id="code"
-                        name="code"
-                        form="coupon-form"
-                        placeholder="Enter coupon code"
-                        autoComplete="off"
-                        className="min-w-0 flex-1 rounded-xs border border-line bg-bone/40 px-3 py-2 text-xs uppercase tracking-[0.1em] text-ink outline-none transition focus:border-gold focus:bg-white"
-                      />
-                      <button
-                        type="submit"
-                        form="coupon-form"
-                        disabled={checking}
-                        className="rounded-xs border border-ink bg-ink px-4 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-bone transition hover:bg-gold-dark hover:border-gold-dark disabled:opacity-50"
-                      >
-                        {checking ? "Checking…" : "Apply"}
-                      </button>
-                    </div>
-                    {couponError && <p className="mt-1.5 text-xs text-red-600">{couponError}</p>}
-                  </div>
-                )}
-              </div>
-
               {/* Financial Calculation */}
               <div className="mt-5 space-y-2.5 border-t border-line pt-4 text-xs text-muted">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
                   <span className="font-medium text-ink">{inr(subtotal)}</span>
                 </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-emerald-700">
-                    <span>Coupon Discount</span>
-                    <span className="font-medium">− {inr(discount)}</span>
-                  </div>
-                )}
                 <div className="flex justify-between">
                   <span>Shipping</span>
                   <span className="font-medium text-ink">

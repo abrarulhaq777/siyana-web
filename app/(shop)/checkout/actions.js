@@ -4,40 +4,9 @@ import db from "@/lib/db";
 import { Order } from "@/lib/models";
 import { currentUser } from "@/lib/auth";
 import { createOrder, restock } from "@/lib/orders";
-import { applyCoupon } from "@/lib/coupons";
-import { Product } from "@/lib/models";
 import { razorpay, getRazorpay, razorpayEnabled, paise, verifyPaymentSignature } from "@/lib/razorpay";
 
 const fail = (error) => ({ ok: false, error });
-
-/**
- * Previews a coupon against server-side prices so the shopper sees the real
- * figure before paying. It is validated again at order time regardless.
- */
-export async function checkCoupon(code, items) {
-  const user = await currentUser();
-  await db();
-
-  const slugs = [...new Set((items ?? []).map((i) => String(i.slug)))];
-  const products = await Product.find({ slug: { $in: slugs }, active: true })
-    .select("slug price category")
-    .lean();
-  const bySlug = Object.fromEntries(products.map((p) => [p.slug, p]));
-
-  const lines = (items ?? [])
-    .map((i) => {
-      const p = bySlug[i.slug];
-      return p && { slug: p.slug, category: p.category, price: p.price, qty: Math.max(1, Number(i.qty) || 1) };
-    })
-    .filter(Boolean);
-
-  if (!lines.length) return fail("Your bag is empty.");
-
-  const result = await applyCoupon(code, lines, { userId: user?._id, email: user?.email });
-  return result.ok
-    ? { ok: true, code: result.coupon.code, discount: result.discount, description: result.coupon.description }
-    : fail(result.error);
-}
 
 /**
  * Step one of checkout. Creates the order from server-side prices and, when
@@ -74,7 +43,7 @@ export async function placeOrder(payload) {
       address,
       method,
       userId: user?._id,
-      couponCode: payload.couponCode || null,
+      couponCode: null, // coupons are switched off on the storefront
     });
   } catch (e) {
     return fail(e.message);

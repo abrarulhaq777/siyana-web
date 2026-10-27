@@ -37,14 +37,6 @@ export default function Header({ categories = [], ticker = [] }) {
                 </Link>
               );
             })}
-            <Link
-              href="/offers"
-              className={`underline-grow py-1 transition-colors ${
-                pathname === "/offers" ? "text-gold-dark font-medium" : "text-ink/80 hover:text-ink"
-              }`}
-            >
-              Offers
-            </Link>
           </nav>
 
           <button
@@ -118,19 +110,6 @@ export default function Header({ categories = [], ticker = [] }) {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link
-                href="/offers"
-                className={`font-display text-2xl flex items-center justify-between transition-colors ${
-                  pathname === "/offers" ? "text-gold-dark font-medium" : "text-ink"
-                }`}
-              >
-                <span>Seasonal Offers</span>
-                <span className="text-xs text-gold font-sans uppercase tracking-widest">
-                  {pathname === "/offers" ? "Active" : "Privilege"}
-                </span>
-              </Link>
-            </li>
             <li className="pt-3 border-t border-line grid grid-cols-2 gap-3 text-[12px] uppercase tracking-brand text-muted">
               <Link href="/about" className={`hover:text-ink ${pathname === "/about" ? "text-ink font-semibold" : ""}`}>
                 About Us

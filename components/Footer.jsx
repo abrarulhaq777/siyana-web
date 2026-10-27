@@ -11,7 +11,6 @@ const help = [
 
 const house = [
   ["About Siyana Daily Modesty", "/about"],
-  ["Offers", "/offers"],
   ["Our Philosophy", "/#ethos"],
   ["All Collections", "/collections"],
 ];

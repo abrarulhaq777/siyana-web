@@ -11,8 +11,6 @@ const ITEMS = [
   ["/admin/orders", "Orders", "orders:read"],
   ["/admin/payments", "Payments", "payments:read"],
   ["/admin/products", "Catalogue", "products:read"],
-  ["/admin/coupons", "Coupons", "products:read"],
-  ["/admin/reviews", "Reviews", "products:read"],
   ["/admin/customers", "Customers", "customers:read"],
   ["/admin/content", "Storefront", "content:read"],
   ["/admin/staff", "Team", "staff:read"],

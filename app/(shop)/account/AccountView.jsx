@@ -139,7 +139,7 @@ export default function AccountView({ user, orders }) {
                     Order History
                   </h2>
                   <p className="mt-1 text-xs text-muted">
-                    Track dispatches, review tailored lengths, and view invoices.
+                    Track your orders and see where each one is.
                   </p>
                 </div>
                 <span className="font-mono text-xs text-muted">
