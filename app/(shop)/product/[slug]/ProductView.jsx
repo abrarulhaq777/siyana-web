@@ -43,18 +43,13 @@ export default function ProductView({ product, related, categories = [] }) {
       <section className="mx-auto grid max-w-[1400px] gap-12 px-6 py-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:px-10">
         <div className="space-y-6">
           <Gallery images={product.images?.length ? product.images : product.image ? [product.image] : []} alt={product.name} />
-          <div className="grid grid-cols-2 gap-4">
-            <div className="arch-sm relative aspect-[4/3] overflow-hidden bg-sand/60 p-6 flex flex-col justify-end border border-line">
+          {product.fabric && (
+            <div className="arch-sm relative overflow-hidden bg-sand/60 px-6 pb-6 pt-10 border border-line">
               <span className="text-[11px] uppercase tracking-brand text-gold font-medium">Fabric</span>
               <p className="mt-1 font-display text-lg leading-tight text-ink">{product.fabric}</p>
               <p className="text-[13px] text-muted mt-1">Premium fabrics with beautiful, carefully chosen details.</p>
             </div>
-            <div className="arch-sm relative aspect-[4/3] overflow-hidden bg-sand/60 p-6 flex flex-col justify-end border border-line">
-              <span className="text-[11px] uppercase tracking-brand text-gold font-medium">Silhouette Cut</span>
-              <p className="mt-1 font-display text-lg leading-tight text-ink">{product.silhouette}</p>
-              <p className="text-[13px] text-muted mt-1">Clean, modest silhouettes that feel modern and timeless.</p>
-            </div>
-          </div>
+          )}
         </div>
 
         <div className="lg:sticky lg:top-36 lg:self-start space-y-8">

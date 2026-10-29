@@ -63,10 +63,10 @@ export default function ProductForm({ product, categories, sizes, writable }) {
             <Field label="Colour swatch" hint="Hex, used as the fallback tile.">
               <Input name="color" defaultValue={p.color ?? "#2f3033"} />
             </Field>
-            <Field label="Opacity"><Input name="opacity" defaultValue={p.opacity} /></Field>
-            <Field label="Silhouette"><Input name="silhouette" defaultValue={p.silhouette} /></Field>
           </div>
-          <Field label="Story"><Textarea name="story" rows={3} defaultValue={p.story} /></Field>
+          <Field label="Description" hint="The paragraph under the price on the product page.">
+            <Textarea name="story" rows={3} defaultValue={p.story} />
+          </Field>
           <Field label="Detail lines" hint="One per line.">
             <Textarea name="details" rows={5} defaultValue={(p.details ?? []).join("\n")} />
           </Field>

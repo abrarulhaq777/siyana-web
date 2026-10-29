@@ -64,7 +64,6 @@ export default function ProductCard({ product, tone = "light" }) {
 
         <div className={`mt-1 flex items-center justify-between text-[12px] uppercase tracking-[0.18em] ${dark ? "text-bone/60" : "text-muted"}`}>
           <span className="truncate">{product.colorName}</span>
-          {product.opacity && <span className={`shrink-0 ${dark ? "text-gold-light/70" : "text-sage"}`}>{product.opacity.split(" ")[0]}</span>}
         </div>
 
         <p className="mt-auto flex items-baseline gap-2 pt-3 text-sm">

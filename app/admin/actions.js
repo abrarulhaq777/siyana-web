@@ -190,8 +190,6 @@ export async function saveProduct(_prev, formData) {
     colorName: formData.get("colorName"),
     fabric: formData.get("fabric"),
     tag: formData.get("tag") || null,
-    opacity: formData.get("opacity"),
-    silhouette: formData.get("silhouette"),
     story: formData.get("story"),
     wuduFriendly: formData.get("wuduFriendly") === "on",
     active: formData.get("active") === "on",
