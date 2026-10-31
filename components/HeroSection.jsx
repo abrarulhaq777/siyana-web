@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import ArchFrame from "@/components/ArchFrame";
 import { Rosette, Star, Corner, Scallop } from "@/components/Ornament";
@@ -9,6 +10,8 @@ import { DEFAULTS } from "@/lib/content-defaults";
 export default function HeroSection({ c, totalProducts }) {
   const [activeLook, setActiveLook] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [onScreen, setOnScreen] = useState(true);
+  const sectionRef = useRef(null);
 
   // The CMS merges its defaults in already; these cover a slide or field saved empty.
   const d = DEFAULTS.hero;
@@ -29,19 +32,26 @@ export default function HeroSection({ c, totalProducts }) {
     link: item.link || "/collections",
   }));
 
+  /* ── Off screen the slides stay put, so phones don't download photos nobody can see ── */
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting));
+    io.observe(sectionRef.current);
+    return () => io.disconnect();
+  }, []);
+
   /* ── Auto-rotate images every 4.2 seconds (pauses on hover) ── */
   useEffect(() => {
-    if (isPaused || LOOKS.length <= 1) return;
+    if (isPaused || !onScreen || LOOKS.length <= 1) return;
     const interval = setInterval(() => {
       setActiveLook((prev) => (prev + 1) % LOOKS.length);
     }, 4200);
     return () => clearInterval(interval);
-  }, [isPaused, LOOKS.length]);
+  }, [isPaused, onScreen, LOOKS.length]);
 
   const currentLook = LOOKS[activeLook % LOOKS.length] || LOOKS[0];
 
   return (
-    <section className="relative overflow-hidden bg-bone/40 pb-16 pt-3 sm:pb-20 sm:pt-4 lg:pb-24 lg:pt-6">
+    <section ref={sectionRef} className="relative overflow-hidden bg-bone/40 pb-16 pt-3 sm:pb-20 sm:pt-4 lg:pb-24 lg:pt-6">
       {/* Ambient background decoration */}
       <div className="pattern-girih pointer-events-none absolute inset-0 opacity-[0.028]" />
       <div className="pointer-events-none absolute -left-48 top-4 h-96 w-96 rounded-full bg-gold/8 blur-[120px]" />
@@ -111,7 +121,7 @@ export default function HeroSection({ c, totalProducts }) {
             <dl className="mt-10 grid max-w-xl grid-cols-3 gap-5 border-t border-line/80 pt-6">
               {stats.map((stat, i) => (
                 <div key={stat.k + i} className={i ? "border-l border-line/80 pl-4" : ""}>
-                  <dt className="whitespace-nowrap text-[12.5px] font-semibold uppercase tracking-[0.1em] text-ink">
+                  <dt className="text-[11px] font-semibold uppercase leading-snug tracking-[0.08em] text-ink sm:whitespace-nowrap sm:text-[12.5px] sm:tracking-[0.1em]">
                     {stat.k}
                   </dt>
                   <dd className="mt-1.5 text-[11px] uppercase leading-relaxed tracking-[0.08em] text-muted">
@@ -157,6 +167,7 @@ export default function HeroSection({ c, totalProducts }) {
                   alt={currentLook.title}
                   ratio="aspect-[4/4.7]"
                   shape="dome"
+                  sizes="(min-width: 1024px) 540px, (min-width: 640px) 500px, 100vw"
                   focus={currentLook.focus}
                   kenburns
                   frame={false}
@@ -201,10 +212,12 @@ export default function HeroSection({ c, totalProducts }) {
                   className="absolute -left-6 top-16 z-30 hidden w-52 rounded-md border border-line bg-paper/95 p-3 shadow-xl backdrop-blur-md transition-all duration-500 hover:scale-105 sm:block lg:-left-10"
                 >
                   <div className="flex items-center gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={currentLook.previewThumb}
                       alt=""
+                      width={42}
+                      height={56}
+                      unoptimized={!currentLook.previewThumb.startsWith("/")}
                       className="h-14 w-10.5 rounded-xs object-cover shadow-xs"
                     />
                     <div className="min-w-0 flex-1">

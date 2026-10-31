@@ -1,10 +1,21 @@
-import ArchFrame from "./ArchFrame";
+import Image from "next/image";
 
 /*
  * Product imagery. Every shot is 3:4 portrait and anchored to the top of the
  * frame so faces and necklines land in the same place across a whole row.
+ * Uploads are large PNGs, so they go through the image optimizer: `sizes` says how
+ * wide the photo is on screen and the browser downloads a copy to match.
  */
-export default function ProductMedia({ product, className = "", ratio = "aspect-[3/4]", children }) {
+const isLocal = (src) => src.startsWith("/") && !src.endsWith(".svg");
+
+export default function ProductMedia({
+  product,
+  className = "",
+  ratio = "aspect-[3/4]",
+  sizes = "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw",
+  eager = false,
+  children,
+}) {
   const primaryImg = product?.image || product?.images?.[0];
   const secondaryImg =
     product?.images && product.images.length > 1 && product.images[1] !== primaryImg
@@ -15,24 +26,27 @@ export default function ProductMedia({ product, className = "", ratio = "aspect-
     return (
       <div className={`${ratio} arch relative overflow-hidden bg-sand/60 ${className}`}>
         {/* Primary cover image */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={primaryImg}
           alt={product.name}
-          loading="lazy"
-          className={`h-full w-full object-cover object-top transition-all duration-[1100ms] ease-out group-hover:scale-[1.06] ${
+          fill
+          sizes={sizes}
+          unoptimized={!isLocal(primaryImg)}
+          loading={eager ? "eager" : "lazy"}
+          className={`object-cover object-top transition-all duration-[1100ms] ease-out group-hover:scale-[1.06] ${
             secondaryImg ? "group-hover:opacity-0" : ""
           }`}
         />
 
-        {/* Secondary image crossfade on hover if present */}
+        {/* Secondary image crossfade on hover. display:none on touch screens, so phones never download it. */}
         {secondaryImg && (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
+          <Image
             src={secondaryImg}
             alt={`${product.name} angle`}
-            loading="lazy"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-top opacity-0 transition-all duration-[1100ms] ease-out group-hover:scale-[1.06] group-hover:opacity-100"
+            fill
+            sizes={sizes}
+            unoptimized={!isLocal(secondaryImg)}
+            className="pointer-events-none hidden object-cover object-top opacity-0 transition-all duration-[1100ms] ease-out group-hover:scale-[1.06] group-hover:opacity-100 [@media(hover:hover)]:block"
           />
         )}
 

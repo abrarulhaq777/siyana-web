@@ -73,9 +73,14 @@ export default async function Home() {
   };
 
   const { order, hidden } = cms.sections;
-  return <>{order.filter((id) => sections[id] && !hidden.includes(id)).map((id) => (
-    <div key={id}>{sections[id]}</div>
-  ))}</>;
+  // On phones the products come first, so they are on screen without scrolling.
+  return (
+    <div className="flex flex-col">
+      {order.filter((id) => sections[id] && !hidden.includes(id)).map((id) => (
+        <div key={id} className={id === "newArrivals" ? "max-sm:order-first" : undefined}>{sections[id]}</div>
+      ))}
+    </div>
+  );
 }
 
 /* ══════════════════════════════════════════ 02 · assurances
@@ -104,26 +109,27 @@ function Assurances({ c }) {
 
 function NewArrivals({ c, items }) {
   return (
-    <section className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10">
+    <section className="mx-auto max-w-[1400px] px-4 pb-14 pt-4 sm:px-6 sm:py-20 lg:px-10">
       <Reveal>
-        <div className="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-6">
-          <div>
-            <p className="text-[12px] uppercase tracking-brand text-muted">
+        <div className="flex items-end justify-between gap-4 border-b border-line pb-3 sm:flex-wrap sm:gap-6 sm:pb-6">
+          <div className="min-w-0">
+            <p className="text-[12px] uppercase tracking-brand text-muted max-sm:text-[10.5px]">
               {c.eyebrow && !/autumn/i.test(c.eyebrow) ? c.eyebrow : "Signature Modesty Edit"}
             </p>
-            <h2 className="mt-3 font-display text-[2.6rem] font-light leading-none">{c.heading}</h2>
-            <p className="mt-3 max-w-lg text-sm text-muted">{c.body}</p>
+            <h2 className="mt-1 font-display text-[1.5rem] font-light leading-tight sm:mt-3 sm:text-[2.6rem] sm:leading-none">{c.heading}</h2>
+            <p className="mt-3 hidden max-w-lg text-sm text-muted sm:block">{c.body}</p>
           </div>
-          <Link href="/collections" className="underline-grow pb-1 text-[12px] uppercase tracking-brand">
-            View all pieces →
+          <Link href="/collections" className="underline-grow shrink-0 pb-1 text-[11px] uppercase tracking-brand sm:text-[12px]">
+            <span className="sm:hidden">View all →</span>
+            <span className="hidden sm:inline">View all pieces →</span>
           </Link>
         </div>
       </Reveal>
 
-      <div className="mt-12 grid items-stretch gap-x-7 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-4 grid grid-cols-2 items-stretch gap-x-3 gap-y-8 sm:mt-12 sm:gap-x-7 sm:gap-y-14 lg:grid-cols-4">
         {items.map((p, i) => (
           <Reveal key={p.slug} delay={i * 90}>
-            <ProductCard product={p} />
+            <ProductCard product={p} sizes="(min-width: 1024px) 25vw, 50vw" eager={i < 4} />
           </Reveal>
         ))}
       </div>

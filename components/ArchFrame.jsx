@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 /*
  * One arch-framed image, used everywhere a photo sits in a mihrab silhouette.
  *
@@ -17,20 +19,25 @@ export default function ArchFrame({
   scrim = true,
   frame = true,
   zoomOnHover = false,
+  sizes = "(min-width: 1024px) 50vw, 100vw",
   className = "",
   children,
 }) {
   return (
     <div className={`${ratio} ${shapes[shape]} relative overflow-hidden bg-sand/60 ${className}`}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt}
-        loading={kenburns ? "eager" : "lazy"}
-        className={`h-full w-full object-cover ${focus} ${kenburns ? "animate-kenburns" : ""} ${
-          zoomOnHover ? "transition-transform duration-[1100ms] ease-out group-hover:scale-[1.06]" : ""
-        }`}
-      />
+      {src && (
+        <Image
+          src={src}
+          alt={alt ?? ""}
+          fill
+          sizes={sizes}
+          unoptimized={!src.startsWith("/") || src.endsWith(".svg")}
+          loading={kenburns ? "eager" : "lazy"}
+          className={`object-cover ${focus} ${kenburns ? "animate-kenburns" : ""} ${
+            zoomOnHover ? "transition-transform duration-[1100ms] ease-out group-hover:scale-[1.06]" : ""
+          }`}
+        />
+      )}
 
       {scrim && (
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-transparent" />

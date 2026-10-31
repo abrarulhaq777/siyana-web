@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 /*
  * A product photo set in a mihrab niche: an ogee arch crown filled with girih lattice
  * sits above the photo, and its outer and inner outlines run on down the sides as a
@@ -16,7 +18,7 @@ const tones = {
   dark: { bg: "bg-midnight-deep", fill: "fill-midnight-deep", line: "text-gold", border: "border-gold/60", inner: "border-gold/35" },
 };
 
-export default function MihrabFrame({ src, alt, label, tone = "light", className = "" }) {
+export default function MihrabFrame({ src, alt, label, tone = "light", sizes = "(min-width: 1024px) 50vw, 100vw", className = "" }) {
   const t = tones[tone];
   const lattice = `mihrab-lattice-${tone}`;
 
@@ -61,14 +63,17 @@ export default function MihrabFrame({ src, alt, label, tone = "light", className
       </div>
 
       <div className={`border-x border-b ${t.border} ${t.bg} px-[4%] pb-[4%]`}>
-        <div className={`relative overflow-hidden border ${t.inner}`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={src}
-            alt={alt}
-            loading="lazy"
-            className="aspect-[3/4] w-full object-cover transition-transform duration-[1100ms] ease-out group-hover:scale-[1.04]"
-          />
+        <div className={`relative aspect-[3/4] overflow-hidden border ${t.inner}`}>
+          {src && (
+            <Image
+              src={src}
+              alt={alt ?? ""}
+              fill
+              sizes={sizes}
+              unoptimized={!src.startsWith("/") || src.endsWith(".svg")}
+              className="object-cover transition-transform duration-[1100ms] ease-out group-hover:scale-[1.04]"
+            />
+          )}
         </div>
       </div>
     </div>

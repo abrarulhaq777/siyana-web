@@ -35,7 +35,7 @@ export default function StyleLookbook({ c, looks = [] }) {
             <li key={look.slug} className={drop[i % drop.length]}>
               <Reveal delay={i * 100}>
                 <Link href={`/product/${look.slug}`} className="group block">
-                  <MihrabFrame src={look.image} alt={look.name} label={`Look ${String(i + 1).padStart(2, "0")}`} />
+                  <MihrabFrame src={look.image} alt={look.name} sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw" label={`Look ${String(i + 1).padStart(2, "0")}`} />
                   <div className="mt-5 text-center">
                     <p className="font-display text-[1.25rem] leading-tight text-ink transition-colors group-hover:text-gold-dark">
                       {look.name}

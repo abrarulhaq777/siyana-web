@@ -10,7 +10,7 @@ import { useStore } from "@/lib/store";
  * two-line name never pushes its neighbour's price out of line. Names are
  * clamped to two lines rather than truncated to one.
  */
-export default function ProductCard({ product, tone = "light" }) {
+export default function ProductCard({ product, tone = "light", sizes, eager }) {
   const dark = tone === "dark";
   const { wishlist, toggleWish } = useStore();
   const wished = wishlist.includes(product.slug);
@@ -19,7 +19,7 @@ export default function ProductCard({ product, tone = "light" }) {
   return (
     <article className="group relative flex h-full flex-col">
       <div className="relative">
-        <ProductMedia product={product}>
+        <ProductMedia product={product} sizes={sizes} eager={eager}>
           {/* Sits in the arch's straight-sided zone, so the crown never clips it */}
           <span className="translate-y-2 self-start bg-ink/75 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-bone opacity-0 backdrop-blur-md transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
             {product.fabric}
