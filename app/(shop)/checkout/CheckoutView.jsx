@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import Script from "next/script";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import ProductMedia from "@/components/ProductMedia";
 import Empty from "@/components/Empty";
 import { shippingFor, inr } from "@/lib/products";
 import { useStore } from "@/lib/store";
 import { placeOrder, confirmPayment, abandonOrder } from "./actions";
+import { trackEvent } from "@/lib/meta-pixel";
 
 export default function CheckoutView({ settings, gateway, me }) {
   const { hydrated, lines, subtotal, clear } = useStore();
@@ -16,6 +17,20 @@ export default function CheckoutView({ settings, gateway, me }) {
   const [done, setDone] = useState(null);
   // "online" opens Razorpay, where the shopper picks UPI, card, netbanking or a wallet.
   const [selectedMethod, setSelectedMethod] = useState(gateway ? "online" : settings.codEnabled ? "cod" : null);
+  const hasTrackedCheckout = useRef(false);
+
+  useEffect(() => {
+    if (hydrated && lines.length > 0 && !hasTrackedCheckout.current) {
+      hasTrackedCheckout.current = true;
+      trackEvent("InitiateCheckout", {
+        content_ids: lines.map((l) => l.slug),
+        content_type: "product",
+        num_items: lines.reduce((acc, l) => acc + (l.qty || 1), 0),
+        value: subtotal,
+        currency: "INR",
+      });
+    }
+  }, [hydrated, lines, subtotal]);
 
   if (!hydrated) return null;
 
@@ -92,6 +107,14 @@ export default function CheckoutView({ settings, gateway, me }) {
         });
         setBusy(false);
         if (!confirmed.ok) return setError(confirmed.error);
+        trackEvent("Purchase", {
+          content_ids: bag.map((i) => i.slug),
+          content_type: "product",
+          value: total,
+          currency: "INR",
+          num_items: bag.reduce((acc, i) => acc + (i.qty || 1), 0),
+          order_id: confirmed.orderNo,
+        });
         clear();
         setDone(confirmed.orderNo);
       },

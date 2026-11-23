@@ -1,5 +1,6 @@
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
+import MetaPixel from "@/components/MetaPixel";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${cormorant.variable} ${jost.variable} h-full antialiased`}>
       {/* Extensions like ColorZilla inject attributes on <body> before hydration. */}
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
+        <MetaPixel />
         {children}
       </body>
     </html>

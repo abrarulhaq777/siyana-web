@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Gallery from "@/components/Gallery";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
 import { inr, sizesOf, abayaLengths } from "@/lib/products";
 import { BRAND } from "@/lib/brand";
 import { useStore } from "@/lib/store";
+import { trackEvent } from "@/lib/meta-pixel";
 
 export default function ProductView({ product, related, categories = [] }) {
   // Stock is per size — a size with nothing left is shown but not selectable.
@@ -21,11 +22,32 @@ export default function ProductView({ product, related, categories = [] }) {
   const category = categories.find((c) => c.slug === product.category);
   const wished = wishlist.includes(product.slug);
 
+  useEffect(() => {
+    if (product?.slug) {
+      trackEvent("ViewContent", {
+        content_name: product.name,
+        content_category: category?.name || product.category,
+        content_ids: [product.slug],
+        content_type: "product",
+        value: product.price,
+        currency: "INR",
+      });
+    }
+  }, [product?.slug, product?.name, product?.price, category?.name, product?.category]);
+
   const isLongGarment = product.category === "abayas" || product.category === "prayerwear";
 
   const add = () => {
     if (!size) return setErr(true);
     addToCart(product.slug, isLongGarment ? `${size} · ${length.split(" ")[0]}` : size);
+    trackEvent("AddToCart", {
+      content_name: product.name,
+      content_category: category?.name || product.category,
+      content_ids: [product.slug],
+      content_type: "product",
+      value: product.price,
+      currency: "INR",
+    });
     setAdded(true);
     setTimeout(() => setAdded(false), 2200);
   };
