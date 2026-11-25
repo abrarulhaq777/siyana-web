@@ -3,6 +3,7 @@ import db from "@/lib/db";
 import { Order } from "@/lib/models";
 import { verifyWebhookSignature } from "@/lib/razorpay";
 import { sendInvoice } from "@/lib/order-emails";
+import { sendPurchase } from "@/lib/meta-capi";
 
 /*
  * Razorpay's own confirmation. This is the source of truth — a shopper whose
@@ -45,7 +46,10 @@ export async function POST(request) {
     await order.save();
   }
 
-  if (event.event === "payment.captured") after(() => sendInvoice(order._id));
+  if (event.event === "payment.captured") {
+    after(() => sendInvoice(order._id));
+    after(() => sendPurchase(order._id)); // no-op if the browser's confirmation already sent it
+  }
 
   // A failed attempt is not the end: Razorpay lets the shopper retry in the same window.
   // The order is only cancelled (and its stock released) when they close the window.

@@ -8,7 +8,7 @@ import Empty from "@/components/Empty";
 import { shippingFor, inr } from "@/lib/products";
 import { useStore } from "@/lib/store";
 import { placeOrder, confirmPayment, abandonOrder } from "./actions";
-import { trackEvent } from "@/lib/meta-pixel";
+import { trackEvent, purchaseEventId } from "@/lib/meta-pixel";
 
 export default function CheckoutView({ settings, gateway, me }) {
   const { hydrated, lines, subtotal, clear } = useStore();
@@ -76,6 +76,22 @@ export default function CheckoutView({ settings, gateway, me }) {
       return setError(result.error);
     }
 
+    // The server reports the same Purchase to Meta under this id, so it is counted once.
+    const trackPurchase = (orderNo) =>
+      trackEvent(
+        "Purchase",
+        {
+          content_ids: bag.map((i) => i.slug),
+          content_type: "product",
+          value: total,
+          currency: "INR",
+          num_items: bag.reduce((acc, i) => acc + (i.qty || 1), 0),
+          order_id: orderNo,
+        },
+        { eventId: purchaseEventId(orderNo), server: false }
+      );
+
+    // Cash on delivery isn't a payment yet, so it is not reported to Meta as a Purchase.
     if (result.mode === "placed") {
       clear();
       setBusy(false);
@@ -107,14 +123,7 @@ export default function CheckoutView({ settings, gateway, me }) {
         });
         setBusy(false);
         if (!confirmed.ok) return setError(confirmed.error);
-        trackEvent("Purchase", {
-          content_ids: bag.map((i) => i.slug),
-          content_type: "product",
-          value: total,
-          currency: "INR",
-          num_items: bag.reduce((acc, i) => acc + (i.qty || 1), 0),
-          order_id: confirmed.orderNo,
-        });
+        trackPurchase(confirmed.orderNo);
         clear();
         setDone(confirmed.orderNo);
       },

@@ -7,6 +7,7 @@ import { currentUser } from "@/lib/auth";
 import { createOrder, restock } from "@/lib/orders";
 import { razorpay, getRazorpay, razorpayEnabled, paise, verifyPaymentSignature } from "@/lib/razorpay";
 import { sendInvoice } from "@/lib/order-emails";
+import { requestContext, sendPurchase } from "@/lib/meta-capi";
 
 const fail = (error) => ({ ok: false, error });
 
@@ -46,6 +47,8 @@ export async function placeOrder(payload) {
       method,
       userId: user?._id,
       couponCode: null, // coupons are switched off on the storefront
+      // Kept so the Purchase can reach Meta even if only Razorpay's webhook confirms the payment.
+      tracking: await requestContext(),
     });
   } catch (e) {
     return fail(e.message);
@@ -54,6 +57,7 @@ export async function placeOrder(payload) {
   // Cash on delivery: nothing more to collect now.
   if (method === "cod") {
     after(() => sendInvoice(order._id));
+    // No Purchase for Meta here: it is only reported once a payment is confirmed.
     return { ok: true, mode: "placed", orderNo: order.orderNo, orderId: String(order._id) };
   }
 
@@ -108,6 +112,7 @@ export async function confirmPayment({ orderId, razorpayOrderId, razorpayPayment
     await order.save();
   }
   after(() => sendInvoice(order._id));
+  after(() => sendPurchase(order._id));
   return { ok: true, orderNo: order.orderNo };
 }
 

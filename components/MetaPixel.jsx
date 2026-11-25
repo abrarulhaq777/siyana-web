@@ -1,49 +1,33 @@
-"use client";
+import { FB_PIXEL_ID } from "@/lib/meta-config";
+import MetaPixelRoutes from "@/components/MetaPixelRoutes";
 
-import Script from "next/script";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useRef, Suspense } from "react";
-import { FB_PIXEL_ID, pageview } from "@/lib/meta-pixel";
+/*
+ * Meta's Pixel base code, served in the document <head> on every storefront page.
+ * Admin pages are skipped so staff browsing doesn't count as shopper traffic.
+ */
+const BASE_CODE = `
+if (!location.pathname.startsWith('/admin')) {
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '${FB_PIXEL_ID}');
+fbq('track', 'PageView');
+}`;
 
-function RouteTracker() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const isFirstLoad = useRef(true);
-
-  useEffect(() => {
-    // The base snippet already tracks PageView on initial page load.
-    // We only trigger PageView on subsequent client-side route transitions.
-    if (isFirstLoad.current) {
-      isFirstLoad.current = false;
-      return;
-    }
-    pageview();
-  }, [pathname, searchParams]);
-
-  return null;
+/** Goes inside <head>. */
+export function MetaPixelHead() {
+  return <script id="meta-pixel-base" dangerouslySetInnerHTML={{ __html: BASE_CODE }} />;
 }
 
-export default function MetaPixel() {
+/** Goes inside <body>: the no-JavaScript fallback, and PageView on in-site navigation. */
+export function MetaPixelBody() {
   return (
     <>
-      <Script
-        id="meta-pixel-base"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '${FB_PIXEL_ID}');
-            fbq('track', 'PageView');
-          `,
-        }}
-      />
       <noscript>
         <img
           height="1"
@@ -53,9 +37,7 @@ export default function MetaPixel() {
           alt=""
         />
       </noscript>
-      <Suspense fallback={null}>
-        <RouteTracker />
-      </Suspense>
+      <MetaPixelRoutes />
     </>
   );
 }
